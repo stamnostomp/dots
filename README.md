@@ -1,2 +1,2 @@
 # dots
-dotfile back up
+dotfile back up mostly everything in gruvbox-dark-soft 
