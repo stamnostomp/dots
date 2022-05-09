@@ -2,6 +2,15 @@
 # wm independent hotkeys
 #
 
+# wifi menu
+alt + w
+	$HOME/.config/rofi/rofi-wifi-menu/rofi-wifi-menu.sh
+
+# set keyboard
+alt + d
+	setxkbmap dvorak
+alt + u
+	setxkbmap us
 # terminal emulator
 super + Return
 	kitty
