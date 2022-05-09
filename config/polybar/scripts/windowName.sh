@@ -2,7 +2,7 @@
 
 WM_DESKTOP=$(xdotool getwindowfocus)
 
-if [ $WM_DESKTOP == "1321" ]; then
+if [ $WM_DESKTOP == "1003" ]; then
 
 	echo "Desktop"
 
@@ -14,6 +14,8 @@ elif [ $WM_DESKTOP != "1883" ]; then
 	if [ $WM_CLASS == 'kitty' ]; then
 		echo "kitty"
 	#everything else
+	elif [ $WM_CLASS == 'Brave-browser' ]; then
+		echo "brave"
 	else
 		echo "$WM_CLASS"
 	fi
