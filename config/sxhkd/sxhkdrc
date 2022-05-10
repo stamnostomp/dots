@@ -2,6 +2,27 @@
 # wm independent hotkeys
 #
 
+
+#volume keys
+XF86AudioLowerVolume
+	amixer set Master 10%-
+
+XF86AudioRaiseVolume
+	amixer set Master 10%+
+
+XF86AudioMute
+	amixer set Master 1+ toggle
+
+XF86AudioMicMute
+	amixer set Capture toggle
+
+
+#backlight 
+XF86MonBrightnessUp
+	xbacklight +10
+
+XF86MonBrightnessDown
+	xbacklight -10
 # wifi menu
 alt + w
 	$HOME/.config/rofi/rofi-wifi-menu/rofi-wifi-menu.sh
