@@ -1,9 +1,9 @@
 #! /bin/sh
 
 $HOME/.config/polybar/launch.sh
-feh --bg-fill -- /home/stamno/pics/wallpapers/wallpaper.png
+feh --bg-fill -- /home/stamno/Pics/Wallpapers/wallpaper.png
 pgrep -x sxhkd > /dev/null || sxhkd &
-#picom &
+picom &
 setxkbmap dvorak &
 
 bspc monitor -d один два три четыре
