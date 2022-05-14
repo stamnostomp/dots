@@ -15,7 +15,9 @@ XF86AudioMute
 
 XF86AudioMicMute
 	amixer set Capture toggle
-
+#screend shot
+super + alt + s
+	flameshot gui
 
 #backlight 
 XF86MonBrightnessUp
