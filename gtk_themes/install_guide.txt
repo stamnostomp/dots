@@ -3,10 +3,12 @@
 COPY THEMES TO:
 User wide theme: ~/.themes
 System wide theme: ~/.local/share/themes/
+or /usr/share/themes/
 
 COPY ICONS TO:
 User wide icons: ~/.icons
 System wide theme: ~/.local/share/icons/
+or /usr/share/icons/
 
 COPY CFG TO:
 System CFG: /etc/gtk-3.0/settings.ini
