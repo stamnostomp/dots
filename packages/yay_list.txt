@@ -1,0 +1,10 @@
+apple_cursor
+betterdiscord-installer-bin
+brave-bin
+greed
+rofi-bluetooth-git
+siji-git
+spotify
+tetris
+vtop
+yay
