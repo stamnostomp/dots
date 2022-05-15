@@ -1,3 +1,0 @@
-grub: put in ect/default/
-
-grub-gruvbox: /boot/grub/themes

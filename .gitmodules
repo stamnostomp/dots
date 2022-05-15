@@ -1,3 +1,0 @@
-[submodule "grub/grub-gruvbox"]
-	path = grub/grub-gruvbox
-	url = https://github.com/x4121/grub-gruvbox.git
