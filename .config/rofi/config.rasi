@@ -1,0 +1,7 @@
+configuration{
+  font: "iosevka-term 12";
+}
+
+
+//@theme "/usr/share/rofi/themes/gruvbox-light-hard.rasi"
+@theme "/usr/share/rofi/themes/gruvbox-dark-soft.rasi"
