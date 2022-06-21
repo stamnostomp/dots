@@ -2,7 +2,7 @@
 
 $HOME/.config/polybar/launch.sh
 autorandr -c
-feh --bg-fill /home/stamno/Pics/Wallpapers/bacground1.png
+feh --bg-fill /home/stamno/Pictures/Wallpapers/bacground.png
 pgrep -x sxhkd > /dev/null || sxhkd &
 picom --experimental-backends -b &
 #setxkbmap dvorak &
