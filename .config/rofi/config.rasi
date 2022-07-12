@@ -1,7 +1,13 @@
 configuration{
-  font: "iosevka-term 12";
+  font: "Cozette 12";
+  display-drun: "Applications";
+  drun-display-format: "{icon} {name}";
+  show-icons: true;
+  icon-theme: "Gruvbox-Material-Dark";
+  modi: [window,run,ssh,drun];
 }
 
 
 //@theme "/usr/share/rofi/themes/gruvbox-light-hard.rasi"
-@theme "/usr/share/rofi/themes/gruvbox-dark-soft.rasi"
+//@theme "/usr/share/rofi/themes/gruvbox-dark-soft.rasi"
+@theme "/usr/share/rofi/themes/gruvbox-dark-hard.rasi"

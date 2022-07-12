@@ -25,9 +25,6 @@ XF86MonBrightnessUp
 
 XF86MonBrightnessDown
 	xbacklight -10
-# wifi menu
-alt + w
-	$HOME/.config/rofi/rofi-wifi-menu/rofi-wifi-menu.sh
 
 # set keyboard
 alt + d
@@ -40,15 +37,27 @@ super + Return
 
 # program launcher
 super + @space
-	rofi -show run 
+	rofi -show drun
+super + alt + t
+	rofi -show window
+super + alt + b
+	  rofi-bluetooth
+super + r
+	  rofi -show run
+#power menu
+super + shift + p
+	   rofi -show p -modi p:rofi-power-menu
+# wifi menu
+super + shift + w
+	rofi-wifi-menu
 
 # make sxhkd reload its configuration files:
 super + Escape
 	pkill -USR1 -x sxhkd
-
 #
 # bspwm hotkeys
 #
+
 #emacs
 super + e
 	  emacs
@@ -90,6 +99,7 @@ super + ctrl + {m,x,y,z}
 
 #
 # focus/swap
+#
 
 
 # focus the node in the given direction
