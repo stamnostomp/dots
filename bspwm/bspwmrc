@@ -1,0 +1,35 @@
+#! /bin/sh
+
+#--- lanch options ---
+$HOME/.config/polybar/launch.sh
+autorandr -c
+feh --bg-fill /home/stamno/Pictures/Wallpapers/Anger.png
+pgrep -x sxhkd > /dev/null || sxhkd &
+picom --experimental-backends -b &
+#setxkbmap dvorak &
+
+#--- monitors ---
+bspc monitor DP-0 -d 1 2 3 4 5 # один два три четыре пять
+bspc monitor HDMI-0 -d 6 7 8 9 10 # шесть семь восемь девять десять
+
+#--- colours ---
+bspc config focused_border_color "#6cbfbf"
+bspc config normal_border_color "#b3b9b8"
+bspc config active_border_color "#b3b9b8"
+
+#--- split rules ---
+bspc config border_width 3
+bspc config window_gap 10
+bspc config split_ratio          0.50
+bspc config borderless_monocle   true
+bspc config gapless_monocle      false
+
+#--- window rules ---
+bspc rule -a Gimp desktop='^8' state=floating follow=on 
+bspc rule -a Brave-browser #desktop='^13' state=tiled
+bspc rule -a mpv desktop='^0'
+bspc rule -a Kupfer.py focus=on 
+bspc rule -a Screenkey manage=off 
+bspc rule -a Emacs  state=tiled
+bspc rule -a Zathura state=tiled
+bspc rule -a Steam state=floating
