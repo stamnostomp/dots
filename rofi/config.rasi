@@ -1,0 +1,10 @@
+configuration{
+  font: "Cozette 12";
+  modi: [window,run,ssh,drun];
+}
+
+
+//@theme "/usr/share/rofi/themes/gruvbox-light-hard.rasi"
+//@theme "/usr/share/rofi/themes/gruvbox-dark-soft.rasi"
+//@theme "/usr/share/rofi/themes/gruvbox-dark-hard.rasi"
+@theme "~/.config/rofi/themes/alphatechnolog.rasi"
