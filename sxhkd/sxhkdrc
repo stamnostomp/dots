@@ -63,7 +63,7 @@ super + e
 	  emacs
 #web browser
 super + w
-	brave
+	  firefox
 
 # quit/restart bspwm
 super + alt + {q,r}

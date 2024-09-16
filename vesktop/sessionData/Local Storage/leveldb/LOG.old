@@ -1,0 +1,30 @@
+2024/07/09-21:27:58.993 24933 Reusing MANIFEST /home/stamno/.config/vesktop/sessionData/Local Storage/leveldb/MANIFEST-000001
+2024/07/09-21:27:58.997 24933 Recovering log #727
+2024/07/09-21:27:58.998 24933 Reusing old log /home/stamno/.config/vesktop/sessionData/Local Storage/leveldb/000727.log 
+2024/07/09-21:28:59.473 24934 Level-0 table #732: started
+2024/07/09-21:28:59.475 24934 Level-0 table #732: 54017 bytes OK
+2024/07/09-21:28:59.475 24934 Delete type=0 #727
+2024/07/09-21:34:59.472 24934 Level-0 table #734: started
+2024/07/09-21:34:59.474 24934 Level-0 table #734: 35839 bytes OK
+2024/07/09-21:34:59.474 24934 Delete type=0 #731
+2024/07/09-21:48:59.472 24934 Level-0 table #736: started
+2024/07/09-21:48:59.474 24934 Level-0 table #736: 33381 bytes OK
+2024/07/09-21:48:59.474 24934 Delete type=0 #733
+2024/07/09-22:26:59.472 24934 Level-0 table #738: started
+2024/07/09-22:26:59.473 24934 Level-0 table #738: 39113 bytes OK
+2024/07/09-22:26:59.474 24934 Delete type=0 #735
+2024/07/09-22:26:59.474 24934 Compacting 4@0 + 1@1 files
+2024/07/09-22:26:59.475 24934 Generated table #739@0: 93 keys, 45520 bytes
+2024/07/09-22:26:59.475 24934 Compacted 4@0 + 1@1 files => 45520 bytes
+2024/07/09-22:26:59.476 24934 compacted to: files[ 0 1 1 0 0 0 0 ]
+2024/07/09-22:26:59.476 24934 Delete type=2 #732
+2024/07/09-22:26:59.476 24934 Delete type=2 #734
+2024/07/09-22:26:59.476 24934 Delete type=2 #736
+2024/07/09-22:26:59.476 24934 Delete type=2 #729
+2024/07/09-22:26:59.476 24934 Delete type=2 #738
+2024/07/09-22:56:59.473 24934 Level-0 table #741: started
+2024/07/09-22:56:59.475 24934 Level-0 table #741: 19356 bytes OK
+2024/07/09-22:56:59.476 24934 Delete type=0 #737
+2024/07/09-23:18:52.299 24934 Level-0 table #743: started
+2024/07/09-23:18:52.301 24934 Level-0 table #743: 32936 bytes OK
+2024/07/09-23:18:52.302 24934 Delete type=0 #740

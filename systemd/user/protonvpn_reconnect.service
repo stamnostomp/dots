@@ -1,0 +1,8 @@
+
+# v3.14.0
+
+[Unit]
+Description=Proton VPN Reconnector
+
+[Service]
+ExecStart=/nix/store/8yqhbsba9l1scwx3cr4m2dl4n0jbppbd-python3.10-protonvpn-nm-lib-3.14.0/bin/protonvpn_reconnector.py

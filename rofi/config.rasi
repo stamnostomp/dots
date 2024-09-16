@@ -7,4 +7,5 @@ configuration{
 //@theme "/usr/share/rofi/themes/gruvbox-light-hard.rasi"
 //@theme "/usr/share/rofi/themes/gruvbox-dark-soft.rasi"
 //@theme "/usr/share/rofi/themes/gruvbox-dark-hard.rasi"
-@theme "~/.config/rofi/themes/alphatechnolog.rasi"
+@theme "~/.config/rofi/themes/manas.rasi"
+//@theme "/nix/store/ypaqwhmgj4xfmwd68rj0227spky52mhw-rofi-1.7.5/share/rofi/themes/gruvbox-dark-hard.rasi"

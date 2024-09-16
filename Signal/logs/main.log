@@ -1,0 +1,46 @@
+{"level":40,"time":"2024-07-23T16:59:26.757Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 1 invalid unprocessed envelopes"}
+{"level":40,"time":"2024-07-23T18:08:24.379Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 1 invalid unprocessed envelopes"}
+{"level":30,"time":"2024-07-23T18:16:54.879Z","msg":"System tray service: setting unread count to 1"}
+{"level":30,"time":"2024-07-23T18:16:54.879Z","msg":"System tray service: rendering no tray"}
+{"level":30,"time":"2024-07-23T18:16:54.967Z","msg":"Approving request for permission 'notifications'"}
+{"level":30,"time":"2024-07-23T18:17:06.510Z","msg":"System tray service: setting unread count to 2"}
+{"level":30,"time":"2024-07-23T18:17:06.510Z","msg":"System tray service: rendering no tray"}
+{"level":30,"time":"2024-07-23T18:17:06.597Z","msg":"Approving request for permission 'notifications'"}
+{"level":30,"time":"2024-07-23T18:17:12.482Z","msg":"System tray service: setting unread count to 0"}
+{"level":30,"time":"2024-07-23T18:17:12.483Z","msg":"System tray service: rendering no tray"}
+{"level":40,"time":"2024-07-23T18:19:14.366Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 2 invalid unprocessed envelopes"}
+{"level":30,"time":"2024-07-23T18:41:52.887Z","msg":"Updating BrowserWindow config: %s {\"maximized\":false,\"autoHideMenuBar\":false,\"fullscreen\":true,\"width\":1661,\"height\":902,\"x\":11,\"y\":34}"}
+{"level":30,"time":"2024-07-23T18:41:52.887Z","msg":"config/set: Saving ephemeral config to disk"}
+{"level":30,"time":"2024-07-23T18:41:52.889Z","msg":"config/set: Saved ephemeral config to disk"}
+{"level":30,"time":"2024-07-23T18:57:40.265Z","msg":"System tray service: setting unread count to 1"}
+{"level":30,"time":"2024-07-23T18:57:40.265Z","msg":"System tray service: rendering no tray"}
+{"level":30,"time":"2024-07-23T18:57:40.352Z","msg":"Approving request for permission 'notifications'"}
+{"level":30,"time":"2024-07-23T18:57:46.556Z","msg":"System tray service: setting unread count to 0"}
+{"level":30,"time":"2024-07-23T18:57:46.556Z","msg":"System tray service: rendering no tray"}
+{"level":40,"time":"2024-07-23T18:59:50.053Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 4 invalid unprocessed envelopes"}
+{"level":40,"time":"2024-07-23T19:35:53.163Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 2 invalid unprocessed envelopes"}
+{"level":30,"time":"2024-07-23T20:03:28.774Z","msg":"System tray service: setting unread count to 1"}
+{"level":30,"time":"2024-07-23T20:03:28.775Z","msg":"System tray service: rendering no tray"}
+{"level":30,"time":"2024-07-23T20:03:28.862Z","msg":"Approving request for permission 'notifications'"}
+{"level":30,"time":"2024-07-23T20:03:32.653Z","msg":"Updating BrowserWindow config: %s {\"maximized\":false,\"autoHideMenuBar\":false,\"fullscreen\":true,\"width\":1661,\"height\":902,\"x\":11,\"y\":34}"}
+{"level":30,"time":"2024-07-23T20:03:32.653Z","msg":"config/set: Saving ephemeral config to disk"}
+{"level":30,"time":"2024-07-23T20:03:32.654Z","msg":"config/set: Saved ephemeral config to disk"}
+{"level":30,"time":"2024-07-23T20:03:34.064Z","msg":"System tray service: setting unread count to 0"}
+{"level":30,"time":"2024-07-23T20:03:34.064Z","msg":"System tray service: rendering no tray"}
+{"level":30,"time":"2024-07-23T20:10:04.988Z","msg":"System tray service: setting unread count to 1"}
+{"level":30,"time":"2024-07-23T20:10:04.988Z","msg":"System tray service: rendering no tray"}
+{"level":30,"time":"2024-07-23T20:10:05.078Z","msg":"Approving request for permission 'notifications'"}
+{"level":40,"time":"2024-07-23T20:12:03.987Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 1 invalid unprocessed envelopes"}
+{"level":40,"time":"2024-07-23T21:15:43.056Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 1 invalid unprocessed envelopes"}
+{"level":30,"time":"2024-07-23T21:18:10.643Z","msg":"System tray service: setting unread count to 0"}
+{"level":30,"time":"2024-07-23T21:18:10.643Z","msg":"System tray service: rendering no tray"}
+{"level":40,"time":"2024-07-23T21:22:24.024Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 1 invalid unprocessed envelopes"}
+{"level":40,"time":"2024-07-23T21:59:31.500Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 1 invalid unprocessed envelopes"}
+{"level":40,"time":"2024-07-23T22:02:13.922Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 2 invalid unprocessed envelopes"}
+{"level":40,"time":"2024-07-23T22:13:35.071Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 5 invalid unprocessed envelopes"}
+{"level":40,"time":"2024-07-23T22:33:16.273Z","msg":"MainSQL: getAllUnprocessedAndIncrementAttempts: deleting 1 invalid unprocessed envelopes"}
+{"level":30,"time":"2024-07-23T22:41:15.596Z","msg":"System tray service: setting unread count to 1"}
+{"level":30,"time":"2024-07-23T22:41:15.596Z","msg":"System tray service: rendering no tray"}
+{"level":30,"time":"2024-07-23T22:41:15.686Z","msg":"Approving request for permission 'notifications'"}
+{"level":30,"time":"2024-07-23T22:41:23.340Z","msg":"System tray service: setting unread count to 0"}
+{"level":30,"time":"2024-07-23T22:41:23.340Z","msg":"System tray service: rendering no tray"}

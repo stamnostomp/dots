@@ -1,0 +1,44 @@
+(21:48:43) INFO:    [Legendary]:        Refreshing library...
+(21:48:43) INFO:    [Connection]:       Connectivity: check-online
+(21:48:43) INFO:    [Connection]:       Pinging external endpoints
+(21:48:43) INFO:    [Legendary]:        Running command: /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/legendary --version
+(21:48:43) INFO:    [Legendary]:        Legendary location: /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/legendary
+(21:48:43) INFO:    [Gog]:              GOGDL location: /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/gogdl
+(21:48:43) INFO:    [Gog]:              GOGDL location: /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/gogdl
+(21:48:43) WARNING: [Backend]:          Failed to register protocol with OS.
+(21:48:43) INFO:    [Gog]:              Running command: /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/gogdl --auth-config-path /home/stamno/.config/heroic/gog_store/auth.json --version
+(21:48:43) INFO:    [Backend]:          Loading Screen Ready
+(21:48:43) INFO:    [Backend]:          Frontend Ready
+(21:48:43) INFO:    [Backend]:          Checking for new Heroic Updates
+(21:48:43) INFO:    [Backend]:          Checking for current version changelog
+(21:48:43) INFO:    [Frontend]:         Updated to a new version, cleaaning up the cache.
+(21:48:43) INFO:    [Legendary]:        Running command: /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/legendary cleanup
+(21:48:43) INFO:    [Connection]:       Connectivity: online
+(21:48:43) INFO:    [Backend]:          User Not Found, removing it from Store
+(21:48:43) INFO:    [Backend]:          
+
+Heroic Version: 2.7.1 Eustass Kid
+Legendary Version:  0.20.32 Dark Energy (hotfix #6)
+GOGdl Version: 0.7.1
+
+Electron Version: 26.3.0
+Chrome Version: 116.0.5845.228
+NodeJS Version: 18.16.1
+
+OS: NixOS KERNEL: 6.1.63 ARCH: x64
+CPU: AMD Ryzen 9 5900X 12-Core Processor @3.7 GOVERNOR: performance
+RAM: Total: 31.24 GiB Available: 19.78 GiB
+GRAPHICS: 
+PROTOCOL: wayland
+
+(21:48:43) INFO:    [Backend]:          AreWeAntiCheatYet data downloaded
+(21:48:45) INFO:    [Winetricks]:       Downloading Winetricks
+(21:48:45) INFO:    [DXVKInstaller]:    Updating dxvk to: dxvk-2.3
+(21:48:45) INFO:    [DXVKInstaller]:    Updating vkd3d to: vkd3d-proton-v2.11
+(21:48:46) INFO:    [DXVKInstaller]:    downloaded vkd3d
+(21:48:46) INFO:    [DXVKInstaller]:    extracting vkd3d
+(21:48:46) INFO:    [DXVKInstaller]:    vkd3d updated!
+(21:48:46) INFO:    [DXVKInstaller]:    downloaded dxvk
+(21:48:46) INFO:    [DXVKInstaller]:    extracting dxvk
+(21:48:47) INFO:    [DXVKInstaller]:    dxvk updated!
+(21:48:48) INFO:    [Backend]:          Starting the Download Queue

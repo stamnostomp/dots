@@ -1,0 +1,4 @@
+[12/12/2023, 21:48:43] /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/legendary --version
+legendary version "0.20.32", codename "Dark Energy (hotfix #6)"
+[12/12/2023, 21:48:43] /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/legendary cleanup
+[cli] INFO: Cleanup complete! Removed 0.00 MiB.

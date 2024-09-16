@@ -1,0 +1,45 @@
+2024/07/17-09:47:10.352 3f4d21 Reusing MANIFEST /home/stamno/.config/vesktop/sessionData/Local Storage/leveldb/MANIFEST-000001
+2024/07/17-09:47:10.355 3f4d21 Recovering log #742
+2024/07/17-09:47:10.356 3f4d21 Reusing old log /home/stamno/.config/vesktop/sessionData/Local Storage/leveldb/000742.log 
+2024/07/17-09:49:12.597 3f4d22 Level-0 table #746: started
+2024/07/17-09:49:12.599 3f4d22 Level-0 table #746: 68642 bytes OK
+2024/07/17-09:49:12.600 3f4d22 Delete type=0 #742
+2024/07/17-10:19:12.598 3f4d22 Level-0 table #748: started
+2024/07/17-10:19:12.600 3f4d22 Level-0 table #748: 39127 bytes OK
+2024/07/17-10:19:12.601 3f4d22 Delete type=0 #745
+2024/07/17-10:19:12.601 3f4d22 Compacting 4@0 + 1@1 files
+2024/07/17-10:19:12.602 3f4d22 Generated table #749@0: 95 keys, 45596 bytes
+2024/07/17-10:19:12.602 3f4d22 Compacted 4@0 + 1@1 files => 45596 bytes
+2024/07/17-10:19:12.602 3f4d22 compacted to: files[ 0 1 1 0 0 0 0 ]
+2024/07/17-10:19:12.603 3f4d22 Delete type=2 #741
+2024/07/17-10:19:12.603 3f4d22 Delete type=2 #739
+2024/07/17-10:19:12.603 3f4d22 Delete type=2 #748
+2024/07/17-10:19:12.603 3f4d22 Delete type=2 #743
+2024/07/17-10:19:12.603 3f4d22 Delete type=2 #746
+2024/07/17-10:53:12.599 3f4d22 Level-0 table #751: started
+2024/07/17-10:53:12.604 3f4d22 Level-0 table #751: 15490 bytes OK
+2024/07/17-10:53:12.604 3f4d22 Delete type=0 #747
+2024/07/18-10:47:19.411 3f4d22 Level-0 table #753: started
+2024/07/18-10:47:19.413 3f4d22 Level-0 table #753: 39242 bytes OK
+2024/07/18-10:47:19.414 3f4d22 Delete type=0 #750
+2024/07/18-22:47:19.420 3f4d22 Level-0 table #755: started
+2024/07/18-22:47:19.422 3f4d22 Level-0 table #755: 50212 bytes OK
+2024/07/18-22:47:19.423 3f4d22 Delete type=0 #752
+2024/07/20-11:13:00.185 3f4d22 Level-0 table #757: started
+2024/07/20-11:13:00.186 3f4d22 Level-0 table #757: 37311 bytes OK
+2024/07/20-11:13:00.187 3f4d22 Delete type=0 #754
+2024/07/20-11:13:00.187 3f4d22 Compacting 4@0 + 1@1 files
+2024/07/20-11:13:00.188 3f4d22 Generated table #758@0: 95 keys, 46363 bytes
+2024/07/20-11:13:00.188 3f4d22 Compacted 4@0 + 1@1 files => 46363 bytes
+2024/07/20-11:13:00.189 3f4d22 compacted to: files[ 0 1 1 0 0 0 0 ]
+2024/07/20-11:13:00.189 3f4d22 Delete type=2 #753
+2024/07/20-11:13:00.189 3f4d22 Delete type=2 #755
+2024/07/20-11:13:00.189 3f4d22 Delete type=2 #757
+2024/07/20-11:13:00.189 3f4d22 Delete type=2 #749
+2024/07/20-11:13:00.189 3f4d22 Delete type=2 #751
+2024/07/20-22:03:17.318 3f4d22 Level-0 table #760: started
+2024/07/20-22:03:17.319 3f4d22 Level-0 table #760: 50030 bytes OK
+2024/07/20-22:03:17.320 3f4d22 Delete type=0 #756
+2024/07/21-22:03:17.462 3f4d22 Level-0 table #762: started
+2024/07/21-22:03:17.464 3f4d22 Level-0 table #762: 55102 bytes OK
+2024/07/21-22:03:17.465 3f4d22 Delete type=0 #759

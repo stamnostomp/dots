@@ -1,0 +1,34 @@
+(22:21:07) INFO:    [Legendary]:        Refreshing library...
+(22:21:07) INFO:    [Connection]:       Connectivity: check-online
+(22:21:07) INFO:    [Connection]:       Pinging external endpoints
+(22:21:07) INFO:    [Legendary]:        Running command: /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/legendary --version
+(22:21:07) INFO:    [Legendary]:        Legendary location: /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/legendary
+(22:21:07) INFO:    [Gog]:              GOGDL location: /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/gogdl
+(22:21:07) INFO:    [Gog]:              GOGDL location: /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/gogdl
+(22:21:07) WARNING: [Backend]:          Failed to register protocol with OS.
+(22:21:07) INFO:    [Gog]:              Running command: /nix/store/160px0xzswhgvl5iwj86l32znbl5m9yr-heroic-unwrapped-2.7.1/share/heroic/build/bin/linux/gogdl --auth-config-path /home/stamno/.config/heroic/gog_store/auth.json --version
+(22:21:08) INFO:    [Connection]:       Connectivity: online
+(22:21:08) INFO:    [Backend]:          User Not Found, removing it from Store
+(22:21:08) INFO:    [Backend]:          Loading Screen Ready
+(22:21:08) INFO:    [Backend]:          Frontend Ready
+(22:21:08) INFO:    [Backend]:          Checking for new Heroic Updates
+(22:21:08) INFO:    [Backend]:          Checking for current version changelog
+(22:21:08) INFO:    [Backend]:          
+
+Heroic Version: 2.7.1 Eustass Kid
+Legendary Version:  0.20.32 Dark Energy (hotfix #6)
+GOGdl Version: 0.7.1
+
+Electron Version: 26.3.0
+Chrome Version: 116.0.5845.228
+NodeJS Version: 18.16.1
+
+OS: NixOS KERNEL: 6.1.63 ARCH: x64
+CPU: AMD Ryzen 9 5900X 12-Core Processor @3.7 GOVERNOR: performance
+RAM: Total: 31.24 GiB Available: 19.93 GiB
+GRAPHICS: 
+PROTOCOL: wayland
+
+(22:21:08) INFO:    [Backend]:          AreWeAntiCheatYet data downloaded
+(22:21:10) INFO:    [Winetricks]:       Downloading Winetricks
+(22:21:13) INFO:    [Backend]:          Starting the Download Queue

@@ -1,11 +1,13 @@
-#! /bin/sh
+#! /usr/bin/env sh
 
 #--- lanch options ---
-$HOME/.config/polybar/launch.sh
-autorandr -c
-feh --bg-fill /home/stamno/Pictures/Wallpapers/Anger.png
-pgrep -x sxhkd > /dev/null || sxhkd &
-picom --experimental-backends -b &
+
+# autorandr -c # trash garbage shit that dosent even do the one thing it should 
+bash /home/stamno/.config/scripts/setDisplays.sh # wow very hard script to make lucky I am very smart :)
+feh --bg-fill /home/stamno/Pictures/Wallpapers/paddingtonOS.png
+grep -x sxhkd > /dev/null || sxhkd &
+picom --experimental-backends # -b &
+bash /home/stamno/.config/polybar/launch.sh
 #setxkbmap dvorak &
 
 #--- monitors ---
@@ -33,3 +35,4 @@ bspc rule -a Screenkey manage=off
 bspc rule -a Emacs  state=tiled
 bspc rule -a Zathura state=tiled
 bspc rule -a Steam state=floating
+bspc rule -a steam_app_553850 state=floating
