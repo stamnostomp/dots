@@ -28,20 +28,21 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      hostname = "desktop"; # Using the original hostname
 
       # Function to make system configuration with given hostname
-      mkSystem = hostname: nixpkgs.lib.nixosSystem {
+      mkSystem = name: nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
           inherit inputs;
-          inherit hostname;
+          hostname = name;
         };
         modules = [
           # Include the hardware configuration
-          ./hosts/${hostname}/hardware.nix
+          ./hosts/${name}/hardware.nix
 
           # Include the host-specific configuration
-          ./hosts/${hostname}
+          ./hosts/${name}
 
           # Make flake inputs available in NixOS
           {
@@ -56,7 +57,7 @@
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = {
               inherit inputs;
-              inherit hostname;
+              hostname = name;
             };
             # Import the user-specific configuration
             home-manager.users.stamno = import ./home/stamno;
@@ -75,7 +76,7 @@
     in {
       # NixOS configurations
       nixosConfigurations = {
-        "${hostname}" = mkSystem "${hostname}";
+        "${hostname}" = mkSystem hostname;
         # Add other hosts as needed
       };
 
@@ -85,7 +86,7 @@
           inherit pkgs;
           extraSpecialArgs = {
             inherit inputs;
-            hostname = "${hostname}";
+            hostname = hostname;
           };
           modules = [
             ./home/stamno
