@@ -1,9 +1,0 @@
-2024/07/03-10:47:43.958 e4d0 Reusing MANIFEST /home/stamno/.config/Signal/Local Storage/leveldb/MANIFEST-000001
-2024/07/03-10:47:43.961 e4d0 Recovering log #29
-2024/07/03-10:47:43.962 e4d0 Reusing old log /home/stamno/.config/Signal/Local Storage/leveldb/000029.log 
-2024/07/03-19:19:54.016 e4d1 Level-0 table #34: started
-2024/07/03-19:19:54.017 e4d1 Level-0 table #34: 9642 bytes OK
-2024/07/03-19:19:54.018 e4d1 Delete type=0 #29
-2024/07/06-10:33:46.937 e4d1 Level-0 table #36: started
-2024/07/06-10:33:46.938 e4d1 Level-0 table #36: 9601 bytes OK
-2024/07/06-10:33:46.939 e4d1 Delete type=0 #33

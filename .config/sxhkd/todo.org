@@ -1,4 +1,0 @@
-#+title: Todo
-
-* TODO change the preselect window colour
-* TODO have binding for moving to the next worksapce
