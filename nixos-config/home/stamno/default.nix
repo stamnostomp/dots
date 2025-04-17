@@ -1,20 +1,28 @@
 # home/stamno/default.nix
 { config, pkgs, lib, inputs, ... }:
 
-let
-  # Import color scheme
-  colors = import ./theme/colors.nix;
-in
 {
   imports = [
     # Import home-manager modules for different components
     ./programs.nix
     ./theme.nix
 
-    # Import reusable home-manager modules
-    ../../modules/home/desktop
-    ../../modules/home/shell
-    ../../modules/home/terminal
+    # Add the global colors module first
+    ../../modules/home/colors.nix
+    
+    # Import desktop modules directly
+    ../../modules/home/desktop/hyprland.nix
+    ../../modules/home/desktop/waybar.nix
+    ../../modules/home/desktop/dunst.nix
+    
+    # Import shell and terminal modules
+    ../../modules/home/shell/bash.nix
+    ../../modules/home/shell/fish.nix
+    ../../modules/home/shell/fish-emacs.nix
+    ../../modules/home/shell/programs.nix
+    ../../modules/home/shell/theme.nix
+    ../../modules/home/terminal/alacritty.nix
+    ../../modules/home/terminal/kitty.nix
     
     # Import Doom Emacs module
     ../../modules/home/editors/doom-emacs.nix
