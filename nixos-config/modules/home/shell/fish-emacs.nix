@@ -1,3 +1,4 @@
+
 # home/stamno/default.nix
 { config, pkgs, lib, inputs, ... }:
 
@@ -12,12 +13,13 @@ in
     ./theme.nix
 
     # Import reusable home-manager modules
-    ../../modules/home/desktop
-    ../../modules/home/shell
-    ../../modules/home/terminal
-    
-    # Import Doom Emacs module
-    ../../modules/home/editors/doom-emacs.nix
+    ../../modules/home/desktop/hyprland.nix
+    ../../modules/home/desktop/waybar.nix
+    ../../modules/home/desktop/dunst.nix
+    ../../modules/home/shell/bash.nix
+    ../../modules/home/shell/fish.nix
+    ../../modules/home/terminal/alacritty.nix
+    ../../modules/home/terminal/kitty.nix
   ];
 
   # Home Manager basics
@@ -28,11 +30,7 @@ in
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
 
-  # Enable Doom Emacs module
-  modules.doom-emacs = {
-    enable = true;
-    userRepoUrl = "https://github.com/stamnostomp/doom-d";
-  };
+  # Allow unfree packages
 
   # Make the Everblush GTK theme available
   home.packages = with pkgs; [

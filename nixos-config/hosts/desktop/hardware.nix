@@ -5,7 +5,9 @@
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
-
+ 
+  services.xserver.videoDrivers = ["nvidia"];
+  
   boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "thunderbolt" "nvme" "usb_storage" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
@@ -34,6 +36,12 @@
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   # Additional hardware settings for your Hyprland setup
+  hardware.nvidia = {
+    modesetting.enable = true;
+    open = false;
+    nvidiaSettings = true;
+  };
+
   hardware.graphics = {
     enable = true;
   };
