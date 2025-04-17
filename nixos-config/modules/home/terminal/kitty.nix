@@ -3,7 +3,9 @@
 
 let
   # Import colors from the theme module
-  inherit (import ../../../home/stamno/theme/colors.nix) colors;
+  # FIXED: Direct import that avoids relative path issues
+  colorsDef = import ../../../modules/theme-colors.nix;
+  colors = colorsDef.colors;
 in
 {
   # Kitty terminal configuration

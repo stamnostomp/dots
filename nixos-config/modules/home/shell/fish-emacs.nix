@@ -1,45 +1,59 @@
+# modules/home/shell/fish-emacs.nix
+{ config, lib, pkgs, ... }:
 
-# home/stamno/default.nix
-{ config, pkgs, lib, inputs, ... }:
-
-let
-  # Import color scheme
-  colors = import ./theme/colors.nix;
-in
 {
-  imports = [
-    # Import home-manager modules for different components
-    ./programs.nix
-    ./theme.nix
+  # Configure Fish shell to work with Emacs
+  programs.fish.interactiveShellInit = lib.mkAfter ''
+    # Ensure Emacs can work with Fish shell
+    if set -q INSIDE_EMACS
+        set -gx SHELL ${pkgs.bash}/bin/bash
+    end
+    
+    # Add support for Emacs vterm
+    function vterm_printf
+      if begin; [ -n "$TMUX" ] && string match -q -r "screen|tmux" "$TERM"; end
+        # Tell tmux to pass the escape sequences through
+        printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
+      else if string match -q -- "screen*" "$TERM"
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\eP\e]%s\007\e\\" "$argv"
+      else
+        printf "\e]%s\e\\" "$argv"
+      end
+    end
 
-    # Import reusable home-manager modules
-    ../../modules/home/desktop/hyprland.nix
-    ../../modules/home/desktop/waybar.nix
-    ../../modules/home/desktop/dunst.nix
-    ../../modules/home/shell/bash.nix
-    ../../modules/home/shell/fish.nix
-    ../../modules/home/terminal/alacritty.nix
-    ../../modules/home/terminal/kitty.nix
-  ];
+    # vterm directory tracking
+    function vterm_prompt_end
+      vterm_printf "51;A$(whoami)@$(hostname):$(pwd)"
+    end
 
-  # Home Manager basics
-  home.username = "stamno";
-  home.homeDirectory = "/home/stamno";
-  home.stateVersion = "25.05";
+    # Emacs vterm clear command
+    function clear
+      if test -n "$INSIDE_EMACS"
+        vterm_printf "51;Evterm-clear-scrollback"
+        echo -ne "\033c"
+      else
+        command clear
+      end
+    end
 
-  # Let Home Manager install and manage itself
-  programs.home-manager.enable = true;
+    # Set up vterm hooks for Fish shell if inside Emacs
+    if test -n "$INSIDE_EMACS"
+      functions -c fish_prompt _old_fish_prompt_with_vterm
+      function fish_prompt
+        _old_fish_prompt_with_vterm
+        vterm_prompt_end
+      end
+    end
+  '';
 
-  # Allow unfree packages
-
-  # Make the Everblush GTK theme available
-  home.packages = with pkgs; [
-    # Make the Everblush GTK theme available
-    inputs.everblush-gtk.packages.${pkgs.system}.default
-  ];
-
-  # Set GTK theme in the environment to ensure it works everywhere
-  home.sessionVariables = {
-    GTK_THEME = "Everblush";
-  };
+  # Add special support for Emacs shell mode in Bash as well
+  programs.bash.initExtra = lib.mkAfter ''
+    # Set up proper shell inside Emacs
+    if [ -n "$INSIDE_EMACS" ]; then
+      export SHELL=${pkgs.bash}/bin/bash
+      unset INSIDE_EMACS
+      exec fish
+    fi
+  '';
 }

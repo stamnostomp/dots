@@ -3,30 +3,21 @@
 
 {
   imports = [
-    # Import home-manager modules for different components
+     # Import home-manager modules for different components
     ./programs.nix
     ./theme.nix
 
-    # Add the global colors module first
-    ../../modules/home/colors.nix
-    
-    # Import desktop modules directly
-    ../../modules/home/desktop/hyprland.nix
-    ../../modules/home/desktop/waybar.nix
-    ../../modules/home/desktop/dunst.nix
+    # Import desktop modules
+    ../modules/home/desktop
     
     # Import shell and terminal modules
-    ../../modules/home/shell/bash.nix
-    ../../modules/home/shell/fish.nix
-    ../../modules/home/shell/fish-emacs.nix
-    ../../modules/home/shell/programs.nix
-    ../../modules/home/shell/theme.nix
-    ../../modules/home/terminal/alacritty.nix
-    ../../modules/home/terminal/kitty.nix
+    ../modules/home/shell
+    ../modules/home/terminal
     
     # Import Doom Emacs module
-    ../../modules/home/editors/doom-emacs.nix
-  ];
+    ../modules/home/editors/doom-emacs.nix
+  ];   
+   
 
   # Home Manager basics
   home.username = "stamno";

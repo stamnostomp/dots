@@ -44,6 +44,8 @@
           # Include the host-specific configuration
           ./hosts/${name}
 
+	  ./modules/system
+
           # Make flake inputs available in NixOS
           {
             _module.args.inputs = inputs;
@@ -60,7 +62,10 @@
               hostname = name;
             };
             # Import the user-specific configuration
-            home-manager.users.stamno = import ./home/stamno;
+  	  home-manager.users.stamno = { ... }: {
+    	    imports = [ ./home/stamno ];
+          };
+
           }
 
           # Include Hyprland as a module
