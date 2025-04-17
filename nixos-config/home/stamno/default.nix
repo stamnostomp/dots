@@ -30,7 +30,6 @@ in
   programs.home-manager.enable = true;
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # Make the Everblush GTK theme available
   home.packages = with pkgs; [
