@@ -30,10 +30,6 @@
     ripgrep
     htop
     btop
-
-    # Text editors
-    emacs
-
     # File managers
     xfce.thunar
     kdePackages.dolphin

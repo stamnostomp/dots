@@ -1,23 +1,25 @@
 # home/stamno/default.nix
 { config, pkgs, lib, inputs, ... }:
 
+let
+  # Import color scheme directly
+  colorsDef = import ./theme/colors.nix;
+in
 {
   imports = [
-     # Import home-manager modules for different components
+    # Import home-manager modules for different components
     ./programs.nix
     ./theme.nix
 
-    # Import desktop modules
-    ../modules/home/desktop
-    
-    # Import shell and terminal modules
-    ../modules/home/shell
-    ../modules/home/terminal
+    # Import reusable home-manager modules
+    ../../modules/home/desktop
+    ../../modules/home/shell
+    ../../modules/home/terminal/alacritty.nix
+    ../../modules/home/terminal/kitty.nix
     
     # Import Doom Emacs module
-    ../modules/home/editors/doom-emacs.nix
-  ];   
-   
+    ../../modules/home/editors/doom-emacs.nix
+  ];
 
   # Home Manager basics
   home.username = "stamno";
@@ -27,9 +29,11 @@
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
 
-  # Enable Doom Emacs module
+  # Enable Doom Emacs module with correct paths
   modules.doom-emacs = {
     enable = true;
+    doomPrivateDir = "${config.home.homeDirectory}/.doom.d";
+    doomRepoUrl = "https://github.com/doomemacs/doomemacs";
     userRepoUrl = "https://github.com/stamnostomp/doom-d";
   };
 
@@ -37,10 +41,34 @@
   home.packages = with pkgs; [
     # Make the Everblush GTK theme available
     inputs.everblush-gtk.packages.${pkgs.system}.default
+    
+    # Terminal utilities that improve Emacs/shell experience
+    ripgrep
+    fd
+    bat
+    #exa
+    
+    # Development tools
+    git
+    gnumake
+    gcc
+    
+    # Wayland tools
+    wl-clipboard
+    
+    # Doom Emacs dependencies
+    cmake
+    python3
   ];
 
   # Set GTK theme in the environment to ensure it works everywhere
   home.sessionVariables = {
     GTK_THEME = "Everblush";
+    # Important for Doom Emacs
+    DOOMDIR = "${config.home.homeDirectory}/.doom.d";
+    DOOMLOCALDIR = "${config.home.homeDirectory}/.doom-local";
   };
+  
+  # Make colors globally available to other modules
+  _module.args.colorScheme = colorsDef.colors;
 }
