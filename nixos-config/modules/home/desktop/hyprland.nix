@@ -251,10 +251,10 @@ in
     '';
   };
 
-  # Generate Everblush wallpaper
+  # Generate Everblush wallpaper (fixing the convert deprecation warning)
   home.activation.generateWallpaper = lib.hm.dag.entryAfter ["writeBoundary"] ''
     mkdir -p ~/.config/hypr
-    ${pkgs.imagemagick}/bin/convert -size 1920x1080 "xc:${colors.background}" ~/.config/hypr/wallpaper.png
+    ${pkgs.imagemagick}/bin/magick -size 1920x1080 "xc:${colors.background}" ~/.config/hypr/wallpaper.png
   '';
 
   # Add required packages for Hyprland

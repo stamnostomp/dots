@@ -6,7 +6,7 @@
   home.packages = with pkgs; [
     # Shell utilities
     bat        # Better cat
-    exa        # Modern ls replacement
+#    exa        # Modern ls replacement
     fd         # Alternative to find
     fzf        # Fuzzy finder
     ripgrep    # Fast grep

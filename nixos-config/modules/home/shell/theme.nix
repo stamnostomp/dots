@@ -1,3 +1,4 @@
+
 # modules/home/shell/theme.nix
 { config, lib, pkgs, ... }:
 
@@ -70,15 +71,8 @@ in
         heuristic = true;
       };
       
-      # Apply Everblush-inspired colors
-      palette = {
-        everblush_red = "${colors.red}";
-        everblush_green = "${colors.green}";
-        everblush_blue = "${colors.blue}";
-        everblush_yellow = "${colors.yellow}";
-        everblush_purple = "${colors.magenta}";
-        everblush_cyan = "${colors.cyan}";
-      };
+      # Remove the palette configuration as it's not supported this way
+      # Instead, apply colors directly in module styles
     };
   };
   

@@ -35,7 +35,7 @@
     kdePackages.dolphin
 
     # Messaging and communication
-    signal-desktop-source
+    signal-desktop  # Changed from signal-desktop-source
     vesktop
 
     # System utilities
@@ -66,7 +66,7 @@
         error_symbol = "[✗](bold red)";
       };
       nix_shell = {
-        format = "via [☃️ $state( $name)](bold blue) ";
+        format = lib.mkForce "via [☃️ $state( $name)](bold blue) ";
         heuristic = true;
       };
     };

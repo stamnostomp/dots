@@ -32,7 +32,7 @@ in
     # Install Emacs with native compilation and wayland support
     programs.emacs = {
       enable = true;
-      package = pkgs.emacs29-pgtk;
+      package = pkgs.emacs-pgtk;
       extraPackages = epkgs: with epkgs; [
         vterm
         # Add any additional Emacs packages here
@@ -56,11 +56,10 @@ in
       # CLI utilities mentioned in error
       xclip
       xdotool
-      xwininfo
+      xorg.xwininfo
       
       # Tool dependencies
       cmake
-      dockerTools
       nodePackages.npm
       
       # Language servers and tooling
@@ -74,7 +73,7 @@ in
       cabal-install
       ghc
       haskell-language-server
-      hoogle
+      haskellPackages.hoogle
       kotlin-language-server
       ktlint
       dotnet-sdk # For C#
@@ -83,12 +82,8 @@ in
       openjdk # For PlantUML
       graphviz # For PlantUML
       purescript
-      purs
       shellcheck
       shfmt
-      
-      # For Markdown
-      nodePackages.marked
       
       # For web development
       nodePackages.prettier
@@ -111,6 +106,9 @@ in
     
     # Clone and set up Doom Emacs
     home.activation.installDoomEmacs = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      # Use git from Nix store
+      PATH=${pkgs.git}/bin:$PATH
+      
       # Clone Doom Emacs if it doesn't exist
       if [ ! -d "${config.home.homeDirectory}/.emacs.d" ]; then
         $DRY_RUN_CMD git clone --depth 1 ${cfg.doomRepoUrl} ${config.home.homeDirectory}/.emacs.d
@@ -128,6 +126,9 @@ in
       # Set up shell file for Emacs
       $DRY_RUN_CMD mkdir -p ${config.home.homeDirectory}/.doom.d
       $DRY_RUN_CMD echo '(setq shell-file-name "${pkgs.bash}/bin/bash")' > ${config.home.homeDirectory}/.doom.d/shells.el
+      
+      # Make sure Emacs and other required binaries are in PATH
+      PATH=${pkgs.emacs-pgtk}/bin:${pkgs.git}/bin:${pkgs.ripgrep}/bin:${pkgs.fd}/bin:$PATH
       
       # Install Doom Emacs
       if [ ! -f "${config.home.homeDirectory}/.emacs.d/bin/doom" ]; then
