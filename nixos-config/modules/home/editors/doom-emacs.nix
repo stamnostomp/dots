@@ -9,22 +9,10 @@ in
   options.modules.doom-emacs = {
     enable = mkEnableOption "Doom Emacs configuration";
     
-    doomPrivateDir = mkOption {
-      type = types.str;
-      default = "${config.home.homeDirectory}/.doom.d";
-      description = "Directory for your private Doom Emacs configuration";
-    };
-    
-    doomRepoUrl = mkOption {
-      type = types.str;
-      default = "https://github.com/doomemacs/doomemacs";
-      description = "URL of the Doom Emacs repository";
-    };
-    
-    userRepoUrl = mkOption {
+    repoUrl = mkOption {
       type = types.str;
       default = "https://github.com/stamnostomp/doom-d";
-      description = "URL of your Doom Emacs private configuration";
+      description = "URL of your Doom config repository";
     };
   };
 
@@ -33,121 +21,159 @@ in
     programs.emacs = {
       enable = true;
       package = pkgs.emacs-pgtk;
-      extraPackages = epkgs: with epkgs; [
-        vterm
-        # Add any additional Emacs packages here
-      ];
     };
     
-    # Set up environment variables for shell
+    # Set up environment variables
     home.sessionVariables = {
-      DOOMDIR = cfg.doomPrivateDir;
+      EDITOR = "emacsclient -c";
+      VISUAL = "emacsclient -c";
+      ALTERNATE_EDITOR = "emacs";
+      DOOMDIR = "${config.home.homeDirectory}/.doom.d";
       DOOMLOCALDIR = "${config.home.homeDirectory}/.doom-local";
     };
     
-    # Add all the dependencies required by Doom Emacs
+    # Doom-specific environment
+    home.sessionPath = [ 
+      "${config.home.homeDirectory}/.emacs.d/bin" 
+    ];
+    
+    # Essential packages for Doom to function
     home.packages = with pkgs; [
       # Core dependencies
       git
       ripgrep
       fd
-      coreutils
       
-      # CLI utilities mentioned in error
-      xclip
-      xdotool
-      xorg.xwininfo
+      # Essential fonts
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.symbols-only
       
-      # Tool dependencies
-      cmake
-      nodePackages.npm
-      
-      # Language servers and tooling
-      nodePackages.typescript-language-server # For JS/TS
-      nodePackages.vscode-langservers-extracted # HTML/CSS/JSON/ESLint
-      nodePackages.bash-language-server
-      nil # Nix language server
-      rust-analyzer
-      rustc
-      cargo
-      cabal-install
-      ghc
-      haskell-language-server
-      haskellPackages.hoogle
-      kotlin-language-server
-      ktlint
-      dotnet-sdk # For C#
-      omnisharp-roslyn
-      plantuml
-      openjdk # For PlantUML
-      graphviz # For PlantUML
-      purescript
+      # Language support
+      nil
+      nixfmt-rfc-style
       shellcheck
       shfmt
       
-      # For web development
-      nodePackages.prettier
+      # Docker tools
+      dockfmt
+      
+      # LSP and npm
+      nodejs
+      nodePackages.npm
+      
+      # C# development
+      csharpier
+      
+      # Haskell development
+      haskell-language-server
+      haskellPackages.hoogle
+      cabal-install
+      ghc
+      
+      # Kotlin development
+      ktlint
+      
+      # Markdown
+      pandoc
+      
+      # PlantUML
+      plantuml
+      jdk
+      graphviz
+      
+      # PureScript
+      purescript
+      nodePackages.purescript-language-server
+      nodePackages.purs-tidy
+      
+      # Rust development
+      rust-analyzer
+      rustc
+      cargo
+      
+      # Web development
+      html-tidy
       nodePackages.stylelint
       nodePackages.js-beautify
+      
+      # Clipboard and window management (for everywhere)
+      xclip
+      xorg.xwininfo
+      xdotool
     ];
     
-    # Let's configure the terminal to handle Fish correctly
-    programs.bash.initExtra = ''
-      # Ensure Emacs can work with Fish shell
-      [ -n "$INSIDE_EMACS" ] && export SHELL=${pkgs.bash}/bin/bash
-    '';
-    
-    programs.fish.interactiveShellInit = ''
-      # Ensure Emacs can work with Fish shell
-      if set -q INSIDE_EMACS
-          set -gx SHELL ${pkgs.bash}/bin/bash
-      end
-    '';
-    
-    # Clone and set up Doom Emacs
-    home.activation.installDoomEmacs = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      # Use git from Nix store
-      PATH=${pkgs.git}/bin:$PATH
-      
-      # Clone Doom Emacs if it doesn't exist
-      if [ ! -d "${config.home.homeDirectory}/.emacs.d" ]; then
-        $DRY_RUN_CMD git clone --depth 1 ${cfg.doomRepoUrl} ${config.home.homeDirectory}/.emacs.d
-      else
-        $DRY_RUN_CMD echo "Doom Emacs already installed, skipping clone"
-      fi
-      
-      # Clone your personal config
-      if [ ! -d "${cfg.doomPrivateDir}" ]; then
-        $DRY_RUN_CMD git clone ${cfg.userRepoUrl} ${cfg.doomPrivateDir}
-      else
-        $DRY_RUN_CMD echo "Doom config already cloned, skipping"
-      fi
-      
-      # Set up shell file for Emacs
-      $DRY_RUN_CMD mkdir -p ${config.home.homeDirectory}/.doom.d
-      $DRY_RUN_CMD echo '(setq shell-file-name "${pkgs.bash}/bin/bash")' > ${config.home.homeDirectory}/.doom.d/shells.el
-      
-      # Make sure Emacs and other required binaries are in PATH
-      PATH=${pkgs.emacs-pgtk}/bin:${pkgs.git}/bin:${pkgs.ripgrep}/bin:${pkgs.fd}/bin:$PATH
-      
-      # Install Doom Emacs
-      if [ ! -f "${config.home.homeDirectory}/.emacs.d/bin/doom" ]; then
-        $DRY_RUN_CMD ${config.home.homeDirectory}/.emacs.d/bin/doom install --no-config --no-env
-      else
-        $DRY_RUN_CMD echo "Doom Emacs already installed, syncing..."
-        $DRY_RUN_CMD ${config.home.homeDirectory}/.emacs.d/bin/doom sync
-      fi
-    '';
-    
-    # Create a desktop file for Doom Emacs
-    xdg.desktopEntries.doom-emacs = {
-      name = "Doom Emacs";
-      comment = "Doom Emacs Text Editor";
-      icon = "emacs";
-      exec = "emacs";
-      categories = [ "Development" "TextEditor" ];
-      terminal = false;
-      mimeType = [ "text/plain" ];
+    # Setup activation script to clone/sync Doom configuration
+    home.activation = {
+      doomEmacs = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        PATH=${pkgs.git}/bin:$PATH
+        
+        # Clone or update Doom Emacs if needed
+        if [ ! -d "${config.home.homeDirectory}/.emacs.d" ]; then
+          $DRY_RUN_CMD git clone --depth 1 https://github.com/doomemacs/doomemacs ${config.home.homeDirectory}/.emacs.d
+        fi
+        
+        # Clone or update user Doom configuration
+        if [ ! -d "${config.home.homeDirectory}/.doom.d" ]; then
+          $DRY_RUN_CMD git clone ${cfg.repoUrl} ${config.home.homeDirectory}/.doom.d
+        else
+          # Pull latest changes if it's a git repository
+          if [ -d "${config.home.homeDirectory}/.doom.d/.git" ]; then
+            $DRY_RUN_CMD cd ${config.home.homeDirectory}/.doom.d && git pull || true
+          fi
+        fi
+        
+        # Ensure Doom binary is executable
+        if [ -f "${config.home.homeDirectory}/.emacs.d/bin/doom" ]; then
+          $DRY_RUN_CMD chmod +x ${config.home.homeDirectory}/.emacs.d/bin/doom
+        fi
+      '';
     };
+    
+    # Create XDG desktop entry
+    xdg.desktopEntries.emacs = {
+      name = "Emacs";
+      genericName = "Text Editor";
+      exec = "${config.home.profileDirectory}/bin/emacs-wrapper %F";
+      terminal = false;
+      categories = [ "Development" "TextEditor" ];
+      icon = "emacs";
+      mimeType = [ "text/english" "text/plain" "text/x-makefile" "text/x-c++hdr" "text/x-c++src" "text/x-chdr" "text/x-csrc" "text/x-java" "text/x-moc" "text/x-pascal" "text/x-tcl" "text/x-tex" "application/x-shellscript" "text/x-c" "text/x-c++" ];
+    };
+    
+    # Create Emacs wrapper script
+    home.file.".local/bin/emacs-wrapper" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        # Emacs wrapper to ensure proper environment
+        
+        # Set necessary environment variables
+        export PATH="${config.home.homeDirectory}/.emacs.d/bin:$PATH"
+        export DOOMDIR="${config.home.homeDirectory}/.doom.d"
+        export DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local"
+        
+        # Run doom sync if the configuration changed
+        if [ -f "${config.home.homeDirectory}/.doom.d/.git/FETCH_HEAD" ]; then
+          LAST_FETCH=$(stat -c %Y "${config.home.homeDirectory}/.doom.d/.git/FETCH_HEAD")
+          CURRENT_TIME=$(date +%s)
+          # If last fetch was more than 24 hours ago, sync
+          if [ $((CURRENT_TIME - LAST_FETCH)) -gt 86400 ]; then
+            ${config.home.homeDirectory}/.emacs.d/bin/doom sync &
+          fi
+        fi
+        
+        # Launch Emacs
+        exec ${pkgs.emacs-pgtk}/bin/emacs "$@"
+      '';
+    };
+    
+    # Create Emacs service
+    services.emacs = {
+      enable = true;
+      client.enable = true;
+    };
+    
+    # Configure fontconfig
+    fonts.fontconfig.enable = true;
   };
 }

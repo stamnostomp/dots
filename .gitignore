@@ -1,2 +1,5 @@
 /nixos-config/*.lock
 /nixos-config/log.txt
+*.sh
+/nixos-config/modules/home/editors/doom-emacs-fonts.nix
+/nixos-config/modules/home/editors/doom-sync.nix

@@ -29,12 +29,10 @@ in
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
 
-  # Enable Doom Emacs module with correct paths
+  # Enable Doom Emacs module with GitHub repository
   modules.doom-emacs = {
     enable = true;
-    doomPrivateDir = "${config.home.homeDirectory}/.doom.d";
-    doomRepoUrl = "https://github.com/doomemacs/doomemacs";
-    userRepoUrl = "https://github.com/stamnostomp/doom-d";
+    repoUrl = "https://github.com/stamnostomp/doom-d";
   };
 
   # Make the Everblush GTK theme available
