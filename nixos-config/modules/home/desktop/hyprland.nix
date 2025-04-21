@@ -124,7 +124,7 @@ in
         "$mod SHIFT, p, exec, wlogout"
 
         # Emacs
-	"$mod, e, exec, ${config.home.profileDirectory}/bin/emacs-wrapper"
+	    "$mod, e, exec, ${config.home.homeDirectory}/.local/bin/emacs-wrapper"
 
         # Web browser
         "$mod, b, exec, firefox"
