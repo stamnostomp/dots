@@ -1,5 +1,10 @@
 # modules/system/base.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Boot and filesystem
@@ -14,7 +19,10 @@
     '';
     settings = {
       auto-optimise-store = true;
-      trusted-users = [ "root" "@wheel" ];
+      trusted-users = [
+        "root"
+        "@wheel"
+      ];
     };
     gc = {
       automatic = true;
@@ -39,7 +47,7 @@
   ];
 
   # System configuration
-  time.timeZone = "America/New_York";  # Adjust to your timezone
+  time.timeZone = "America/Denver"; # Adjust to your timezone
   i18n.defaultLocale = "en_US.UTF-8";
 
   # Allow unfree packages

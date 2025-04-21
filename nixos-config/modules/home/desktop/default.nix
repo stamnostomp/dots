@@ -6,5 +6,6 @@
     ./hyprland.nix
     ./waybar.nix
     ./dunst.nix
+    ./audio.nix
   ];
 }

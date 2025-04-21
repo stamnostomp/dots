@@ -1,5 +1,11 @@
 # home/stamno/default.nix
-{ config, pkgs, lib, inputs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 let
   # Import color scheme directly
@@ -16,7 +22,7 @@ in
     ../../modules/home/shell
     ../../modules/home/terminal/alacritty.nix
     ../../modules/home/terminal/kitty.nix
-    
+
     # Import Doom Emacs module
     ../../modules/home/editors/doom-emacs.nix
   ];
@@ -39,21 +45,21 @@ in
   home.packages = with pkgs; [
     # Make the Everblush GTK theme available
     inputs.everblush-gtk.packages.${pkgs.system}.default
-    
+
     # Terminal utilities that improve Emacs/shell experience
     ripgrep
     fd
     bat
     #exa
-    
+
     # Development tools
     git
     gnumake
     gcc
-    
+
     # Wayland tools
     wl-clipboard
-    
+
     # Doom Emacs dependencies
     cmake
     python3
@@ -66,7 +72,7 @@ in
     DOOMDIR = "${config.home.homeDirectory}/.doom.d";
     DOOMLOCALDIR = "${config.home.homeDirectory}/.doom-local";
   };
-  
+
   # Make colors globally available to other modules
   _module.args.colorScheme = colorsDef.colors;
 }

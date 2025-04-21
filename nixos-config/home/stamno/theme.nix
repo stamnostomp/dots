@@ -1,5 +1,11 @@
 # home/stamno/theme.nix
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 let
   # Import colors
@@ -17,6 +23,10 @@ in
     XCURSOR_PATH = "${config.home.profileDirectory}/share/icons:${pkgs.apple-cursor}/share/icons";
     XCURSOR_THEME = cursorTheme.name;
     XCURSOR_SIZE = toString cursorTheme.size;
+    GTK_THEME = "Everblush";
+    # Use mkForce to override the conflicting definition
+    GTK2_RC_FILES = lib.mkForce "${config.xdg.configHome}/gtk-2.0/gtkrc:${config.home.homeDirectory}/.gtkrc-2.0";
+    XDG_DATA_DIRS = "${config.home.profileDirectory}/share:\${XDG_DATA_DIRS}";
   };
 
   # Set consistent cursor configuration across the system for X11
@@ -44,6 +54,21 @@ in
       package = pkgs.apple-cursor;
       size = cursorTheme.size;
     };
+    gtk2.extraConfig = ''
+      gtk-theme-name="Everblush"
+      gtk-icon-theme-name="Papirus-Dark"
+      gtk-cursor-theme-name="${cursorTheme.name}"
+      gtk-cursor-theme-size=${toString cursorTheme.size}
+      gtk-button-images=0
+      gtk-menu-images=0
+      gtk-enable-event-sounds=0
+      gtk-enable-input-feedback-sounds=0
+      gtk-xft-antialias=1
+      gtk-xft-hinting=1
+      gtk-xft-hintstyle="hintslight"
+      gtk-xft-rgba="rgb"
+      gtk-application-prefer-dark-theme=1
+    '';
     gtk3.extraConfig = {
       Settings = ''
         gtk-application-prefer-dark-theme=1
@@ -115,5 +140,9 @@ in
 
     # Cursor theme
     apple-cursor
+
+    # GTK configuration tools
+    dconf
+    gnome-themes-extra
   ];
 }

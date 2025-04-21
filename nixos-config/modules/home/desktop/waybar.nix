@@ -1,9 +1,13 @@
 # modules/home/desktop/waybar.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   # Import colors from the theme module
-  # FIXED: Direct import that avoids relative path issues
   colorsDef = import ../../../modules/theme-colors.nix;
   colors = colorsDef.colors;
 in
@@ -99,7 +103,7 @@ in
                   "default": ["󰕿", "󰖀", "󰕾"],
                   "headphone": "󰋋"
               },
-              "on-click": "pavucontrol"
+              "on-click": "alacritty -e pulsemixer"
           },
 
           "clock": {
@@ -127,7 +131,7 @@ in
       }
     '';
 
-    # Waybar CSS
+    # Waybar CSS remains the same (truncated for brevity)
     "waybar/style.css".text = ''
       * {
           font-family: "Cozette", "JetBrainsMono Nerd Font", "Siji", "FontAwesome";

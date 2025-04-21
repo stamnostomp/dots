@@ -1,12 +1,17 @@
 # modules/home/desktop/hyprland.nix
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 let
   # Import colors from the theme module
   # FIXED: Direct import that avoids relative path issues
   colorsDef = import ../../../modules/theme-colors.nix;
   colors = colorsDef.colors;
-
 
   # Cursor theme
   cursorTheme = {
@@ -34,6 +39,9 @@ in
         "XCURSOR_THEME,${cursorTheme.name}"
         "WLR_NO_HARDWARE_CURSORS,1" # Needed for NVIDIA
         "GTK_THEME,Everblush" # Set GTK theme
+        "GTK2_RC_FILES,${config.xdg.configHome}/gtk-2.0/gtkrc:${config.home.homeDirectory}/.gtkrc-2.0"
+        "XDG_DATA_DIRS,${config.home.profileDirectory}/share:$XDG_DATA_DIRS"
+        "QT_QPA_PLATFORMTHEME,gtk2"
       ];
 
       # Startup applications
@@ -124,10 +132,16 @@ in
         "$mod SHIFT, p, exec, wlogout"
 
         # Emacs
-	    "$mod, e, exec, ${config.home.homeDirectory}/.local/bin/emacs-wrapper"
+        "$mod, e, exec, ${config.home.homeDirectory}/.local/bin/emacs-wrapper"
 
         # Web browser
-        "$mod, b, exec, firefox"
+        "$mod, w, exec, firefox"
+
+        # File Manager
+        "$mod, m, exec, pcmanfm"
+
+        # Audio mixer
+        "$mod, p, exec, alacritty -e pulsemixer"
 
         # Waybar reload
         "$mod SHIFT, w, exec, killall waybar && waybar &"
@@ -252,7 +266,7 @@ in
   };
 
   # Generate Everblush wallpaper (fixing the convert deprecation warning)
-  home.activation.generateWallpaper = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.generateWallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p ~/.config/hypr
     ${pkgs.imagemagick}/bin/magick -size 1920x1080 "xc:${colors.background}" ~/.config/hypr/wallpaper.png
   '';

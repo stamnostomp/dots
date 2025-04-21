@@ -1,5 +1,12 @@
 # hosts/desktop/default.nix
-{ config, pkgs, lib, inputs, hostname, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  hostname,
+  ...
+}:
 
 {
   imports = [
@@ -12,7 +19,7 @@
   networking.networkmanager.enable = true;
 
   # Time zone and locale
-  time.timeZone = "America/New_York";  # Adjust to your timezone
+  time.timeZone = "America/Denver"; # Adjust to your timezone
   i18n.defaultLocale = "en_US.UTF-8";
 
   # Enable sound with Pipewire
@@ -41,7 +48,12 @@
   users.users.stamno = {
     isNormalUser = true;
     description = "stamno";
-    extraGroups = [ "wheel" "networkmanager" "video" "audio" ];
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+      "video"
+      "audio"
+    ];
     shell = pkgs.fish;
   };
 
@@ -85,7 +97,10 @@
     '';
     settings = {
       auto-optimise-store = true;
-      trusted-users = [ "root" "stamno" ];
+      trusted-users = [
+        "root"
+        "stamno"
+      ];
     };
   };
 

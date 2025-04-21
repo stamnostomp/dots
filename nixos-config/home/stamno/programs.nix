@@ -1,12 +1,18 @@
 # home/stamno/programs.nix
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
   # Git configuration
   programs.git = {
     enable = true;
-    userName = "stamno";  # Replace with your actual name
-    userEmail = "your.email@example.com";  # Replace with your email
+    userName = "stamno"; # Replace with your actual name
+    userEmail = "your.email@example.com"; # Replace with your email
     extraConfig = {
       init.defaultBranch = "main";
       pull.rebase = false;
@@ -31,27 +37,29 @@
     htop
     btop
     # File managers
+    pcmanfm # Lightweight GTK+ file manager
     xfce.thunar
     kdePackages.dolphin
 
     # Messaging and communication
-    signal-desktop  # Changed from signal-desktop-source
+    signal-desktop # Changed from signal-desktop-source
     vesktop
 
     # System utilities
     imagemagick
     wl-clipboard
-    grim  # Screenshot utility
-    slurp  # Area selection for screenshots
-    grimblast  # Wrapper for grim and slurp
+    grim # Screenshot utility
+    slurp # Area selection for screenshots
+    grimblast # Wrapper for grim and slurp
 
     # Audio utilities
-    pamixer  # CLI audio control
-    pavucontrol  # GUI audio control
+    pulsemixer # Terminal-based mixer for PulseAudio (better alternative to pavucontrol)
+    # pavucontrol removed in favor of pulsemixer
+    easyeffects # Audio effects and equalizer
 
     # Other utilities
     xdg-utils
-    libnotify  # Notification library
+    libnotify # Notification library
   ];
 
   # Starship prompt (optional)
