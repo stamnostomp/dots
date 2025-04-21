@@ -18,7 +18,7 @@
 - **Audio**: pulsemixer + easyeffects
 
 ## Screenshot
-[Screenshot](preview.png)
+![Preview](./preview.png)
 
 ## Features
 - Declarative NixOS configuration with flakes
@@ -48,3 +48,4 @@
 inputs.everblush-gtk.url = "github:Everblush/gtk";
 ```
 
+Repo coming soon™️
