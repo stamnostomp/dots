@@ -1,12 +1,18 @@
 # modules/home/shell/fish.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Fish shell configuration
   programs.fish = {
     enable = true;
     plugins = [
-      { name = "z";
+      {
+        name = "z";
         src = pkgs.fetchFromGitHub {
           owner = "jethrokuan";
           repo = "z";
@@ -14,25 +20,36 @@
           sha256 = "0dbnir6jbwjpjalz14snzd3cgdysgcs3raznsijd6savad3qhijc";
         };
       }
+
+      {
+        name = "nix-env";
+        src = pkgs.fetchFromGitHub {
+          owner = "lilyball";
+          repo = "nix-env.fish";
+          rev = "00c6cc762427efe08ac0bd0d1b1d12048d3ca727";
+          sha256 = "1hrl22dd0aaszdanhvddvqz3aq40jp9zi2zn0v1hjnf7fx4bgpma";
+        };
+      }
     ];
 
-    interactiveShellInit = ''
-      # Set environment variables
-      set -gx GTK_THEME "Everblush"
+    interactiveShellInit = lib.mkAfter ''
+      # Nix development shell integration
+      if test -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+        source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+      end
 
-      # Nix shell integration for fish
-      function __fish_nix_shell_prompt
+      # Handle nix develop shell transitions
+      function __handle_nix_shell_enter --on-variable IN_NIX_SHELL
         if set -q IN_NIX_SHELL
-          echo -n " (nix-shell)"
+          # We've entered a nix shell
+          echo "Entered Nix development environment"
         end
       end
-
-      # Add the nix-shell status to the prompt
-      functions -c fish_prompt _old_fish_prompt
-      function fish_prompt
-        _old_fish_prompt
-        __fish_nix_shell_prompt
-      end
     '';
+
+    shellAliases = {
+      # ... your existing aliases
+      "nix-develop" = "nix develop --command fish";
+    };
   };
 }

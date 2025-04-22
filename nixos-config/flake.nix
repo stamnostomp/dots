@@ -116,9 +116,20 @@
         };
       };
 
-      # Make packages available for dependent flakes
       packages.${system} = {
         inherit (everblush-gtk.packages.${system}) everblush-gtk;
+      };
+
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = with pkgs; [
+
+          git
+          nixfmt
+        ];
+
+        shellHook = ''
+          exec ${pkgs.fish}/bin/fish
+        '';
       };
     };
 }
