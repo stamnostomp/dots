@@ -65,6 +65,12 @@ in
     python3
   ];
 
+  wayland.windowManager.hyprland = {
+    enable = true;
+    systemd.enable = true;
+    xwayland.enable = true;
+  };
+
   # Set GTK theme in the environment to ensure it works everywhere
   home.sessionVariables = {
     GTK_THEME = "Everblush";

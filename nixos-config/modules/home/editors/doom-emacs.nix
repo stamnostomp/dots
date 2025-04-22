@@ -84,6 +84,12 @@ in
       cabal-install
       ghc
 
+      # Elm development
+      elmPackages.elm
+      elmPackages.elm-format
+      elmPackages.elm-language-server
+      elmPackages.elm-test
+
       # Kotlin development
       ktlint
 
