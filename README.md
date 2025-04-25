@@ -4,7 +4,7 @@
 - **OS**: NixOS Unstable
 - **WM**: Hyprland
 - **Terminal**: Alacritty / Kitty
-- **Shell**: Fish + Bash (with starship prompt)
+- **Shell**: Fish + Bash (with Tidal prompt)
 - **Editor**: Doom Emacs (`doom-everblush-theme`)
 - **Bar**: Waybar
 - **Launcher**: Wofi
@@ -69,13 +69,14 @@ nixos-config/
 - **Doom Emacs**: Auto-configured with custom `doom-everblush-theme` and syncs from my [personal repo](https://github.com/stamnostomp/doom-d)
 - **Performance**: Native Doom compilation, hardware-accelerated Wayland
 - **Shell**: Fish with emacs vterm integration + custom nix-shell prompts
-- **Monitor**: Proper positioning for ultrawide + secondary display
 
 ## Key Bindings
 - `SUPER + Return`: Terminal
 - `SUPER + Space`: App Launcher
 - `SUPER + E`: Doom Emacs
 - `SUPER + W`: Web Browser
+- `SUPER + M`: File Manager
+- `SUPER + P`: Audio Mixer
 - `ALT + S`: Screenshot region
 
 ## Dotfiles
