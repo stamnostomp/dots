@@ -15,7 +15,7 @@ let
 
   # Cursor theme
   cursorTheme = {
-    name = "macOS-BigSur";
+    name = "Bibata-Modern-Classic";
     size = 20;
   };
 in
@@ -42,11 +42,13 @@ in
         "GTK2_RC_FILES,${config.xdg.configHome}/gtk-2.0/gtkrc:${config.home.homeDirectory}/.gtkrc-2.0"
         "XDG_DATA_DIRS,${config.home.profileDirectory}/share:$XDG_DATA_DIRS"
         "QT_QPA_PLATFORMTHEME,gtk2"
+        "WLR_NO_HARDWARE_CURSORS,1"
       ];
 
       # Startup applications
       exec-once = [
         "hyprcursor"
+        "hyprctl setcursor ${cursorTheme.name} ${toString cursorTheme.size}"
         "waybar"
         "dunst"
         "hyprpaper"
@@ -262,6 +264,46 @@ in
       wallpaper = DP-1,~/.config/hypr/wallpaper.png
       wallpaper = HDMI-A-1,~/.config/hypr/wallpaper.png
       splash = false
+    '';
+
+    # Additional Hyprland config for cursor
+    "hypr/cursor.conf".text = ''
+      env = XCURSOR_SIZE,${toString cursorTheme.size}
+      env = XCURSOR_THEME,${cursorTheme.name}
+    '';
+  };
+
+  # Create a direct script to fix cursor on hyprland startup
+  home.file.".local/bin/fix-cursor.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+
+      # Set cursor theme
+      export XCURSOR_THEME="${cursorTheme.name}"
+      export XCURSOR_SIZE="${toString cursorTheme.size}"
+
+      # Find cursor theme in nix store
+      CURSOR_THEME_PATH=$(find /nix/store -name "${cursorTheme.name}" -type d -path "*/share/icons/*" | grep -v "\.icons" | head -n 1)
+
+      # Create symlinks if not already exist
+      if [ -n "$CURSOR_THEME_PATH" ]; then
+        mkdir -p $HOME/.icons
+        mkdir -p $HOME/.local/share/icons
+        ln -sf $CURSOR_THEME_PATH $HOME/.icons/
+        ln -sf $CURSOR_THEME_PATH $HOME/.local/share/icons/
+      else
+        # Fallback to package
+        ln -sf ${pkgs.apple-cursor}/share/icons/${cursorTheme.name} $HOME/.icons/
+        ln -sf ${pkgs.apple-cursor}/share/icons/${cursorTheme.name} $HOME/.local/share/icons/
+      fi
+
+      # Set cursor with hyprctl
+      hyprctl setcursor "${cursorTheme.name}" "${toString cursorTheme.size}"
+
+      # Update Hyprland config
+      echo "env = XCURSOR_SIZE,${toString cursorTheme.size}" > $HOME/.config/hypr/cursor.conf
+      echo "env = XCURSOR_THEME,${cursorTheme.name}" >> $HOME/.config/hypr/cursor.conf
     '';
   };
 

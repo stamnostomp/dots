@@ -13,7 +13,7 @@ let
 
   # Cursor theme definition
   cursorTheme = {
-    name = "macOS-BigSur";
+    name = "Bibata-Modern-Classic";
     size = 20;
   };
 in
@@ -32,7 +32,7 @@ in
   # Set consistent cursor configuration across the system for X11
   home.pointerCursor = {
     name = cursorTheme.name;
-    package = pkgs.apple-cursor;
+    package = pkgs.bibata-cursors;
     size = cursorTheme.size;
     gtk.enable = true;
     x11.enable = true;
@@ -51,7 +51,7 @@ in
     };
     cursorTheme = {
       name = cursorTheme.name;
-      package = pkgs.apple-cursor;
+      package = pkgs.bibata-cursors;
       size = cursorTheme.size;
     };
     gtk2.extraConfig = ''
@@ -72,11 +72,15 @@ in
     gtk3.extraConfig = {
       Settings = ''
         gtk-application-prefer-dark-theme=1
+        gtk-cursor-theme-name=${cursorTheme.name}
+        gtk-cursor-theme-size=${toString cursorTheme.size}
       '';
     };
     gtk4.extraConfig = {
       Settings = ''
         gtk-application-prefer-dark-theme=1
+        gtk-cursor-theme-name=${cursorTheme.name}
+        gtk-cursor-theme-size=${toString cursorTheme.size}
       '';
     };
   };
@@ -129,6 +133,74 @@ in
     '';
   };
 
+  # Explicit GTK settings files
+  xdg.configFile = {
+    # Hyprcursor configuration
+    "hyprcursor/hyprcursor.toml".text = ''
+      theme = "${cursorTheme.name}"
+      size = ${toString cursorTheme.size}
+    '';
+
+    # Hyprland cursor config
+    "hypr/cursor.conf".text = ''
+      env = XCURSOR_SIZE,${toString cursorTheme.size}
+      env = XCURSOR_THEME,${cursorTheme.name}
+    '';
+
+    "gtk-3.0/settings.ini".text = ''
+      [Settings]
+      gtk-application-prefer-dark-theme=1
+      gtk-cursor-theme-name=${cursorTheme.name}
+      gtk-cursor-theme-size=${toString cursorTheme.size}
+      gtk-theme-name=Everblush
+      gtk-icon-theme-name=Papirus-Dark
+      gtk-font-name=Sans 10
+      gtk-xft-antialias=1
+      gtk-xft-hinting=1
+      gtk-xft-hintstyle=hintslight
+      gtk-xft-rgba=rgb
+    '';
+
+    "gtk-4.0/settings.ini".text = ''
+      [Settings]
+      gtk-application-prefer-dark-theme=1
+      gtk-cursor-theme-name=${cursorTheme.name}
+      gtk-cursor-theme-size=${toString cursorTheme.size}
+      gtk-theme-name=Everblush
+      gtk-icon-theme-name=Papirus-Dark
+      gtk-font-name=Sans 10
+      gtk-xft-antialias=1
+      gtk-xft-hinting=1
+      gtk-xft-hintstyle=hintslight
+      gtk-xft-rgba=rgb
+    '';
+  };
+
+  # Create a simpler cursor fix script
+  home.file.".local/bin/fix-cursor.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+
+      # Set cursor theme
+      export XCURSOR_THEME="${cursorTheme.name}"
+      export XCURSOR_SIZE="${toString cursorTheme.size}"
+
+      # Create necessary directories
+      mkdir -p $HOME/.icons
+      mkdir -p $HOME/.local/share/icons
+
+      # Create symbolic links to cursor theme
+      ln -sf ${pkgs.apple-cursor}/share/icons/${cursorTheme.name} $HOME/.icons/
+      ln -sf ${pkgs.apple-cursor}/share/icons/${cursorTheme.name} $HOME/.local/share/icons/
+
+      # Explicitly set cursor with hyprctl if Hyprland is running
+      if command -v hyprctl &>/dev/null && pgrep -x Hyprland &>/dev/null; then
+        hyprctl setcursor "${cursorTheme.name}" "${toString cursorTheme.size}"
+      fi
+    '';
+  };
+
   # Add theme-related packages
   home.packages = with pkgs; [
     # Theme dependencies
@@ -140,9 +212,14 @@ in
 
     # Cursor theme
     apple-cursor
+    bibata-cursors
 
     # GTK configuration tools
     dconf
     gnome-themes-extra
+
+    # Add xorg utils for cursor settings
+    xorg.xcursorgen
+    xorg.xrdb
   ];
 }
