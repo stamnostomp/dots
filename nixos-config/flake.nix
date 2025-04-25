@@ -14,15 +14,18 @@
     # Hardware support
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
-    # Desktop environment
-    #hyprland = {
-    #  url = "github:hyprwm/Hyprland/v0.36.0";
-    #  inputs.nixpkgs.follows = "nixpkgs";
-    #};
+    # Add NUR (Nix User Repository)
+    nur.url = "github:nix-community/NUR";
 
     # Package overrides and custom packages
     everblush-gtk = {
       url = "path:./pkgs/everblush-gtk";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Firefox Everblush theme
+    firefox-everblush-theme = {
+      url = "path:./pkgs/firefox-everblush-theme";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -39,14 +42,27 @@
       nixpkgs,
       home-manager,
       nixos-hardware,
-      #hyprland,
+      nur,
       everblush-gtk,
+      firefox-everblush-theme,
       doom-config,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        # Add NUR overlay
+        overlays = [
+          nur.overlay
+          # Add our custom packages
+          (final: prev: {
+            inherit (everblush-gtk.packages.${system}) everblush-gtk;
+            firefox-everblush-theme = firefox-everblush-theme.packages.${system}.default;
+            doom-config = doom-config.packages.${system}.default;
+          })
+        ];
+      };
       hostname = "desktop"; # Using the original hostname
 
       # Function to make system configuration with given hostname
@@ -88,11 +104,9 @@
                 {
                   imports = [ ./home/stamno ];
                 };
-
             }
 
             # Include Hyprland as a module
-            # hyprland.nixosModules.default
             {
               programs.hyprland = {
                 enable = true;
@@ -125,12 +139,12 @@
 
       packages.${system} = {
         inherit (everblush-gtk.packages.${system}) everblush-gtk;
-        inherit (doom-config.packages.${system}) default;
+        firefox-theme = firefox-everblush-theme.packages.${system}.default;
+        doom = doom-config.packages.${system}.default;
       };
 
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [
-
           git
           nixfmt
         ];

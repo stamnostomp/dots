@@ -22,6 +22,7 @@ in
     ../../modules/home/shell
     ../../modules/home/terminal/alacritty.nix
     ../../modules/home/terminal/kitty.nix
+    ../../modules/home/browser/firefox.nix
 
     # Import Doom Emacs module
     ../../modules/home/editors/doom-emacs.nix
