@@ -30,7 +30,7 @@
   # Application packages
   home.packages = with pkgs; [
     # Browsers
-    firefox
+    firefox-bin
 
     # Development tools
     git
@@ -61,6 +61,9 @@
     # Other utilities
     xdg-utils
     libnotify # Notification library
+
+    #game
+    steam
   ];
 
   # Starship prompt (optional)

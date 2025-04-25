@@ -25,6 +25,12 @@
       url = "path:./pkgs/everblush-gtk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Doom Emacs configuration
+    doom-config = {
+      url = "path:./pkgs/doom-config";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -35,6 +41,7 @@
       nixos-hardware,
       #hyprland,
       everblush-gtk,
+      doom-config,
       ...
     }@inputs:
     let
@@ -118,6 +125,7 @@
 
       packages.${system} = {
         inherit (everblush-gtk.packages.${system}) everblush-gtk;
+        inherit (doom-config.packages.${system}) default;
       };
 
       devShells.${system}.default = pkgs.mkShell {

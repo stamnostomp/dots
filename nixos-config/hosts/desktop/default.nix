@@ -71,7 +71,7 @@
     htop
 
     # Desktop utilities
-    firefox
+    firefox-bin
     xdg-utils
     xdg-desktop-portal
     xdg-desktop-portal-gtk

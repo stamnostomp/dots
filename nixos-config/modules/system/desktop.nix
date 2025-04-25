@@ -1,5 +1,10 @@
 # modules/system/desktop.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Enable X11 and display manager
@@ -21,7 +26,7 @@
   };
 
   # Enable OpenGL
-  hardware.graphics= {
+  hardware.graphics = {
     enable = true;
   };
 
@@ -32,7 +37,7 @@
   # Desktop packages
   environment.systemPackages = with pkgs; [
     # Desktop utilities
-    firefox
+    firefox-bin
     xdg-utils
     xdg-desktop-portal
     xdg-desktop-portal-gtk
@@ -41,4 +46,11 @@
 
   # Fish shell
   programs.fish.enable = true;
+
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Optional: if you want Steam Remote Play
+    dedicatedServer.openFirewall = true; # Optional: for hosting game servers
+  };
+
 }

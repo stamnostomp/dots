@@ -35,9 +35,10 @@ in
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
 
-  # Enable Doom Emacs module with GitHub repository
+  # Enable Doom Emacs module (no longer needs the repo URL as we're using the packaged config)
   modules.doom-emacs = {
     enable = true;
+    # The repoUrl is deprecated but kept for compatibility
     repoUrl = "https://github.com/stamnostomp/doom-d";
   };
 

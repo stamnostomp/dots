@@ -3,6 +3,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
@@ -14,10 +15,11 @@ in
   options.modules.doom-emacs = {
     enable = mkEnableOption "Doom Emacs configuration";
 
+    # The repoUrl option is no longer used but kept for backward compatibility
     repoUrl = mkOption {
       type = types.str;
       default = "https://github.com/stamnostomp/doom-d";
-      description = "URL of your Doom config repository";
+      description = "URL of your Doom config repository (deprecated, now using packaged config)";
     };
   };
 
@@ -122,7 +124,7 @@ in
       xdotool
     ];
 
-    # Setup activation script to clone/sync Doom configuration
+    # Setup activation script to clone Doom Emacs and symlink the packaged config
     home.activation = {
       doomEmacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         PATH=${pkgs.git}/bin:${pkgs.emacs-pgtk}/bin:$PATH
@@ -132,22 +134,30 @@ in
           $DRY_RUN_CMD git clone --depth 1 https://github.com/doomemacs/doomemacs ${config.home.homeDirectory}/.emacs.d
         fi
 
-        # Remove existing .doom.d if it exists and clone fresh from repo
+        # Remove existing .doom.d if it exists and symlink the packaged config
         if [ -d "${config.home.homeDirectory}/.doom.d" ]; then
           $DRY_RUN_CMD rm -rf ${config.home.homeDirectory}/.doom.d
         fi
-        $DRY_RUN_CMD git clone ${cfg.repoUrl} ${config.home.homeDirectory}/.doom.d
+
+        # Create symlink to the packaged Doom config
+        $DRY_RUN_CMD ln -sf ${
+          inputs.doom-config.packages.${pkgs.system}.default
+        } ${config.home.homeDirectory}/.doom.d
 
         # Ensure Doom binary is executable
         if [ -f "${config.home.homeDirectory}/.emacs.d/bin/doom" ]; then
           $DRY_RUN_CMD chmod +x ${config.home.homeDirectory}/.emacs.d/bin/doom
         fi
 
-        # Skip the doom sync for now, we'll do it in the wrapper
-        # if [ -z "$DRY_RUN_CMD" ]; then
-        #   rm -rf ${config.home.homeDirectory}/.doom-local
-        #   ${config.home.homeDirectory}/.emacs.d/bin/doom -y sync
-        # fi
+        # Run doom sync if not in dry run mode
+        if [ -z "$DRY_RUN_CMD" ]; then
+          # Make sure the directory exists first
+          mkdir -p ${config.home.homeDirectory}/.doom-local
+          # Run doom sync with important environment variables
+          DOOMDIR="${config.home.homeDirectory}/.doom.d" \
+          DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local" \
+          ${config.home.homeDirectory}/.emacs.d/bin/doom -y sync
+        fi
       '';
     };
 
