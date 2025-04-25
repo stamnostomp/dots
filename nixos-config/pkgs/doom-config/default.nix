@@ -12,11 +12,11 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "stamnostomp";
     repo = "doom-d";
-    # You can use a specific commit or branch
-    rev = "main";
-    # You'll need to replace this with the actual hash after first trying to build
-    # If you don't know the hash, use a placeholder and Nix will tell you the correct hash
-    sha256 = lib.fakeSha256;
+    # Using master instead of main branch
+    rev = "master";
+    # Replace this with the actual hash after the first build attempt fails
+    # Nix will provide the correct hash in the error message
+    sha256 = "sha256-KztD7kL46/qEfb0lAoqwPAm7CCz0QmfFEuKIZ/j9tYw=";
   };
 
   # No build step needed, we're just copying files

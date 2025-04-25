@@ -149,14 +149,14 @@ in
           $DRY_RUN_CMD chmod +x ${config.home.homeDirectory}/.emacs.d/bin/doom
         fi
 
-        # Run doom sync if not in dry run mode
+        # Run doom sync if not in dry run mode - REMOVED the -y flag
         if [ -z "$DRY_RUN_CMD" ]; then
           # Make sure the directory exists first
           mkdir -p ${config.home.homeDirectory}/.doom-local
           # Run doom sync with important environment variables
           DOOMDIR="${config.home.homeDirectory}/.doom.d" \
           DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local" \
-          ${config.home.homeDirectory}/.emacs.d/bin/doom -y sync
+          ${config.home.homeDirectory}/.emacs.d/bin/doom sync
         fi
       '';
     };
@@ -207,7 +207,7 @@ in
         # Check if Doom is properly installed/synced
         if [ ! -d "${config.home.homeDirectory}/.doom-local" ] || [ ! -f "${config.home.homeDirectory}/.doom-local/init.el" ]; then
           echo "Doom appears to be not properly installed. Running doom sync..."
-          ${config.home.homeDirectory}/.emacs.d/bin/doom -y sync
+          ${config.home.homeDirectory}/.emacs.d/bin/doom sync
         fi
 
         # Launch Emacs
