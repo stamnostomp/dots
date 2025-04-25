@@ -327,46 +327,78 @@ stdenv.mkDerivation {
     echo "=================================="
     echo ""
 
+    # Make sure Firefox is not running
+    if pgrep -x "firefox" > /dev/null; then
+        echo "Firefox is currently running. Please close Firefox and try again."
+        echo "This is necessary to modify the profile files without permission issues."
+        exit 1
+    fi
+
     # Find Firefox profile directory
     if [ -d "\$HOME/.mozilla/firefox" ]; then
-      FIREFOX_DIR="\$HOME/.mozilla/firefox"
+        FIREFOX_DIR="\$HOME/.mozilla/firefox"
 
-      # Find the default profile
-      DEFAULT_PROFILE=\$(grep -E "Default=.+" "\$FIREFOX_DIR/profiles.ini" | cut -d'=' -f2)
+        # Find profiles
+        PROFILES=\$(grep -E "^Path=" "\$FIREFOX_DIR/profiles.ini" | cut -d'=' -f2)
 
-      if [ -z "\$DEFAULT_PROFILE" ]; then
-        # Try another method to find the profile
-        DEFAULT_PROFILE=\$(grep -E "Path=.+\.default" "\$FIREFOX_DIR/profiles.ini" | cut -d'=' -f2 | head -n 1)
-      fi
+        if [ -z "\$PROFILES" ]; then
+            echo "Could not find any Firefox profiles."
+            exit 1
+        fi
 
-      if [ -n "\$DEFAULT_PROFILE" ]; then
-        PROFILE_PATH="\$FIREFOX_DIR/\$DEFAULT_PROFILE"
+        # If more than one profile, let user choose
+        if [ \$(echo "\$PROFILES" | wc -l) -gt 1 ]; then
+            echo "Found multiple Firefox profiles:"
+            PS3="Select a profile to install the theme (number): "
+            select PROFILE in \$PROFILES; do
+                if [ -n "\$PROFILE" ]; then
+                    PROFILE_PATH="\$FIREFOX_DIR/\$PROFILE"
+                    break
+                fi
+            done
+        else
+            PROFILE="\$PROFILES"
+            PROFILE_PATH="\$FIREFOX_DIR/\$PROFILE"
+        fi
+
+        echo "Using profile: \$PROFILE_PATH"
 
         # Create chrome directory if it doesn't exist
         mkdir -p "\$PROFILE_PATH/chrome"
 
-        # Copy theme files
-        cp ${userChrome} "\$PROFILE_PATH/chrome/userChrome.css"
-        cp ${userContent} "\$PROFILE_PATH/chrome/userContent.css"
-        cp ${userJs} "\$PROFILE_PATH/user.js"
+        # Install theme files
+        echo "Installing theme files..."
 
-        echo "Theme installed successfully to: \$PROFILE_PATH"
-        echo "Please restart Firefox to apply the theme."
-        echo ""
-        echo "Would you like to open Firefox now? (y/n)"
-        read -r OPEN_FIREFOX
-
-        if [[ \$OPEN_FIREFOX =~ ^[Yy]\$ ]]; then
-          firefox &
+        # Install user.js preferences
+        if [ -f "\$PROFILE_PATH/user.js" ]; then
+            # Append our preferences without overwriting the existing ones
+            cat "$out/share/firefox-everblush-theme/user.js" >> "\$PROFILE_PATH/user.js"
+            echo "Added theme preferences to existing user.js"
+        else
+            # Create new user.js
+            cp "$out/share/firefox-everblush-theme/user.js" "\$PROFILE_PATH/user.js"
+            echo "Created new user.js with theme preferences"
         fi
 
-      else
-        echo "Could not find Firefox default profile."
-        echo "Please run Firefox at least once before running this script."
-      fi
+        # Install CSS files
+        cp "$out/share/firefox-everblush-theme/chrome/userChrome.css" "\$PROFILE_PATH/chrome/"
+        cp "$out/share/firefox-everblush-theme/chrome/userContent.css" "\$PROFILE_PATH/chrome/"
+
+        # Set proper permissions
+        chmod 644 "\$PROFILE_PATH/chrome/userChrome.css"
+        chmod 644 "\$PROFILE_PATH/chrome/userContent.css"
+        chmod 644 "\$PROFILE_PATH/user.js"
+
+        echo "Theme installed successfully!"
+        echo ""
+        echo "Please start Firefox now to see the new theme."
+        echo "If the theme doesn't apply, check about:config and make sure"
+        echo "toolkit.legacyUserProfileCustomizations.stylesheets is set to true."
+
     else
-      echo "Firefox profile directory not found."
-      echo "Please make sure Firefox is installed and has been run at least once."
+        echo "Firefox profile directory not found."
+        echo "Please make sure Firefox is installed and has been run at least once."
+        exit 1
     fi
     EOF
 
