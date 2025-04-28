@@ -113,7 +113,14 @@
             }
 
             # Add hardware-specific modules for laptop
-            (nixpkgs.lib.mkIf (hostname == "laptop") nixos-hardware.nixosModules.lenovo-thinkpad-t470)
+            (nixpkgs.lib.mkIf (hostname == "laptop") {
+              imports = [
+                # ThinkPad T470 has a Kaby Lake CPU
+                nixos-hardware.nixosModules.common-cpu-intel-kaby-lake
+                nixos-hardware.nixosModules.common-pc-laptop
+                nixos-hardware.nixosModules.common-pc-laptop-ssd
+              ];
+            })
           ];
         };
     in
