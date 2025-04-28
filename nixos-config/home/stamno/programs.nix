@@ -11,8 +11,8 @@
   # Git configuration
   programs.git = {
     enable = true;
-    userName = "stamno"; # Replace with your actual name
-    userEmail = "stamno@stamno.com"; # Replace with your email
+    userName = "stamnostomp"; # Replace with your actual name
+    userEmail = "stamno@pm.me"; # Replace with your email
     extraConfig = {
       init.defaultBranch = "main";
       pull.rebase = false;

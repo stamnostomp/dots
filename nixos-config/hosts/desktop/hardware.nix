@@ -47,6 +47,8 @@
   ];
 
   # Additional hardware settings for your Hyprland setup
+  hardware.steam-hardware.enable = true;
+
   hardware.nvidia = {
     modesetting.enable = true;
     open = false;
