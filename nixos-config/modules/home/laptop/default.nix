@@ -1,0 +1,17 @@
+# nixos-config/modules/home/laptop/default.nix
+{ ... }:
+
+{
+  imports = [
+    ./waybar.nix
+    ./power.nix
+    ./input.nix
+    ./brightness.nix
+    ./function-keys.nix
+    ./hyprland-battery.nix
+    ./hypridle.nix
+    ./network.nix
+    ./dock.nix
+    ./conferencing.nix
+  ];
+}

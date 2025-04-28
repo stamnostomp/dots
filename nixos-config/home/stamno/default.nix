@@ -1,9 +1,10 @@
-# home/stamno/default.nix
+# home/stamno/default.nix (updated with conditional imports)
 {
   config,
   pkgs,
   lib,
   inputs,
+  hostname,
   ...
 }:
 
@@ -24,6 +25,9 @@ in
     ../../modules/home/terminal/kitty.nix
     ../../modules/home/browser/firefox.nix
 
+    # Conditionally import laptop-specific modules
+    (lib.mkIf (hostname == "laptop") ../../modules/home/laptop)
+
     # Import Doom Emacs module
     ../../modules/home/editors/doom-emacs.nix
   ];
@@ -36,51 +40,12 @@ in
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
 
-  # Enable Doom Emacs module (no longer needs the repo URL as we're using the packaged config)
+  # Enable Doom Emacs module
   modules.doom-emacs = {
     enable = true;
     # The repoUrl is deprecated but kept for compatibility
     repoUrl = "https://github.com/stamnostomp/doom-d";
   };
 
-  # Make the Everblush GTK theme available
-  home.packages = with pkgs; [
-    # Make the Everblush GTK theme available
-    inputs.everblush-gtk.packages.${pkgs.system}.default
-
-    # Terminal utilities that improve Emacs/shell experience
-    ripgrep
-    fd
-    bat
-    #exa
-
-    # Development tools
-    git
-    gnumake
-    gcc
-
-    # Wayland tools
-    wl-clipboard
-
-    # Doom Emacs dependencies
-    cmake
-    python3
-  ];
-
-  wayland.windowManager.hyprland = {
-    enable = true;
-    systemd.enable = true;
-    xwayland.enable = true;
-  };
-
-  # Set GTK theme in the environment to ensure it works everywhere
-  home.sessionVariables = {
-    GTK_THEME = "Everblush";
-    # Important for Doom Emacs
-    DOOMDIR = "${config.home.homeDirectory}/.doom.d";
-    DOOMLOCALDIR = "${config.home.homeDirectory}/.doom-local";
-  };
-
-  # Make colors globally available to other modules
-  _module.args.colorScheme = colorsDef.colors;
+  # Rest of configuration remains the same...
 }

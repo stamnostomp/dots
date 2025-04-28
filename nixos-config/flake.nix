@@ -63,24 +63,23 @@
           })
         ];
       };
-      hostname = "desktop"; # Using the original hostname
 
       # Function to make system configuration with given hostname
       mkSystem =
-        name:
+        hostname:
         nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
-            inherit inputs;
-            hostname = name;
+            inherit inputs hostname;
           };
           modules = [
             # Include the hardware configuration
-            ./hosts/${name}/hardware.nix
+            ./hosts/${hostname}/hardware.nix
 
             # Include the host-specific configuration
-            ./hosts/${name}
+            ./hosts/${hostname}
 
+            # System modules
             ./modules/system
 
             # Make flake inputs available in NixOS
@@ -95,8 +94,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = {
-                inherit inputs;
-                hostname = name;
+                inherit inputs hostname;
               };
               # Import the user-specific configuration
               home-manager.users.stamno =
@@ -113,23 +111,37 @@
                 xwayland.enable = true;
               };
             }
+
+            # Add hardware-specific modules for laptop
+            (nixpkgs.lib.mkIf (hostname == "laptop") nixos-hardware.nixosModules.lenovo-thinkpad-t470)
           ];
         };
     in
     {
       # NixOS configurations
       nixosConfigurations = {
-        "${hostname}" = mkSystem hostname;
-        # Add other hosts as needed
+        "desktop" = mkSystem "desktop";
+        "laptop" = mkSystem "laptop";
       };
 
       # Standalone home-manager configuration for non-NixOS systems
       homeConfigurations = {
-        "stamno@${hostname}" = home-manager.lib.homeManagerConfiguration {
+        "stamno@desktop" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {
             inherit inputs;
-            hostname = hostname;
+            hostname = "desktop";
+          };
+          modules = [
+            ./home/stamno
+          ];
+        };
+
+        "stamno@laptop" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = {
+            inherit inputs;
+            hostname = "laptop";
           };
           modules = [
             ./home/stamno
