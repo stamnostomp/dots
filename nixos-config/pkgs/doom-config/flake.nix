@@ -5,7 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     # Add this new input to fetch your doom-d repository
     doom-d = {
-      url = "github:stamnostomp/doom-d"; # Your repo
+      url = "github:stamnostomp/.doom-d"; # Your repo
       flake = false; # Not a flake itself
     };
   };
