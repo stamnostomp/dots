@@ -14,15 +14,6 @@
     # Hardware support
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
-    # Add NUR (Nix User Repository)
-    nur.url = "github:nix-community/NUR";
-
-    # Add treefmt-nix as a separate input
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Package overrides and custom packages
     everblush-gtk = {
       url = "path:./pkgs/everblush-gtk";
@@ -48,8 +39,6 @@
       nixpkgs,
       home-manager,
       nixos-hardware,
-      nur,
-      treefmt-nix,
       everblush-gtk,
       firefox-everblush-theme,
       doom-config,
@@ -59,9 +48,7 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
-        # Add NUR overlay
         overlays = [
-          nur.overlay
           # Add our custom packages
           (final: prev: {
             everblush-gtk = everblush-gtk.packages.${system}.default;
@@ -164,12 +151,6 @@
             ./home/stamno
           ];
         };
-      };
-
-      # Formatting options using treefmt-nix
-      formatter.${system} = treefmt-nix.lib.mkWrapper nixpkgs.legacyPackages.${system} {
-        projectRootFile = "flake.nix";
-        programs.nixpkgs-fmt.enable = true;
       };
 
       packages.${system} = {
