@@ -67,18 +67,30 @@
       # Function to make system configuration with given hostname
       mkSystem =
         hostname:
+        let
+          # Define modules based on hostname
+          hostModules =
+            if hostname == "laptop" then
+              [
+                # Include ThinkPad T480 module - it's similar to T470
+                nixos-hardware.nixosModules.lenovo-thinkpad-t480
+                # Add basic laptop configs
+                ./hosts/${hostname}/hardware.nix
+                ./hosts/${hostname}
+              ]
+            else
+              [
+                # Desktop modules
+                ./hosts/${hostname}/hardware.nix
+                ./hosts/${hostname}
+              ];
+        in
         nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
             inherit inputs hostname;
           };
-          modules = [
-            # Include the hardware configuration
-            ./hosts/${hostname}/hardware.nix
-
-            # Include the host-specific configuration
-            ./hosts/${hostname}
-
+          modules = hostModules ++ [
             # System modules
             ./modules/system
 
@@ -111,14 +123,6 @@
                 xwayland.enable = true;
               };
             }
-
-            # Add hardware-specific modules for laptop
-            (nixpkgs.lib.mkIf (hostname == "laptop") {
-              imports = [
-                # ThinkPad T470 has a Kaby Lake CPU
-                nixos-hardware.nixosModules.lenovo-thinkpad-t480
-              ];
-            })
           ];
         };
     in
