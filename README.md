@@ -1,5 +1,6 @@
 # [Hyprland] Everblush
 
+
 ## Details
 - **OS**: NixOS Unstable
 - **WM**: Hyprland
