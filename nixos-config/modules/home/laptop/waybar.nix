@@ -38,7 +38,7 @@ in
               "custom/left", "disk", "custom/right", "custom/space",
               "custom/left", "pulseaudio", "custom/right", "custom/space",
               "custom/left", "battery", "custom/right", "custom/space",
-              "custom/left", "battery#bat1", "custom/right", "custom/space",
+              "custom/left", "network", "custom/right", "custom/space",
               "custom/left", "clock", "custom/right", "custom/space",
               "tray"
           ],
@@ -64,13 +64,7 @@ in
                   "1": [],
                   "2": [],
                   "3": [],
-                  "4": [],
-                  "5": [],
-                  "6": [],
-                  "7": [],
-                  "8": [],
-                  "9": [],
-                  "10": []
+                  "4": []
               }
           },
 
@@ -83,13 +77,15 @@ in
           "cpu": {
               "interval": 2,
               "format": "󰘚 {usage}%",
-              "max-length": 10
+              "max-length": 10,
+              "on-click": "alacritty -e htop"
           },
 
           "memory": {
               "interval": 5,
               "format": "󰍛 {percentage}%",
-              "max-length": 10
+              "max-length": 10,
+              "on-click": "alacritty -e htop"
           },
 
           "disk": {
@@ -120,28 +116,39 @@ in
               "format-charging": "󰂄 {capacity}%",
               "format-plugged": "󰚥 {capacity}%",
               "format-alt": "{icon} {time}",
-              "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+              "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+              "on-click": "~/.local/bin/battery-status.sh"
           },
 
-          "battery#bat1": {
-              "bat": "BAT1",
-              "adapter": "AC",
-              "interval": 10,
-              "states": {
-                  "warning": 30,
-                  "critical": 15
-              },
-              "format": "{icon} {capacity}%",
-              "format-charging": "󰂄 {capacity}%",
-              "format-plugged": "󰚥 {capacity}%",
-              "format-alt": "{icon} {time}",
-              "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+          "network": {
+              "format-wifi": "  {essid}",
+              "format-ethernet": "󰈀 {ipaddr}",
+              "format-linked": "󰈀 {ifname} (No IP)",
+              "format-disconnected": "󰖪 Disconnected",
+              "format-alt": "󱘖 {bandwidthUpBytes} 󱘎 {bandwidthDownBytes}",
+              "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+              "on-click": "nm-connection-editor"
           },
 
           "clock": {
               "interval": 1,
               "format": "󰥔 {:%H:%M:%S}",
-              "format-alt": "󰃭 {:%Y-%m-%d}"
+              "format-alt": "󰃭 {:%Y-%m-%d}",
+              "tooltip-format": "<tt><small>{calendar}</small></tt>",
+              "calendar": {
+                  "mode"          : "month",
+                  "mode-mon-col"  : 3,
+                  "weeks-pos"     : "right",
+                  "on-scroll"     : 1,
+                  "on-click-right": "mode",
+                  "format": {
+                      "months":     "<span color='#ffead3'><b>{}</b></span>",
+                      "days":       "<span color='#ecc6d9'><b>{}</b></span>",
+                      "weeks":      "<span color='#99ffdd'><b>W{}</b></span>",
+                      "weekdays":   "<span color='#ffcc66'><b>{}</b></span>",
+                      "today":      "<span color='#ff6699'><b><u>{}</u></b></span>"
+                  }
+              }
           },
 
           "tray": {
@@ -198,19 +205,19 @@ in
       }
 
       #cpu {
-          color: #83a598;
+          color: ${colors.blue};
       }
 
       #memory {
-          color: #d3869b;
+          color: ${colors.magenta};
       }
 
       #disk {
-          color: #8ec07c;
+          color: ${colors.cyan};
       }
 
       #pulseaudio {
-          color: #fabd3f;
+          color: ${colors.yellow};
       }
 
       #battery {
@@ -234,23 +241,80 @@ in
           animation-direction: alternate;
       }
 
-      #battery#bat1 {
-          color: ${colors.cyan};
+      #network {
+          color: ${colors.brightBlue};
       }
 
-      #battery#bat1.charging, #battery#bat1.plugged {
+      #network.disconnected {
+          color: ${colors.red};
+      }
+
+      #network.disabled {
+          color: ${colors.brightBlack};
+      }
+
+      @keyframes blink {
+          to {
+              color: ${colors.background};
+              background-color: ${colors.red};
+          }
+      }
+
+      #clock {
           color: ${colors.brightCyan};
       }
 
-      #battery#bat1.warning {
-          color: ${colors.yellow};
+      #custom-left {
+          font-size: 20px;
+          color: ${colors.waybarbg};
+          background-color: transparent;
+          margin: 0;
+          padding: 0;
       }
 
-      #battery#bat1.critical {
-          color: ${colors.red};
-          animation-name: blink;
-          animation-duration: 0.5s;
-          animation-timing-function: linear;
-          animation-iteration-count: infinite;
-          animation-direction: alternate;
+      #custom-right {
+          font-size: 20px;
+          color: ${colors.waybarbg};
+          background-color: transparent;
+          margin: 0;
+          padding: 0;
       }
+
+      #cpu, #memory, #disk, #pulseaudio, #battery, #network, #clock {
+          padding: 0 10px;
+          background-color: ${colors.waybarbg};
+      }
+
+      #workspaces {
+          background-color: ${colors.waybarbg};
+          padding: 0 5px;
+      }
+
+      #window {
+          background-color: ${colors.waybarbg};
+      }
+
+      #tray {
+          padding: 0 10px;
+          margin-right: 5px;
+      }
+
+      tooltip {
+          background-color: ${colors.background};
+          border: 1px solid ${colors.blue};
+          border-radius: 2px;
+      }
+
+      tooltip label {
+          color: ${colors.foreground};
+      }
+    '';
+  };
+
+  # Add required packages for Waybar
+  home.packages = with pkgs; [
+    waybar
+    libnotify
+    networkmanagerapplet
+  ];
+}
