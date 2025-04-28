@@ -116,7 +116,7 @@
             (nixpkgs.lib.mkIf (hostname == "laptop") {
               imports = [
                 # ThinkPad T470 has a Kaby Lake CPU
-                nixos-hardware.nixosModules.lenovo-thinkpad-t470s
+                nixos-hardware.nixosModules.lenovo-thinkpad-t480
               ];
             })
           ];
