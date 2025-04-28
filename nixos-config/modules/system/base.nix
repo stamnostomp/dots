@@ -31,6 +31,21 @@
     };
   };
 
+  #security config
+  security.sudo = {
+    enable = true;
+    extraRules = [
+      {
+        groups = [ "wheel" ];
+        commands = [
+          {
+            command = "ALL";
+            options = [ "NOPASSWD" ]; # No password will be required
+          }
+        ];
+      }
+    ];
+  };
   # System packages
   environment.systemPackages = with pkgs; [
     # Basic utilities

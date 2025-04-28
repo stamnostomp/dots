@@ -66,6 +66,7 @@
 
     # Games
     steam
+    protonup-ng
   ];
 
   # Auto-install the Firefox theme on activation
@@ -110,22 +111,4 @@
           echo "Warning: Firefox Everblush theme package not found at expected path."
         fi
   '';
-
-  # Starship prompt (optional)
-  programs.starship = {
-    enable = true;
-    enableBashIntegration = true;
-    enableFishIntegration = true;
-    settings = {
-      add_newline = false;
-      character = {
-        success_symbol = "[➜](bold green)";
-        error_symbol = "[✗](bold red)";
-      };
-      nix_shell = {
-        format = lib.mkForce "via [☃️ $state( $name)](bold blue) ";
-        heuristic = true;
-      };
-    };
-  };
 }

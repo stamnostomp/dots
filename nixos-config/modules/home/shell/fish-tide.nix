@@ -1,4 +1,4 @@
-# modules/home/shell/fish-tide.nix
+# modules/home/shell/fish-prompt.nix
 {
   config,
   lib,
@@ -11,7 +11,7 @@ let
   inherit (import ../../../home/stamno/theme/colors.nix) colors;
 in
 {
-  # Install tide using nixpkgs fishPlugins
+  # Install tide using nixpkgs fishPlugins but don't use its prompt functions
   programs.fish = {
     plugins = lib.mkBefore [
       {
@@ -20,90 +20,82 @@ in
       }
     ];
 
-    # Configure tide prompt
+    # Configure fish prompt and splash text
     interactiveShellInit = lib.mkAfter ''
-      # Initialize Tide prompt if not already configured
-      if not set -q _tide_init_done
-        # Set tide version to avoid prompt
-        set -g _tide_init_done true
+      # Splash text to display when opening a new terminal
+      function fish_greeting
+        echo "When I die, I don't know if I'll go to heaven, not sure if they let cowboys in"
+      end
 
-        # Set tide color variables to Everblush theme with high contrast
-        set -g tide_pwd_color_anchors ${colors.brightBlue}
-        set -g tide_pwd_color_dirs ${colors.brightCyan}
-        set -g tide_pwd_color_truncated_dirs ${colors.blue}
+      # First, ensure the command duration threshold is set before any functions run
+      set -g tide_cmd_duration_threshold 3000
 
-        set -g tide_cmd_duration_color ${colors.yellow}
-        set -g tide_context_color_default ${colors.green}
-        set -g tide_context_color_root ${colors.red}
-        set -g tide_git_color_branch ${colors.magenta}
-        set -g tide_git_color_conflicted ${colors.red}
-        set -g tide_git_color_dirty ${colors.yellow}
-        set -g tide_git_color_operation ${colors.brightMagenta}
-        set -g tide_git_color_staged ${colors.green}
-        set -g tide_git_color_stash ${colors.blue}
-        set -g tide_git_color_untracked ${colors.brightRed}
-        set -g tide_git_color_upstream ${colors.cyan}
-        set -g tide_status_color_failure ${colors.brightRed}
-        set -g tide_status_color_success ${colors.brightGreen}
-        set -g tide_time_color ${colors.brightWhite}
-        set -g tide_nix_shell_color ${colors.brightBlue}
+      # Fix for missing CMD_DURATION variable
+      if not set -q CMD_DURATION
+        set -g CMD_DURATION 0
+      end
 
-        # Configure Tide prompt style - Two-line prompt with arrow
-        set -g tide_prompt_icon_connection "╭─"
-        set -g tide_left_prompt_frame_enabled true
-        set -g tide_right_prompt_frame_enabled true
-        set -g tide_prompt_connection_color ${colors.brightBlack}
-        set -g tide_left_prompt_suffix ""
-        set -g tide_right_prompt_suffix ""
-        set -g tide_prompt_add_newline_before true
-        set -g tide_left_prompt_frame_color ${colors.brightBlack}
-        set -g tide_right_prompt_frame_color ${colors.brightBlack}
+      # Apply Everblush theme colors
+      set -g tide_pwd_color_anchors "${colors.brightBlue}"
+      set -g tide_pwd_color_dirs "${colors.brightCyan}"
+      set -g tide_pwd_color_truncated_dirs "${colors.blue}"
 
-        # Configure the prompt character
-        set -g tide_prompt_char_icon "❯"
-        set -g tide_prompt_char_color_success ${colors.brightGreen}
-        set -g tide_prompt_char_color_failure ${colors.brightRed}
-        set -g tide_prompt_char_vi_insert_icon "❯"
-        set -g tide_prompt_char_vi_normal_icon "N"
-        set -g tide_prompt_char_vi_replace_icon "R"
-        set -g tide_prompt_char_vi_visual_icon "V"
+      set -g tide_cmd_duration_color "${colors.yellow}"
+      set -g tide_context_color_default "${colors.green}"
+      set -g tide_context_color_root "${colors.red}"
+      set -g tide_git_color_branch "${colors.magenta}"
+      set -g tide_git_color_conflicted "${colors.red}"
+      set -g tide_git_color_dirty "${colors.yellow}"
+      set -g tide_git_color_operation "${colors.brightMagenta}"
+      set -g tide_git_color_staged "${colors.green}"
+      set -g tide_git_color_stash "${colors.blue}"
+      set -g tide_git_color_untracked "${colors.brightRed}"
+      set -g tide_git_color_upstream "${colors.cyan}"
+      set -g tide_status_color_failure "${colors.brightRed}"
+      set -g tide_status_color_success "${colors.brightGreen}"
+      set -g tide_time_color "${colors.brightWhite}"
+      set -g tide_nix_shell_color "${colors.brightBlue}"
 
-        # Item configuration
-        set -g tide_left_prompt_items 'pwd' 'git' 'newline' 'character'
-        set -g tide_right_prompt_items 'status' 'cmd_duration' 'context' 'jobs' 'nix_shell' 'virtual_env' 'time'
+      # Custom prompt function
+      function fish_prompt
+        set -l last_status $status
 
-        # Enable transient prompt (command moves up after execution)
-        set -g tide_transient_prompt 'always'
+        # Left side
+        set_color "${colors.brightCyan}"
+        echo -n (prompt_pwd)
+        set_color normal
 
-        # Time settings
-        set -g tide_time_format '%H:%M:%S'
+        # Git info if available
+        if command -sq git && git rev-parse --is-inside-work-tree &>/dev/null
+          set_color "${colors.magenta}"
+          echo -n " ("(git branch --show-current)")"
+          set_color normal
+        end
 
-        # Git settings
-        set -g tide_git_icon ""
-        set -g tide_git_truncation_strategy 15
+        # Nix shell indicator
+        if set -q IN_NIX_SHELL
+          set_color "${colors.brightBlue}"
+          echo -n " (nix-shell)"
+          set_color normal
+        end
 
-        # Directory settings
-        set -g tide_pwd_icon_home ""
-        set -g tide_pwd_icon_unwritable "⛔"
-        set -g tide_pwd_markers .git .svn .hg
-        set -g tide_pwd_truncation_strategy anchors
-        set -g tide_pwd_max_dirs 2
+        # Prompt character
+        echo ""
+        if test $last_status -eq 0
+          set_color "${colors.brightGreen}"
+          echo -n "❯ "
+        else
+          set_color "${colors.brightRed}"
+          echo -n "✘ "
+        end
+        set_color normal
+      end
 
-        # Status settings
-        set -g tide_status_icon "✔"
-        set -g tide_status_icon_failure "✘"
-
-        # Nix shell
-        set -g tide_nix_shell_icon "❄️ "
-        set -g tide_nix_shell_verbose_icon true
-
-        # Command duration
-        set -g tide_cmd_duration_threshold 3000
-        set -g tide_cmd_duration_decimals 1
-        set -g tide_cmd_duration_icon "⏱ "
-
-        # Visual separator between left/right sides
-        set -g tide_prompt_icon_separator ""
+      # Right-side prompt with time
+      function fish_right_prompt
+        set_color "${colors.brightWhite}"
+        echo -n (date "+%H:%M:%S")
+        set_color normal
       end
     '';
   };
