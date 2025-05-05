@@ -1,4 +1,4 @@
-# nixos-config/modules/home/laptop/default.nix
+# modules/home/laptop/default.nix
 { ... }:
 
 {
@@ -9,7 +9,7 @@
     ./brightness.nix
     ./function-keys.nix
     ./hyprland-battery.nix
-    ./hypridle.nix
+    ./hypridel.nix
     ./network.nix
     ./dock.nix
     ./conferencing.nix

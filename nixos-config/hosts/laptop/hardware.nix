@@ -33,7 +33,7 @@
   # Basic hardware assumptions - adjust during real installation
   boot.initrd.availableKernelModules = [
     "nvme"
-    "xhci_pci"
+    "xhci_pcirowse"
     "usb_storage"
     "sd_mod"
   ];

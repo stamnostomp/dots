@@ -55,6 +55,8 @@ in
       set -g tide_status_color_success "${colors.brightGreen}"
       set -g tide_time_color "${colors.brightWhite}"
       set -g tide_nix_shell_color "${colors.brightBlue}"
+      set -g tide_nix_shell_icon "️❄"
+      set -g tide_nix_shell_enabled true
 
       # Custom prompt function
       function fish_prompt

@@ -4,13 +4,15 @@
   pkgs,
   lib,
   inputs,
-  hostname,
+  hostname ? "desktop",
   ...
 }:
 
 let
   # Import color scheme directly
   colorsDef = import ./theme/colors.nix;
+  isLaptop = hostname == "laptop";
+  laptopModule = if isLaptop then ../../modules/home/laptop else null;
 in
 {
   imports = [
@@ -26,11 +28,10 @@ in
     ../../modules/home/browser/firefox.nix
 
     # Conditionally import laptop-specific modules
-    (lib.mkIf (hostname == "laptop") ../../modules/home/laptop)
 
     # Import Doom Emacs module
     ../../modules/home/editors/doom-emacs.nix
-  ];
+  ] ++ lib.optional isLaptop laptopModule;
 
   # Home Manager basics
   home.username = "stamno";

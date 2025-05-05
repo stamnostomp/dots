@@ -4,6 +4,7 @@
   inputs = {
     # Core dependencies
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
 
     # Home manager
     home-manager = {
@@ -89,6 +90,11 @@
             # System modules
             ./modules/system
 
+            # Override hostname here to be explicit
+            {
+              networking.hostName = hostname;
+            }
+
             # Make flake inputs available in NixOS
             {
               _module.args.inputs = inputs;
@@ -104,11 +110,7 @@
                 inherit inputs hostname;
               };
               # Import the user-specific configuration
-              home-manager.users.stamno =
-                { ... }:
-                {
-                  imports = [ ./home/stamno ];
-                };
+              home-manager.users.stamno = import ./home/stamno;
             }
 
             # Include Hyprland as a module
@@ -159,15 +161,84 @@
         doom = doom-config.packages.${system}.default;
       };
 
-      devShells.${system}.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          git
-          nixfmt
-        ];
+      # Add specific shells for each target
+      devShells.${system} = {
+        default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            git
+            nixfmt
+            ripgrep
+            fd
+            jq
+          ];
 
-        shellHook = ''
-          exec ${pkgs.fish}/bin/fish
-        '';
+          shellHook = ''
+            # Export NIX_SHELL to ensure Fish and Tide detect we're in a Nix shell
+            export IN_NIX_SHELL=1
+            export NIX_SHELL_NAME="nixos-config"
+
+            # Create helpful aliases that explicitly specify the hostname
+            alias ll="ls -la"
+            alias rebuild-desktop="nixos-rebuild switch --flake .#desktop"
+            alias rebuild-laptop="nixos-rebuild switch --flake .#laptop"
+            alias check="nix flake check"
+
+            # Show which configuration we're working with
+            echo "NixOS Configuration Development Shell"
+            echo "Available commands:"
+            echo "  rebuild-desktop   - Rebuild the desktop configuration"
+            echo "  rebuild-laptop    - Rebuild the laptop configuration"
+            echo "  check             - Check the flake"
+
+            # Execute fish with proper environment
+            exec ${pkgs.fish}/bin/fish
+          '';
+        };
+
+        # Add specific shells for each target
+        desktop = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            git
+            nixfmt
+            ripgrep
+            fd
+            jq
+          ];
+          shellHook = ''
+            export IN_NIX_SHELL=1
+            export NIX_SHELL_NAME="nixos-desktop"
+            echo "Building for: desktop"
+
+            # Create helpful aliases
+            alias ll="ls -la"
+            alias rebuild="nixos-rebuild switch --flake .#desktop"
+            alias check="nix flake check"
+
+            exec ${pkgs.fish}/bin/fish
+          '';
+        };
+
+        laptop = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            git
+            nixfmt
+            ripgrep
+            fd
+            jq
+          ];
+          shellHook = ''
+            export IN_NIX_SHELL=1
+            export NIX_SHELL_NAME="nixos-laptop"
+            echo "Building for: laptop"
+
+            # Create helpful aliases
+            alias ll="ls -la"
+            alias rebuild="nixos-rebuild switch --flake .#laptop"
+            alias check="nix flake check"
+
+            exec ${pkgs.fish}/bin/fish
+          '';
+        };
       };
     };
 }

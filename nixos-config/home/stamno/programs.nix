@@ -30,6 +30,7 @@
   home.packages = with pkgs; [
     # Browsers
     firefox-bin
+    inputs.zen-browser.packages.${system}.default
 
     # The Everblush Firefox theme - use the input directly
     inputs.firefox-everblush-theme.packages.${system}.default
