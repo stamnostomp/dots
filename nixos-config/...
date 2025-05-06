@@ -1,0 +1,231 @@
+#!/usr/bin/env bash
+
+# Create the directory structure for our custom flake
+mkdir -p nixos-config/pkgs/everblush-gtk-custom
+mkdir -p nixos-config/pkgs/everblush-gtk-custom/transparency-fixes/gtk-3.0
+mkdir -p nixos-config/pkgs/everblush-gtk-custom/transparency-fixes/gtk-4.0
+
+# Create the flake.nix file
+cat >nixos-config/pkgs/everblush-gtk-custom/flake.nix <<'EOF'
+{
+  description = "Everblush GTK Theme with Transparency Support";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      {
+        packages = rec {
+          everblush-gtk = pkgs.stdenv.mkDerivation {
+            pname = "everblush-gtk";
+            version = "1.0.0";
+
+            src = pkgs.fetchFromGitHub {
+              owner = "Everblush";
+              repo = "gtk";
+              rev = "main";
+              sha256 = "sha256-bVMwXCNncv47Ksjyq6pc1EU4Ede6PCefd1+I62wM0Lk=";
+            };
+
+            nativeBuildInputs = with pkgs; [
+              gnumake
+              nodePackages.sass
+            ];
+
+            propagatedUserEnvPkgs = with pkgs; [
+              gtk-engine-murrine
+              gtk_engines
+            ];
+
+            # We'll create the files in the right place directly
+            buildPhase = ''
+              make
+            '';
+
+            installPhase = ''
+              mkdir -p $out/share/themes/Everblush
+              cp -r gtk-* $out/share/themes/Everblush/
+              cp -r assets $out/share/themes/Everblush/ || true
+              cp -r index.theme $out/share/themes/Everblush/ || true
+
+              # Add our transparency fixes
+              cat ${./transparency-fixes/gtk-3.0/gtk.css} >> $out/share/themes/Everblush/gtk-3.0/gtk.css
+              cat ${./transparency-fixes/gtk-4.0/gtk.css} >> $out/share/themes/Everblush/gtk-4.0/gtk.css
+            '';
+
+            meta = with pkgs.lib; {
+              description = "Everblush GTK Theme with transparency support";
+              homepage = "https://github.com/Everblush/gtk";
+              license = licenses.mit;
+              platforms = platforms.all;
+              maintainers = [ ];
+            };
+          };
+
+          default = everblush-gtk;
+        };
+      }
+    );
+}
+EOF
+
+# Create the transparency CSS for GTK-3.0
+cat >nixos-config/pkgs/everblush-gtk-custom/transparency-fixes/gtk-3.0/gtk.css <<'EOF'
+/* Transparency overrides for Everblush GTK-3.0 theme */
+
+/* Global transparency settings */
+window.background {
+  background-color: rgba(20, 27, 30, 0.90); /* #141b1e with 90% opacity */
+  border-radius: 8px;
+}
+
+/* Application-specific overrides */
+.nautilus-window,
+.thunar,
+.pcmanfm-main-window {
+  background-color: rgba(20, 27, 30, 0.85);
+}
+
+/* Dialog transparency */
+window.dialog {
+  background-color: rgba(20, 27, 30, 0.95);
+  border: 1px solid rgba(103, 176, 232, 0.7); /* #67b0e8 */
+}
+
+/* Menu transparency */
+popover,
+popover box,
+popover scrolledwindow,
+popover viewport,
+menu,
+.menu,
+.context-menu {
+  background-color: rgba(35, 42, 45, 0.95); /* #232a2d with 95% opacity */
+  border: 1px solid rgba(45, 52, 55, 0.8); /* #2d3437 */
+}
+
+/* Tooltip transparency */
+tooltip {
+  background-color: rgba(35, 42, 45, 0.95);
+  border: 1px solid rgba(45, 52, 55, 0.8);
+}
+
+/* GTK sidebar transparency */
+placessidebar {
+  background-color: rgba(35, 42, 45, 0.90);
+}
+
+/* Fix for GTK scrolled window elements */
+scrolledwindow {
+  background-color: transparent;
+}
+
+scrolledwindow viewport {
+  background-color: transparent;
+}
+
+/* App-specific fixes for headerbar */
+headerbar {
+  background-color: rgba(35, 42, 45, 0.95);
+  border-bottom: 1px solid rgba(45, 52, 55, 0.8);
+}
+
+/* Button transparency */
+button {
+  background-color: rgba(35, 42, 45, 0.95);
+}
+
+button:hover {
+  background-color: rgba(45, 52, 55, 0.95);
+}
+
+/* Entry field transparency */
+entry {
+  background-color: rgba(45, 52, 55, 0.90);
+}
+EOF
+
+# Create the transparency CSS for GTK-4.0
+cat >nixos-config/pkgs/everblush-gtk-custom/transparency-fixes/gtk-4.0/gtk.css <<'EOF'
+/* Transparency overrides for Everblush GTK-4.0 theme */
+
+/* Global transparency settings */
+window.background {
+  background-color: rgba(20, 27, 30, 0.90); /* #141b1e with 90% opacity */
+  border-radius: 8px;
+}
+
+/* Application-specific overrides */
+.nautilus-window,
+.thunar,
+.pcmanfm-main-window {
+  background-color: rgba(20, 27, 30, 0.85);
+}
+
+/* Dialog transparency */
+window.dialog {
+  background-color: rgba(20, 27, 30, 0.95);
+  border: 1px solid rgba(103, 176, 232, 0.7); /* #67b0e8 */
+}
+
+/* Menu transparency */
+popover,
+popover box,
+popover scrolledwindow,
+popover viewport,
+menu,
+.menu,
+.context-menu {
+  background-color: rgba(35, 42, 45, 0.95); /* #232a2d with 95% opacity */
+  border: 1px solid rgba(45, 52, 55, 0.8); /* #2d3437 */
+}
+
+/* Tooltip transparency */
+tooltip {
+  background-color: rgba(35, 42, 45, 0.95);
+  border: 1px solid rgba(45, 52, 55, 0.8);
+}
+
+/* GTK sidebar transparency */
+placessidebar {
+  background-color: rgba(35, 42, 45, 0.90);
+}
+
+/* Fix for GTK scrolled window elements */
+scrolledwindow {
+  background-color: transparent;
+}
+
+scrolledwindow viewport {
+  background-color: transparent;
+}
+
+/* App-specific fixes for headerbar */
+headerbar {
+  background-color: rgba(35, 42, 45, 0.95);
+  border-bottom: 1px solid rgba(45, 52, 55, 0.8);
+}
+
+/* Button transparency */
+button {
+  background-color: rgba(35, 42, 45, 0.95);
+}
+
+button:hover {
+  background-color: rgba(45, 52, 55, 0.95);
+}
+
+/* Entry field transparency */
+entry {
+  background-color: rgba(45, 52, 55, 0.90);
+}
+EOF
+
+echo "Custom Everblush GTK theme with transparency support has been set up in nixos-config/pkgs/everblush-gtk-custom/"
+echo "Next step: Update your main flake.nix to use this custom flake instead of the official one."

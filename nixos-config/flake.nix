@@ -18,9 +18,9 @@
     # Add NUR (Nix User Repository)
     nur.url = "github:nix-community/NUR";
 
-    # Package overrides and custom packages
-    everblush-gtk = {
-      url = "github:Everblush/gtk";
+    # CHANGED: Use custom everblush-gtk flake with transparency support
+    everblush-gtk-custom = {
+      url = "path:./pkgs/everblush-gtk-custom";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -44,7 +44,7 @@
       home-manager,
       nixos-hardware,
       nur,
-      everblush-gtk,
+      everblush-gtk-custom, # CHANGED: Using our custom flake
       firefox-everblush-theme,
       doom-config,
       zen-browser,
@@ -59,7 +59,8 @@
           nur.overlay
           # Add our custom packages
           (final: prev: {
-            everblush-gtk = everblush-gtk.packages.${system}.default;
+            # CHANGED: Use custom everblush-gtk with transparency
+            everblush-gtk = everblush-gtk-custom.packages.${system}.default;
             firefox-everblush-theme = firefox-everblush-theme.packages.${system}.default;
             doom-config = doom-config.packages.${system}.default;
             zen-browser = zen-browser.packages.${system}.default;
@@ -164,7 +165,8 @@
       };
 
       packages.${system} = {
-        everblush-gtk = everblush-gtk.packages.${system}.default;
+        # CHANGED: Use custom everblush-gtk with transparency
+        everblush-gtk = everblush-gtk-custom.packages.${system}.default;
         firefox-theme = firefox-everblush-theme.packages.${system}.default;
         doom = doom-config.packages.${system}.default;
         zen-browser = zen-browser.packages.${system}.default;
