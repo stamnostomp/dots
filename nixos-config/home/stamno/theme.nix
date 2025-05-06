@@ -118,7 +118,7 @@ in
     XCURSOR_PATH = "${config.home.profileDirectory}/share/icons:${pkgs.apple-cursor}/share/icons";
     XCURSOR_THEME = cursorTheme.name;
     XCURSOR_SIZE = toString cursorTheme.size;
-    GTK_THEME = "Everblush";
+    GTK_THEME = "Tokyonight-Dark-B";
     # Use mkForce to override the conflicting definition
     GTK2_RC_FILES = lib.mkForce "${config.xdg.configHome}/gtk-2.0/gtkrc:${config.home.homeDirectory}/.gtkrc-2.0";
     XDG_DATA_DIRS = "${config.home.profileDirectory}/share:\${XDG_DATA_DIRS}";
@@ -137,8 +137,8 @@ in
   gtk = {
     enable = true;
     theme = {
-      name = "Everblush";
-      package = inputs.everblush-gtk.packages.${pkgs.system}.default;
+      name = "Tokyonight-Dark-B";
+      package = pkgs.tokyo-night-gtk;
     };
     iconTheme = {
       name = "Papirus-Dark";
@@ -150,7 +150,7 @@ in
       size = cursorTheme.size;
     };
     gtk2.extraConfig = ''
-      gtk-theme-name="Everblush"
+      gtk-theme-name="Tokyonight-Dark-B"
       gtk-icon-theme-name="Papirus-Dark"
       gtk-cursor-theme-name="${cursorTheme.name}"
       gtk-cursor-theme-size=${toString cursorTheme.size}
@@ -247,7 +247,7 @@ in
       gtk-application-prefer-dark-theme=1
       gtk-cursor-theme-name=${cursorTheme.name}
       gtk-cursor-theme-size=${toString cursorTheme.size}
-      gtk-theme-name=Everblush
+      gtk-theme-name="Tokyonight-Dark-B"
       gtk-icon-theme-name=Papirus-Dark
       gtk-font-name=Sans 10
       gtk-xft-antialias=1
@@ -261,7 +261,7 @@ in
       gtk-application-prefer-dark-theme=1
       gtk-cursor-theme-name=${cursorTheme.name}
       gtk-cursor-theme-size=${toString cursorTheme.size}
-      gtk-theme-name=Everblush
+      gtk-theme-name="Tokyonight-Dark-B"
       gtk-icon-theme-name=Papirus-Dark
       gtk-font-name=Sans 10
       gtk-xft-antialias=1
@@ -388,6 +388,113 @@ in
 
       tooltip label {
           color: ${colors.foreground};
+      }
+    '';
+
+    "gtk-3.0/gtk.css".text = ''
+      /* GTK Selection Highlighting Fix for Everblush Theme */
+
+      /* Generic selection highlight rules */
+      ::-moz-selection {
+        background-color: #67b0e8 !important; /* Using the blue from your theme */
+        color: #141b1e !important;           /* Using your background color for contrast */
+      }
+
+      ::selection {
+        background-color: #67b0e8 !important;
+        color: #141b1e !important;
+      }
+
+      /* GTK specific selection highlight */
+      *:selected,
+      *:focus:selected {
+        background-color: #67b0e8 !important;
+        color: #141b1e !important;
+      }
+
+      /* Text view and other widget selection */
+      textview text:selected,
+      textview text:selected:focus,
+      textview text selection,
+      entry selection,
+      label selection,
+      .view:selected,
+      .view:selected:focus,
+      .view text:selected,
+      iconview:selected,
+      iconview:selected:focus,
+      flowbox flowboxchild:selected,
+      entry:selected,
+      modelbutton.flat:selected,
+      treeview.view:selected,
+      treeview.view:selected:focus,
+      row:selected,
+      calendar:selected,
+      .gedit-document-panel-document-row:selected {
+        background-color: #67b0e8 !important;
+        color: #141b1e !important;
+      }
+
+      /* For Thunar/PCManFM specific fixes */
+      .thunar .view:selected,
+      .pcmanfm .view:selected,
+      .thunar .sidebar .view:selected,
+      .pcmanfm .sidebar .view:selected {
+        background-color: #67b0e8 !important;
+        color: #141b1e !important;
+      }
+
+      /* File browsers selection */
+      filechooser .view:selected,
+      filechooser .view:selected:focus {
+        background-color: #67b0e8 !important;
+        color: #141b1e !important;
+      }
+
+      /* Terminal selection - often needs special handling */
+      vte-terminal selection {
+        background-color: #67b0e8 !important;
+        color: #141b1e !important;
+      }
+    '';
+
+    # Also add for GTK4 applications
+    "gtk-4.0/gtk.css".text = ''
+      /* GTK4 Selection Highlighting Fix for Everblush Theme */
+
+      /* Generic selection highlight rules */
+      ::-moz-selection {
+        background-color: #67b0e8 !important;
+        color: #141b1e !important;
+      }
+
+      ::selection {
+        background-color: #67b0e8 !important;
+        color: #141b1e !important;
+      }
+
+      /* GTK specific selection highlight */
+      *:selected,
+      *:focus:selected {
+        background-color: #67b0e8 !important;
+        color: #141b1e !important;
+      }
+
+      /* Text view and other widget selection */
+      textview text:selected,
+      textview text:selected:focus,
+      textview text selection,
+      entry selection,
+      label selection,
+      .view:selected,
+      .view:selected:focus,
+      .view text:selected,
+      iconview:selected,
+      iconview:selected:focus,
+      flowbox flowboxchild:selected,
+      entry:selected {
+        background-color: #67b0e8 !important;
+        color: #141b1e !important;
       }
     '';
   };
