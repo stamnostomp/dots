@@ -16,6 +16,193 @@ let
     name = "Bibata-Modern-Classic";
     size = 20;
   };
+
+  # Create a script derivation for the GTK transparency fix
+  gtkTransparencyFix = pkgs.writeScriptBin "fix-gtk-transparency" ''
+    #!/usr/bin/env bash
+
+    # Define Everblush colors
+    BACKGROUND="${colors.background}"
+    BLACK="${colors.black}"
+    CYAN="${colors.cyan}"
+    FOREGROUND="${colors.foreground}"
+
+    # Create GTK-3.0 settings if they don't exist
+    mkdir -p "$HOME/.config/gtk-3.0"
+    mkdir -p "$HOME/.config/gtk-4.0"
+
+    # Add specific transparency fixes to GTK-3.0 settings
+    cat > "$HOME/.config/gtk-3.0/gtk.css" << EOF
+    /* Fix for transparency issues in GTK apps */
+    window, dialog, popover, menu {
+      background-color: $BACKGROUND;
+      box-shadow: none;
+    }
+
+    window.solid-csd, dialog.solid-csd {
+      background-color: $BACKGROUND;
+      box-shadow: none;
+    }
+
+    .background {
+      background-color: $BACKGROUND;
+    }
+
+    /* Fix for some specific apps with transparency issues */
+    .titlebar, headerbar {
+      background-color: $BLACK;
+      border-color: $BLACK;
+    }
+
+    /* Fix for context menus */
+    menu, .menu, .context-menu {
+      background-color: $BLACK;
+      border: 1px solid $CYAN;
+    }
+
+    /* Additional fixes for popover widgets */
+    popover > arrow,
+    popover > contents {
+      background-color: $BLACK;
+      border: 1px solid $CYAN;
+    }
+
+    /* Fix for dropdown menus */
+    combobox window.popup,
+    combobox menu {
+      background-color: $BLACK;
+      border: 1px solid $CYAN;
+    }
+
+    /* Fix transparency for tooltips */
+    tooltip {
+      background-color: $BLACK;
+      border: 1px solid $CYAN;
+    }
+    tooltip label {
+      color: $FOREGROUND;
+    }
+
+    /* Fix for dialog buttons */
+    button {
+      background-color: $BLACK;
+      border: 1px solid $CYAN;
+    }
+    button:hover {
+      background-color: ${colors.brightBlack};
+    }
+    EOF
+
+    # Apply the same fixes for GTK-4
+    cat > "$HOME/.config/gtk-4.0/gtk.css" << EOF
+    /* Fix for transparency issues in GTK apps */
+    window, dialog, popover, menu {
+      background-color: $BACKGROUND;
+      box-shadow: none;
+    }
+
+    window.solid-csd, dialog.solid-csd {
+      background-color: $BACKGROUND;
+      box-shadow: none;
+    }
+
+    .background {
+      background-color: $BACKGROUND;
+    }
+
+    /* Fix for some specific apps with transparency issues */
+    .titlebar, headerbar {
+      background-color: $BLACK;
+      border-color: $BLACK;
+    }
+
+    /* Fix for context menus */
+    menu, .menu, .context-menu {
+      background-color: $BLACK;
+      border: 1px solid $CYAN;
+    }
+
+    /* Additional fixes for popover widgets */
+    popover > arrow,
+    popover > contents {
+      background-color: $BLACK;
+      border: 1px solid $CYAN;
+    }
+
+    /* Fix for dropdown menus */
+    combobox window.popup,
+    combobox menu {
+      background-color: $BLACK;
+      border: 1px solid $CYAN;
+    }
+
+    /* Fix transparency for tooltips */
+    tooltip {
+      background-color: $BLACK;
+      border: 1px solid $CYAN;
+    }
+    tooltip label {
+      color: $FOREGROUND;
+    }
+
+    /* Fix for dialog buttons */
+    button {
+      background-color: $BLACK;
+      border: 1px solid $CYAN;
+    }
+    button:hover {
+      background-color: ${colors.brightBlack};
+    }
+    EOF
+
+    # Create a fix for Flatpak apps
+    mkdir -p "$HOME/.config/gtk-3.0/flatpak-overrides"
+    mkdir -p "$HOME/.config/gtk-4.0/flatpak-overrides"
+
+    cp "$HOME/.config/gtk-3.0/gtk.css" "$HOME/.config/gtk-3.0/flatpak-overrides/gtk.css"
+    cp "$HOME/.config/gtk-4.0/gtk.css" "$HOME/.config/gtk-4.0/flatpak-overrides/gtk.css"
+
+    echo "GTK transparency fixes applied. Please restart your applications."
+
+    # Update theme setting in dconf (for GNOME/GTK apps)
+    if command -v gsettings &> /dev/null; then
+      gsettings set org.gnome.desktop.interface gtk-theme 'Everblush'
+      gsettings set org.gnome.desktop.interface cursor-theme '${cursorTheme.name}'
+      gsettings set org.gnome.desktop.interface cursor-size ${toString cursorTheme.size}
+      echo "Updated GTK theme settings via gsettings."
+    fi
+
+    # Force reload for running applications
+    if command -v xsettingsd &> /dev/null; then
+      killall -HUP xsettingsd 2>/dev/null
+    fi
+
+    echo "Transparency fixes complete. Log out and back in for the best results."
+  '';
+
+  # Create a script derivation for cursor fix
+  cursorFix = pkgs.writeScriptBin "fix-cursor" ''
+    #!/usr/bin/env bash
+
+    # Set cursor theme
+    export XCURSOR_THEME="${cursorTheme.name}"
+    export XCURSOR_SIZE="${toString cursorTheme.size}"
+
+    # Create necessary directories
+    mkdir -p $HOME/.icons
+    mkdir -p $HOME/.local/share/icons
+
+    # Create symbolic links to cursor theme
+    ln -sf ${pkgs.apple-cursor}/share/icons/${cursorTheme.name} $HOME/.icons/
+    ln -sf ${pkgs.apple-cursor}/share/icons/${cursorTheme.name} $HOME/.local/share/icons/
+
+    # Explicitly set cursor with hyprctl if Hyprland is running
+    if command -v hyprctl &>/dev/null && pgrep -x Hyprland &>/dev/null; then
+      hyprctl setcursor "${cursorTheme.name}" "${toString cursorTheme.size}"
+    fi
+
+    echo "Cursor theme set to ${cursorTheme.name} with size ${toString cursorTheme.size}"
+  '';
 in
 {
   # Set cursor environment variables consistently
@@ -174,35 +361,88 @@ in
       gtk-xft-hintstyle=hintslight
       gtk-xft-rgba=rgb
     '';
-  };
 
-  # Create a simpler cursor fix script
-  home.file.".local/bin/fix-cursor.sh" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
+    # Fix for transparency issues in GTK apps
+    "gtk-3.0/gtk.css".text = ''
+      /* Fix for transparency issues in GTK apps */
+      window, dialog, popover, menu {
+        background-color: ${colors.background};
+        box-shadow: none;
+      }
 
-      # Set cursor theme
-      export XCURSOR_THEME="${cursorTheme.name}"
-      export XCURSOR_SIZE="${toString cursorTheme.size}"
+      window.solid-csd, dialog.solid-csd {
+        background-color: ${colors.background};
+        box-shadow: none;
+      }
 
-      # Create necessary directories
-      mkdir -p $HOME/.icons
-      mkdir -p $HOME/.local/share/icons
+      .background {
+        background-color: ${colors.background};
+      }
 
-      # Create symbolic links to cursor theme
-      ln -sf ${pkgs.apple-cursor}/share/icons/${cursorTheme.name} $HOME/.icons/
-      ln -sf ${pkgs.apple-cursor}/share/icons/${cursorTheme.name} $HOME/.local/share/icons/
+      /* Fix for some specific apps with transparency issues */
+      .titlebar, headerbar {
+        background-color: ${colors.black};
+        border-color: ${colors.black};
+      }
 
-      # Explicitly set cursor with hyprctl if Hyprland is running
-      if command -v hyprctl &>/dev/null && pgrep -x Hyprland &>/dev/null; then
-        hyprctl setcursor "${cursorTheme.name}" "${toString cursorTheme.size}"
-      fi
+      /* Fix for context menus */
+      menu, .menu, .context-menu {
+        background-color: ${colors.black};
+        border: 1px solid ${colors.cyan};
+      }
+
+      /* Additional fixes for popover widgets */
+      popover > arrow,
+      popover > contents {
+        background-color: ${colors.black};
+        border: 1px solid ${colors.cyan};
+      }
+    '';
+
+    # Apply the same fixes for GTK-4
+    "gtk-4.0/gtk.css".text = ''
+      /* Fix for transparency issues in GTK apps */
+      window, dialog, popover, menu {
+        background-color: ${colors.background};
+        box-shadow: none;
+      }
+
+      window.solid-csd, dialog.solid-csd {
+        background-color: ${colors.background};
+        box-shadow: none;
+      }
+
+      .background {
+        background-color: ${colors.background};
+      }
+
+      /* Fix for some specific apps with transparency issues */
+      .titlebar, headerbar {
+        background-color: ${colors.black};
+        border-color: ${colors.black};
+      }
+
+      /* Fix for context menus */
+      menu, .menu, .context-menu {
+        background-color: ${colors.black};
+        border: 1px solid ${colors.cyan};
+      }
+
+      /* Additional fixes for popover widgets */
+      popover > arrow,
+      popover > contents {
+        background-color: ${colors.black};
+        border: 1px solid ${colors.cyan};
+      }
     '';
   };
 
-  # Add theme-related packages
+  # Add the fix scripts to the user's PATH via home.packages
   home.packages = with pkgs; [
+    # Our custom script packages
+    gtkTransparencyFix
+    cursorFix
+
     # Theme dependencies
     gtk-engine-murrine
     gtk_engines
@@ -222,4 +462,14 @@ in
     xorg.xcursorgen
     xorg.xrdb
   ];
+
+  # Automatic activation hook to apply fixes
+  home.activation.fixGtkAndCursor = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # Run our scripts after configuration is written
+    echo "Applying GTK transparency fixes..."
+    $DRY_RUN_CMD ${gtkTransparencyFix}/bin/fix-gtk-transparency
+
+    echo "Setting up cursor theme..."
+    $DRY_RUN_CMD ${cursorFix}/bin/fix-cursor
+  '';
 }

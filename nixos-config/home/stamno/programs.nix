@@ -30,7 +30,7 @@
   home.packages = with pkgs; [
     # Browsers
     firefox-bin
-    inputs.zen-browser.packages.${system}.default
+    inputs.zen-browser.packages.${system}.default # Use the Zen Browser input
 
     # The Everblush Firefox theme - use the input directly
     inputs.firefox-everblush-theme.packages.${system}.default
@@ -75,41 +75,98 @@
         # Use the flake input directly
         THEME_PACKAGE="${inputs.firefox-everblush-theme.packages.${pkgs.system}.default}"
 
-        if [ -e "$THEME_PACKAGE/share/firefox-addons/everblush-firefox-theme.xpi" ]; then
-          mkdir -p $HOME/.local/bin
-          cat > $HOME/.local/bin/install-firefox-everblush-theme << EOF
+        # Create the script in the user's bin directory
+        mkdir -p $HOME/.local/bin
+        cat > $HOME/.local/bin/install-firefox-everblush-theme << EOF
     #!/usr/bin/env bash
 
     echo "Everblush Firefox Theme Installer"
     echo "=================================="
     echo ""
 
-    # Path to the XPI file
-    XPI_PATH="$THEME_PACKAGE/share/firefox-addons/everblush-firefox-theme.xpi"
+    # Find Firefox profile directory
+    if [ -d "\$HOME/.mozilla/firefox" ]; then
+        FIREFOX_DIR="\$HOME/.mozilla/firefox"
 
-    echo "Theme file is located at: \$XPI_PATH"
-    echo ""
-    echo "To install the theme permanently:"
-    echo "1. Open Firefox"
-    echo "2. Go to about:addons (or click the menu button and select 'Add-ons and Themes')"
-    echo "3. Click the gear icon in the top-right"
-    echo "4. Select 'Install Add-on From File...'"
-    echo "5. Navigate to and select: \$XPI_PATH"
-    echo "6. Click 'Add' when prompted"
-    echo ""
-    echo "Would you like to open Firefox now? (y/n)"
-    read -r OPEN_FIREFOX
+        # Find profiles
+        PROFILES=\$(grep -E "^Path=" "\$FIREFOX_DIR/profiles.ini" | cut -d'=' -f2)
 
-    if [[ \$OPEN_FIREFOX =~ ^[Yy]\$ ]]; then
-      firefox "about:addons" &
+        if [ -z "\$PROFILES" ]; then
+            echo "Could not find any Firefox profiles."
+            exit 1
+        fi
+
+        # If more than one profile, let user choose
+        if [ \$(echo "\$PROFILES" | wc -l) -gt 1 ]; then
+            echo "Found multiple Firefox profiles:"
+            PS3="Select a profile to install the theme (number): "
+            select PROFILE in \$PROFILES; do
+                if [ -n "\$PROFILE" ]; then
+                    PROFILE_PATH="\$FIREFOX_DIR/\$PROFILE"
+                    break
+                fi
+            done
+        else
+            PROFILE="\$PROFILES"
+            PROFILE_PATH="\$FIREFOX_DIR/\$PROFILE"
+        fi
+
+        echo "Using profile: \$PROFILE_PATH"
+
+        # Create chrome directory if it doesn't exist
+        mkdir -p "\$PROFILE_PATH/chrome"
+
+        # Install theme files
+        echo "Installing theme files..."
+
+        # Install user.js preferences
+        if [ -f "\$PROFILE_PATH/user.js" ]; then
+            # Append our preferences without overwriting the existing ones
+            cat "$THEME_PACKAGE/share/firefox-everblush-theme/user.js" >> "\$PROFILE_PATH/user.js"
+            echo "Added theme preferences to existing user.js"
+        else
+            # Create new user.js
+            cp "$THEME_PACKAGE/share/firefox-everblush-theme/user.js" "\$PROFILE_PATH/user.js"
+            echo "Created new user.js with theme preferences"
+        fi
+
+        # Install CSS files
+        cp "$THEME_PACKAGE/share/firefox-everblush-theme/chrome/userChrome.css" "\$PROFILE_PATH/chrome/"
+        cp "$THEME_PACKAGE/share/firefox-everblush-theme/chrome/userContent.css" "\$PROFILE_PATH/chrome/"
+
+        # Set proper permissions
+        chmod 644 "\$PROFILE_PATH/chrome/userChrome.css"
+        chmod 644 "\$PROFILE_PATH/chrome/userContent.css"
+        chmod 644 "\$PROFILE_PATH/user.js"
+
+        echo "Theme installed successfully!"
+        echo ""
+        echo "Please start Firefox now to see the new theme."
+        echo "If the theme doesn't apply, check about:config and make sure"
+        echo "toolkit.legacyUserProfileCustomizations.stylesheets is set to true."
+
+    else
+        echo "Firefox profile directory not found."
+        echo "Please make sure Firefox is installed and has been run at least once."
+        exit 1
     fi
     EOF
-          chmod +x $HOME/.local/bin/install-firefox-everblush-theme
+        chmod +x $HOME/.local/bin/install-firefox-everblush-theme
+  '';
 
-          echo "Firefox Everblush theme package installed."
-          echo "To install the theme in Firefox, run: install-firefox-everblush-theme"
-        else
-          echo "Warning: Firefox Everblush theme package not found at expected path."
-        fi
+  # Create a script to launch Zen Browser
+  home.activation.createZenBrowserScript = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        # Create a script to launch Zen Browser with the Everblush theme
+        mkdir -p $HOME/.local/bin
+        cat > $HOME/.local/bin/zen-browser << EOF
+    #!/usr/bin/env bash
+
+    # Set GTK theme
+    export GTK_THEME=Everblush
+
+    # Launch Zen Browser
+    exec ${inputs.zen-browser.packages.${pkgs.system}.default}/bin/zen-browser "\$@"
+    EOF
+        chmod +x $HOME/.local/bin/zen-browser
   '';
 }

@@ -15,9 +15,12 @@
     # Hardware support
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
+    # Add NUR (Nix User Repository)
+    nur.url = "github:nix-community/NUR";
+
     # Package overrides and custom packages
     everblush-gtk = {
-      url = "path:./pkgs/everblush-gtk";
+      url = "github:Everblush/gtk";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -40,21 +43,26 @@
       nixpkgs,
       home-manager,
       nixos-hardware,
+      nur,
       everblush-gtk,
       firefox-everblush-theme,
       doom-config,
+      zen-browser,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
+        # Add NUR overlay
         overlays = [
+          nur.overlay
           # Add our custom packages
           (final: prev: {
             everblush-gtk = everblush-gtk.packages.${system}.default;
             firefox-everblush-theme = firefox-everblush-theme.packages.${system}.default;
             doom-config = doom-config.packages.${system}.default;
+            zen-browser = zen-browser.packages.${system}.default;
           })
         ];
         config.allowUnfree = true;
@@ -156,9 +164,10 @@
       };
 
       packages.${system} = {
-        inherit (everblush-gtk.packages.${system}) everblush-gtk;
+        everblush-gtk = everblush-gtk.packages.${system}.default;
         firefox-theme = firefox-everblush-theme.packages.${system}.default;
         doom = doom-config.packages.${system}.default;
+        zen-browser = zen-browser.packages.${system}.default;
       };
 
       # Add specific shells for each target
