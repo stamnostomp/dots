@@ -137,7 +137,7 @@ in
         "$mod, e, exec, ${config.home.homeDirectory}/.local/bin/emacs-wrapper"
 
         # Web browser
-        "$mod, w, exec, firefox"
+        "$mod, w, exec, zen-bin"
 
         # File Manager
         "$mod, m, exec, pcmanfm"

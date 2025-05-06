@@ -423,21 +423,16 @@ in
   # Activation hooks
   home.activation = {
     # Clean up old GTK fixes - runs first
-    cleanupGtkFixes = lib.hm.dag.entryBefore [ "fixCursor" ] ''
-      echo "Cleaning up previous GTK fixes..."
-      $DRY_RUN_CMD ${cleanupGtkFixes}/bin/cleanup-gtk-fixes
-    '';
-
     # Fix cursor
-    fixCursor = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      echo "Setting up cursor theme..."
-      $DRY_RUN_CMD ${cursorFix}/bin/fix-cursor
-    '';
+    #fixCursor = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # echo "Setting up cursor theme..."
+    #$DRY_RUN_CMD ${cursorFix}/bin/fix-cursor
+    #'';
 
     # Set Papirus folder color
-    setPapirusFolderColor = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      echo "Setting Papirus folder color to blue-grey..."
-      $DRY_RUN_CMD ${papirusFolderColor}/bin/set-papirus-folder-color
-    '';
+    #setPapirusFolderColor = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # echo "Setting Papirus folder color to blue-grey..."
+    # $DRY_RUN_CMD ${papirusFolderColor}/bin/set-papirus-folder-color
+    #'';
   };
 }

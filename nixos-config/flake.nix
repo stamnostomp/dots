@@ -56,7 +56,7 @@
         inherit system;
         # Add NUR overlay
         overlays = [
-          nur.overlay
+          nur.overlay.default
           # Add our custom packages
           (final: prev: {
             everblush-gtk = everblush-gtk.packages.${system}.default;
