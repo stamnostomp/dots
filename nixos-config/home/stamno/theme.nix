@@ -17,169 +17,6 @@ let
     size = 20;
   };
 
-  # Create a script derivation for the GTK transparency fix
-  gtkTransparencyFix = pkgs.writeScriptBin "fix-gtk-transparency" ''
-    #!/usr/bin/env bash
-
-    # Define Everblush colors
-    BACKGROUND="${colors.background}"
-    BLACK="${colors.black}"
-    CYAN="${colors.cyan}"
-    FOREGROUND="${colors.foreground}"
-
-    # Create GTK-3.0 settings if they don't exist
-    mkdir -p "$HOME/.config/gtk-3.0"
-    mkdir -p "$HOME/.config/gtk-4.0"
-
-    # Add specific transparency fixes to GTK-3.0 settings
-    cat > "$HOME/.config/gtk-3.0/gtk.css" << EOF
-    /* Fix for transparency issues in GTK apps */
-    window, dialog, popover, menu {
-      background-color: $BACKGROUND;
-      box-shadow: none;
-    }
-
-    window.solid-csd, dialog.solid-csd {
-      background-color: $BACKGROUND;
-      box-shadow: none;
-    }
-
-    .background {
-      background-color: $BACKGROUND;
-    }
-
-    /* Fix for some specific apps with transparency issues */
-    .titlebar, headerbar {
-      background-color: $BLACK;
-      border-color: $BLACK;
-    }
-
-    /* Fix for context menus */
-    menu, .menu, .context-menu {
-      background-color: $BLACK;
-      border: 1px solid $CYAN;
-    }
-
-    /* Additional fixes for popover widgets */
-    popover > arrow,
-    popover > contents {
-      background-color: $BLACK;
-      border: 1px solid $CYAN;
-    }
-
-    /* Fix for dropdown menus */
-    combobox window.popup,
-    combobox menu {
-      background-color: $BLACK;
-      border: 1px solid $CYAN;
-    }
-
-    /* Fix transparency for tooltips */
-    tooltip {
-      background-color: $BLACK;
-      border: 1px solid $CYAN;
-    }
-    tooltip label {
-      color: $FOREGROUND;
-    }
-
-    /* Fix for dialog buttons */
-    button {
-      background-color: $BLACK;
-      border: 1px solid $CYAN;
-    }
-    button:hover {
-      background-color: ${colors.brightBlack};
-    }
-    EOF
-
-    # Apply the same fixes for GTK-4
-    cat > "$HOME/.config/gtk-4.0/gtk.css" << EOF
-    /* Fix for transparency issues in GTK apps */
-    window, dialog, popover, menu {
-      background-color: $BACKGROUND;
-      box-shadow: none;
-    }
-
-    window.solid-csd, dialog.solid-csd {
-      background-color: $BACKGROUND;
-      box-shadow: none;
-    }
-
-    .background {
-      background-color: $BACKGROUND;
-    }
-
-    /* Fix for some specific apps with transparency issues */
-    .titlebar, headerbar {
-      background-color: $BLACK;
-      border-color: $BLACK;
-    }
-
-    /* Fix for context menus */
-    menu, .menu, .context-menu {
-      background-color: $BLACK;
-      border: 1px solid $CYAN;
-    }
-
-    /* Additional fixes for popover widgets */
-    popover > arrow,
-    popover > contents {
-      background-color: $BLACK;
-      border: 1px solid $CYAN;
-    }
-
-    /* Fix for dropdown menus */
-    combobox window.popup,
-    combobox menu {
-      background-color: $BLACK;
-      border: 1px solid $CYAN;
-    }
-
-    /* Fix transparency for tooltips */
-    tooltip {
-      background-color: $BLACK;
-      border: 1px solid $CYAN;
-    }
-    tooltip label {
-      color: $FOREGROUND;
-    }
-
-    /* Fix for dialog buttons */
-    button {
-      background-color: $BLACK;
-      border: 1px solid $CYAN;
-    }
-    button:hover {
-      background-color: ${colors.brightBlack};
-    }
-    EOF
-
-    # Create a fix for Flatpak apps
-    mkdir -p "$HOME/.config/gtk-3.0/flatpak-overrides"
-    mkdir -p "$HOME/.config/gtk-4.0/flatpak-overrides"
-
-    cp "$HOME/.config/gtk-3.0/gtk.css" "$HOME/.config/gtk-3.0/flatpak-overrides/gtk.css"
-    cp "$HOME/.config/gtk-4.0/gtk.css" "$HOME/.config/gtk-4.0/flatpak-overrides/gtk.css"
-
-    echo "GTK transparency fixes applied. Please restart your applications."
-
-    # Update theme setting in dconf (for GNOME/GTK apps)
-    if command -v gsettings &> /dev/null; then
-      gsettings set org.gnome.desktop.interface gtk-theme 'Everblush'
-      gsettings set org.gnome.desktop.interface cursor-theme '${cursorTheme.name}'
-      gsettings set org.gnome.desktop.interface cursor-size ${toString cursorTheme.size}
-      echo "Updated GTK theme settings via gsettings."
-    fi
-
-    # Force reload for running applications
-    if command -v xsettingsd &> /dev/null; then
-      killall -HUP xsettingsd 2>/dev/null
-    fi
-
-    echo "Transparency fixes complete. Log out and back in for the best results."
-  '';
-
   # Create a script derivation for cursor fix
   cursorFix = pkgs.writeScriptBin "fix-cursor" ''
     #!/usr/bin/env bash
@@ -202,6 +39,77 @@ let
     fi
 
     echo "Cursor theme set to ${cursorTheme.name} with size ${toString cursorTheme.size}"
+  '';
+
+  # Create a script to clean up previous GTK fixes
+  cleanupGtkFixes = pkgs.writeScriptBin "cleanup-gtk-fixes" ''
+        #!/usr/bin/env bash
+
+        # Define paths to clean up
+        GTK3_CSS="$HOME/.config/gtk-3.0/gtk.css"
+        GTK4_CSS="$HOME/.config/gtk-4.0/gtk.css"
+        GTK3_FLATPAK="$HOME/.config/gtk-3.0/flatpak-overrides/gtk.css"
+        GTK4_FLATPAK="$HOME/.config/gtk-4.0/flatpak-overrides/gtk.css"
+        STEAM_CSS="$HOME/.local/share/Steam/skins/Everblush/resource/styles.css"
+        STEAM_LAYOUT="$HOME/.local/share/Steam/skins/Everblush/resource/layout.css"
+
+        # Function to reset a CSS file
+        reset_css() {
+          local file="$1"
+          if [ -f "$file" ]; then
+            echo "Removing custom CSS from $file"
+            rm -f "$file"
+          fi
+        }
+
+        # Reset all CSS files
+        reset_css "$GTK3_CSS"
+        reset_css "$GTK4_CSS"
+        reset_css "$GTK3_FLATPAK"
+        reset_css "$GTK4_FLATPAK"
+        reset_css "$STEAM_CSS"
+        reset_css "$STEAM_LAYOUT"
+
+        # Remove Steam skin directory if empty
+        if [ -d "$(dirname "$STEAM_CSS")" ] && [ -z "$(ls -A "$(dirname "$STEAM_CSS")")" ]; then
+          rm -rf "$(dirname "$(dirname "$STEAM_CSS")")"
+          echo "Removed empty Steam skin directory"
+        fi
+
+        # Create minimal GTK CSS for both GTK3 and GTK4 with just the background color
+        mkdir -p "$(dirname "$GTK3_CSS")"
+        cat > "$GTK3_CSS" << EOF
+    /* Minimal CSS file - only contains necessary settings */
+    window.background {
+      background-color: #141b1e;
+    }
+    EOF
+
+        mkdir -p "$(dirname "$GTK4_CSS")"
+        cat > "$GTK4_CSS" << EOF
+    /* Minimal CSS file - only contains necessary settings */
+    window.background {
+      background-color: #141b1e;
+    }
+    EOF
+
+        echo "All custom GTK fixes have been cleaned up. You should log out and back in for the changes to take effect."
+  '';
+
+  # Create a script to set Papirus folder color to blue-grey
+  papirusFolderColor = pkgs.writeScriptBin "set-papirus-folder-color" ''
+    #!/usr/bin/env bash
+
+    # Check if papirus-folders is installed
+    if ! command -v papirus-folders &> /dev/null; then
+      echo "papirus-folders not found. Installing..."
+      ${pkgs.papirus-folders}/bin/papirus-folders -h &> /dev/null
+    fi
+
+    # Set the folder color to blue-grey
+    ${pkgs.papirus-folders}/bin/papirus-folders -C bluegrey --theme Papirus-Dark
+
+    echo "Papirus folder color set to blue-grey for Papirus-Dark theme"
   '';
 in
 {
@@ -362,86 +270,134 @@ in
       gtk-xft-rgba=rgb
     '';
 
-    # Fix for transparency issues in GTK apps
-    "gtk-3.0/gtk.css".text = ''
-      /* Fix for transparency issues in GTK apps */
-      window, dialog, popover, menu {
-        background-color: ${colors.background};
-        box-shadow: none;
+    # Waybar style for fixing black bars
+    "waybar/style.css".text = ''
+      * {
+          font-family: "Cozette", "JetBrainsMono Nerd Font", "Siji", "FontAwesome";
+          font-size: 13px;
+          border: none;
+          border-radius: 0;
       }
 
-      window.solid-csd, dialog.solid-csd {
-        background-color: ${colors.background};
-        box-shadow: none;
+      window#waybar {
+          background-color: ${colors.waybarbg};
+          color: #dadada;
       }
 
-      .background {
-        background-color: ${colors.background};
+      #workspaces button {
+          padding: 0 5px;
+          background: transparent;
+          color: #dadada;
       }
 
-      /* Fix for some specific apps with transparency issues */
-      .titlebar, headerbar {
-        background-color: ${colors.black};
-        border-color: ${colors.black};
+      #workspaces button.active {
+          background-color: #32302f;
+          color: #dadada;
+          border-bottom: 2px solid #427b58;
       }
 
-      /* Fix for context menus */
-      menu, .menu, .context-menu {
-        background-color: ${colors.black};
-        border: 1px solid ${colors.cyan};
+      #workspaces button:hover {
+          background: rgba(50, 48, 47, 0.5);
       }
 
-      /* Additional fixes for popover widgets */
-      popover > arrow,
-      popover > contents {
-        background-color: ${colors.black};
-        border: 1px solid ${colors.cyan};
-      }
-    '';
-
-    # Apply the same fixes for GTK-4
-    "gtk-4.0/gtk.css".text = ''
-      /* Fix for transparency issues in GTK apps */
-      window, dialog, popover, menu {
-        background-color: ${colors.background};
-        box-shadow: none;
+      #window {
+          padding: 0 10px;
       }
 
-      window.solid-csd, dialog.solid-csd {
-        background-color: ${colors.background};
-        box-shadow: none;
+      #cpu {
+          color: ${colors.blue};
       }
 
-      .background {
-        background-color: ${colors.background};
+      #memory {
+          color: ${colors.magenta};
       }
 
-      /* Fix for some specific apps with transparency issues */
-      .titlebar, headerbar {
-        background-color: ${colors.black};
-        border-color: ${colors.black};
+      #disk {
+          color: ${colors.cyan};
       }
 
-      /* Fix for context menus */
-      menu, .menu, .context-menu {
-        background-color: ${colors.black};
-        border: 1px solid ${colors.cyan};
+      #pulseaudio {
+          color: ${colors.yellow};
       }
 
-      /* Additional fixes for popover widgets */
-      popover > arrow,
-      popover > contents {
-        background-color: ${colors.black};
-        border: 1px solid ${colors.cyan};
+      #clock {
+          color: ${colors.brightCyan};
+      }
+
+      /* Fix for custom separators */
+      #custom-left {
+          font-size: 20px;
+          color: ${colors.waybarbg};
+          background-color: transparent;
+          margin: 0;
+          padding: 0;
+      }
+
+      #custom-right {
+          font-size: 20px;
+          color: ${colors.waybarbg};
+          background-color: transparent;
+          margin: 0;
+          padding: 0;
+      }
+
+      /* Fix spacing between modules */
+      #workspaces {
+          background-color: ${colors.waybarbg};
+          padding: 0 5px;
+          margin: 0;
+      }
+
+      #window {
+          background-color: ${colors.waybarbg};
+          margin: 0;
+      }
+
+      /* Module styling with consistent background */
+      #cpu, #memory, #disk, #pulseaudio, #battery, #network, #clock {
+          padding: 0 10px;
+          margin: 0;
+          background-color: ${colors.waybarbg};
+      }
+
+      /* Fix for waybar spacing */
+      box {
+          padding: 0;
+          margin: 0;
+          background-color: transparent;
+      }
+
+      /* Add styling for tray to match */
+      #tray {
+          background-color: ${colors.waybarbg};
+          padding: 0 10px;
+          margin-right: 5px;
+      }
+
+      /* Specific fix for gaps between modules */
+      .modules-left, .modules-center, .modules-right {
+          background-color: ${colors.waybarbg};
+      }
+
+      /* Tooltip styling */
+      tooltip {
+          background-color: ${colors.background};
+          border: 1px solid ${colors.blue};
+          border-radius: 2px;
+      }
+
+      tooltip label {
+          color: ${colors.foreground};
       }
     '';
   };
 
-  # Add the fix scripts to the user's PATH via home.packages
+  # Add scripts and packages
   home.packages = with pkgs; [
     # Our custom script packages
-    gtkTransparencyFix
     cursorFix
+    papirusFolderColor
+    cleanupGtkFixes
 
     # Theme dependencies
     gtk-engine-murrine
@@ -449,6 +405,7 @@ in
 
     # Icon theme
     papirus-icon-theme
+    papirus-folders
 
     # Cursor theme
     apple-cursor
@@ -463,13 +420,24 @@ in
     xorg.xrdb
   ];
 
-  # Automatic activation hook to apply fixes
-  home.activation.fixGtkAndCursor = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    # Run our scripts after configuration is written
-    echo "Applying GTK transparency fixes..."
-    $DRY_RUN_CMD ${gtkTransparencyFix}/bin/fix-gtk-transparency
+  # Activation hooks
+  home.activation = {
+    # Clean up old GTK fixes - runs first
+    cleanupGtkFixes = lib.hm.dag.entryBefore [ "fixCursor" ] ''
+      echo "Cleaning up previous GTK fixes..."
+      $DRY_RUN_CMD ${cleanupGtkFixes}/bin/cleanup-gtk-fixes
+    '';
 
-    echo "Setting up cursor theme..."
-    $DRY_RUN_CMD ${cursorFix}/bin/fix-cursor
-  '';
+    # Fix cursor
+    fixCursor = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      echo "Setting up cursor theme..."
+      $DRY_RUN_CMD ${cursorFix}/bin/fix-cursor
+    '';
+
+    # Set Papirus folder color
+    setPapirusFolderColor = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      echo "Setting Papirus folder color to blue-grey..."
+      $DRY_RUN_CMD ${papirusFolderColor}/bin/set-papirus-folder-color
+    '';
+  };
 }
