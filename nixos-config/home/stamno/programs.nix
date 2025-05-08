@@ -68,6 +68,9 @@
     # Games
     steam
     protonup-ng
+
+    #CAd
+    freecad
   ];
 
   # Auto-install the Firefox theme on activation

@@ -75,6 +75,7 @@ in
         gaps_in = 5;
         gaps_out = 10;
         border_size = 3;
+        # Fix the color format for Hyprland
         "col.active_border" = "rgba(6cbfbfee)";
         "col.inactive_border" = "rgba(b3b9b8aa)";
         layout = "dwindle";
@@ -248,6 +249,15 @@ in
         force_default_wallpaper = 0;
       };
     };
+
+    # Use extraConfig for the color settings in the correct format
+    extraConfig = ''
+      # Border colors
+      general {
+        col.active_border = rgb(6cbfbf)
+        col.inactive_border = rgb(b3b9b8)
+      }
+    '';
   };
 
   # Set up configuration files for Hyprland
@@ -306,7 +316,6 @@ in
       echo "env = XCURSOR_THEME,${cursorTheme.name}" >> $HOME/.config/hypr/cursor.conf
     '';
   };
-
 
   # Add required packages for Hyprland
   home.packages = with pkgs; [

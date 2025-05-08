@@ -1,5 +1,4 @@
-# Create a modified theme.nix file
-
+# home/stamno/theme.nix
 {
   config,
   lib,
@@ -9,10 +8,10 @@
 }:
 
 let
-  # Theme configuration - change just this section to switch themes
+  # Theme configuration - using Everblush theme
   theme = {
-    name = "Tokyonight-Dark-B";
-    package = pkgs.tokyo-night-gtk;
+    name = "Everblush";
+    package = inputs.everblush-gtk.packages.${pkgs.system}.default; # Use our custom package
     cursor = {
       name = "Bibata-Modern-Classic";
       package = pkgs.bibata-cursors;
@@ -22,29 +21,51 @@ let
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
     };
-    colors = {
-      # Tokyo Night colors
-      background = "#1a1b26";
-      foreground = "#c0caf5";
-      black = "#15161e";
-      brightBlack = "#414868";
-      red = "#f7768e";
-      brightRed = "#f7768e";
-      green = "#9ece6a";
-      brightGreen = "#9ece6a";
-      yellow = "#e0af68";
-      brightYellow = "#e0af68";
-      blue = "#7aa2f7";
-      brightBlue = "#7aa2f7";
-      magenta = "#bb9af7";
-      brightMagenta = "#bb9af7";
-      cyan = "#7dcfff";
-      brightCyan = "#7dcfff";
-      white = "#a9b1d6";
-      brightWhite = "#c0caf5";
-      waybarbg = "#24283b"; # Slightly lighter background for waybar
-    };
+    # Import colors from existing configuration in home directory
+    colors = (import ./theme/colors.nix).colors;
   };
+
+  # Helper function to convert hex to rgba
+  hexToRgba =
+    hex: opacity:
+    let
+      r = builtins.substring 1 2 hex;
+      g = builtins.substring 3 2 hex;
+      b = builtins.substring 5 2 hex;
+
+      # Convert hex to decimal
+      hexToDec =
+        hex:
+        let
+          chars = lib.stringToCharacters hex;
+          value =
+            c:
+            let
+              v = builtins.substring 0 1 (lib.toLower c);
+            in
+            if v == "a" then
+              10
+            else if v == "b" then
+              11
+            else if v == "c" then
+              12
+            else if v == "d" then
+              13
+            else if v == "e" then
+              14
+            else if v == "f" then
+              15
+            else
+              lib.toInt v;
+        in
+        (value (builtins.elemAt chars 0)) * 16 + (value (builtins.elemAt chars 1));
+
+      # Convert to rgba format
+      dec_r = hexToDec r;
+      dec_g = hexToDec g;
+      dec_b = hexToDec b;
+    in
+    "rgba(${toString dec_r} ${toString dec_g} ${toString dec_b} ${toString opacity})";
 
   # Create a script derivation for cursor fix
   cursorFix = pkgs.writeScriptBin "fix-cursor" ''
@@ -277,126 +298,18 @@ in
       gtk-xft-hintstyle=hintslight
       gtk-xft-rgba=rgb
     '';
-
-    # Update waybar style to use the new theme colors
-    "waybar/style.css".text = ''
-      * {
-          font-family: "Cozette", "JetBrainsMono Nerd Font", "Siji", "FontAwesome";
-          font-size: 13px;
-          border: none;
-          border-radius: 0;
-      }
-
-      window#waybar {
-          background-color: ${theme.colors.waybarbg};
-          color: ${theme.colors.foreground};
-      }
-
-      #workspaces button {
-          padding: 0 5px;
-          background: transparent;
-          color: ${theme.colors.foreground};
-      }
-
-      #workspaces button.active {
-          background-color: ${theme.colors.black};
-          color: ${theme.colors.foreground};
-          border-bottom: 2px solid ${theme.colors.blue};
-      }
-
-      #workspaces button:hover {
-          background: rgba(50, 48, 47, 0.5);
-      }
-
-      #window {
-          padding: 0 10px;
-      }
-
-      #cpu {
-          color: ${theme.colors.blue};
-      }
-
-      #memory {
-          color: ${theme.colors.magenta};
-      }
-
-      #disk {
-          color: ${theme.colors.cyan};
-      }
-
-      #pulseaudio {
-          color: ${theme.colors.yellow};
-      }
-
-      #clock {
-          color: ${theme.colors.brightCyan};
-      }
-
-      /* Fix for custom separators */
-      #custom-left {
-          font-size: 20px;
-          color: ${theme.colors.waybarbg};
-          background-color: transparent;
-          margin: 0;
-          padding: 0;
-      }
-
-      #custom-right {
-          font-size: 20px;
-          color: ${theme.colors.waybarbg};
-          background-color: transparent;
-          margin: 0;
-          padding: 0;
-      }
-
-      /* Module styling with consistent background */
-      #cpu, #memory, #disk, #pulseaudio, #battery, #network, #clock {
-          padding: 0 10px;
-          margin: 0;
-          background-color: ${theme.colors.waybarbg};
-      }
-
-      #workspaces {
-          background-color: ${theme.colors.waybarbg};
-          padding: 0 5px;
-          margin: 0;
-      }
-
-      #window {
-          background-color: ${theme.colors.waybarbg};
-          margin: 0;
-      }
-
-      /* Add styling for tray to match */
-      #tray {
-          background-color: ${theme.colors.waybarbg};
-          padding: 0 10px;
-          margin-right: 5px;
-      }
-
-      /* Tooltip styling */
-      tooltip {
-          background-color: ${theme.colors.background};
-          border: 1px solid ${theme.colors.blue};
-          border-radius: 2px;
-      }
-
-      tooltip label {
-          color: ${theme.colors.foreground};
-      }
-    '';
   };
 
-  # Update Hyprland configuration with the theme colors
+  # Update Hyprland configuration with the theme colors (using fixed format)
   wayland.windowManager.hyprland.extraConfig = ''
     # Theme colors
     general {
-        col.active_border = rgba(${theme.colors.blue}ee)
-        col.inactive_border = rgba(${theme.colors.white}aa)
+        col.active_border = rgba(6cbfbfee)
+        col.inactive_border = rgba(b3b9b8aa)
     }
   '';
 
-  # Generate wallpaper with the new background color
+  # Generate wallpaper with the background color
   home.activation.generateWallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     mkdir -p ~/.config/hypr
     ${pkgs.imagemagick}/bin/magick -size 1920x1080 "xc:${theme.colors.background}" ~/.config/hypr/wallpaper.png
