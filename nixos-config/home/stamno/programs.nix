@@ -26,6 +26,7 @@
     nix-direnv.enable = true;
   };
 
+
   # Application packages
   home.packages = with pkgs; [
     # Browsers
@@ -71,6 +72,10 @@
 
     #CAd
     freecad
+
+    #3d
+    orca-slicer
+
   ];
 
   # Auto-install the Firefox theme on activation
