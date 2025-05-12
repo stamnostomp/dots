@@ -64,6 +64,8 @@
       vulkan-loader
       vulkan-validation-layers
       libvdpau
+      mesa
+      libGL
     ];
     extraPackages32 = with pkgs.pkgsi686Linux; [
       vulkan-loader
