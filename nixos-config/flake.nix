@@ -5,12 +5,6 @@
     # Core dependencies
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
-
-    orca-slicer-fixed = {
-      url = "path: ./pkgs/orca-slicer-fixed";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Home manager
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -53,7 +47,6 @@
       firefox-everblush-theme,
       doom-config,
       zen-browser,
-      orca-slicer-fixed,
       ...
     }@inputs:
     let
@@ -69,7 +62,7 @@
             firefox-everblush-theme = firefox-everblush-theme.packages.${system}.default;
             doom-config = doom-config.packages.${system}.default;
             zen-browser = zen-browser.packages.${system}.default;
-            orca-slicer-fixed = orca-slicer-fixed.packages.${system}.default;
+
           })
         ];
         config.allowUnfree = true;
@@ -175,7 +168,6 @@
         firefox-theme = firefox-everblush-theme.packages.${system}.default;
         doom = doom-config.packages.${system}.default;
         zen-browser = zen-browser.packages.${system}.default;
-        orca-slicer-fixed = orca-slicer-fixed.packages.${system}.default;
       };
 
       # Add specific shells for each target

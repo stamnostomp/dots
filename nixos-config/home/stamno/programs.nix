@@ -26,7 +26,6 @@
     nix-direnv.enable = true;
   };
 
-
   # Application packages
   home.packages = with pkgs; [
     # Browsers
@@ -75,6 +74,7 @@
 
     #3d
     orca-slicer
+    bottles
 
   ];
 
