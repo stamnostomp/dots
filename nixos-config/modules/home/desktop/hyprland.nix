@@ -149,6 +149,9 @@ in
         # Waybar reload
         "$mod SHIFT, w, exec, killall waybar && waybar &"
 
+        # emacse
+        "$mod SHIFT, semicolon, exec, emacsclient -c -e '(emacs-everywhere)'"
+
         # Close window
         "$mod, q, killactive"
 
