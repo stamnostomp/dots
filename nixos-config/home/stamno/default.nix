@@ -26,6 +26,9 @@ in
     ../../modules/home/terminal/alacritty.nix
     ../../modules/home/terminal/kitty.nix
     ../../modules/home/browser/firefox.nix
+    ../../modules/home/3d-printing/prusa-wrapper.nix
+    ../../modules/home/3d-printing/override-prusa-slicer.nix
+    ../../modules/home/3d-printing/prusa-slicer.nix
 
     # Conditionally import laptop-specific modules
 
