@@ -74,6 +74,9 @@
 
     #3d
     orca-slicer
+    prusa-slicer
+
+    #wine
     bottles
 
   ];

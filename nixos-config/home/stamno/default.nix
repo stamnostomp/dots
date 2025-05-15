@@ -31,7 +31,7 @@ in
 
     # Import Doom Emacs module
     ../../modules/home/editors/doom-emacs.nix
-    ../../modules/home/editors/emacs-everywhere.nix
+
   ] ++ lib.optional isLaptop laptopModule;
 
   # Home Manager basics
