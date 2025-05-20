@@ -112,8 +112,11 @@
             # Include home-manager as a module
             home-manager.nixosModules.home-manager
             {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
+              home-manager = {
+                useGlobalPkgs = true;
+                backupFileExtension = "backup";
+                useUserPackages = true;
+              };
               home-manager.extraSpecialArgs = {
                 inherit inputs hostname;
               };

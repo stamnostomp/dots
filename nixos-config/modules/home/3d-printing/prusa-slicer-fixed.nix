@@ -8,7 +8,7 @@
 
 let
   # Create an FHS environment specifically for PrusaSlicer
-  prusaSlicerFHS = pkgs.buildFHSUserEnv {
+  prusaSlicerFHS = pkgs.buildFHSEnv {
     name = "prusa-slicer-fhs";
     targetPkgs =
       pkgs: with pkgs; [
@@ -41,7 +41,7 @@ let
         fontconfig
         freetype
         # Prebuilt dependencies from Adwaita theme
-        gnome.adwaita-icon-theme
+        pkgs.adwaita-icon-theme
         # Common system libraries
         curl
         openssl

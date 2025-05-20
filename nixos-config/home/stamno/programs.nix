@@ -79,6 +79,9 @@
     #wine
     bottles
 
+    #office
+    libreoffice
+
   ];
 
   # Auto-install the Firefox theme on activation
