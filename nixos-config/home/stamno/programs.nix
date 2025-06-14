@@ -68,6 +68,7 @@
     # Games
     steam
     protonup-ng
+    lutris
 
     #CAd
     freecad

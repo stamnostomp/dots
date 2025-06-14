@@ -1,5 +1,10 @@
 # modules/system/networking.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Enable NetworkManager
@@ -7,7 +12,7 @@
 
   # Firewall configuration
   networking.firewall = {
-    enable = true;
+    enable = false;
     allowedTCPPorts = [ 22 ];
   };
 

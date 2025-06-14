@@ -5,6 +5,7 @@
     # Core dependencies
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     zen-browser.url = "github:MarceColl/zen-browser-flake";
+
     # Home manager
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -14,7 +15,7 @@
     # Hardware support
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
-    # Add NUR (Nix User Repository)
+    # Add NUR (Nix User Repository) - FIXED
     nur.url = "github:nix-community/NUR";
 
     # Package overrides and custom packages
@@ -53,16 +54,18 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
-        # Add NUR overlay
+        # FIXED: Updated NUR overlay and improved structure
         overlays = [
-          nur.overlay.default
-          # Add our custom packages
+          # Use the new NUR overlay syntax
+          nur.overlays.default
+
+          # Add our custom packages overlay
           (final: prev: {
+            # Custom packages from our flake inputs
             everblush-gtk = everblush-gtk.packages.${system}.default;
             firefox-everblush-theme = firefox-everblush-theme.packages.${system}.default;
             doom-config = doom-config.packages.${system}.default;
             zen-browser = zen-browser.packages.${system}.default;
-
           })
         ];
         config.allowUnfree = true;
@@ -178,7 +181,7 @@
         default = pkgs.mkShell {
           buildInputs = with pkgs; [
             git
-            nixfmt
+            nixfmt-rfc-style
             ripgrep
             fd
             jq
@@ -211,7 +214,7 @@
         desktop = pkgs.mkShell {
           buildInputs = with pkgs; [
             git
-            nixfmt
+            nixfmt-rfc-style
             ripgrep
             fd
             jq
@@ -233,7 +236,7 @@
         laptop = pkgs.mkShell {
           buildInputs = with pkgs; [
             git
-            nixfmt
+            nixfmt-rfc-style
             ripgrep
             fd
             jq

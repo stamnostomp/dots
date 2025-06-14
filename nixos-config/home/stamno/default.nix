@@ -12,7 +12,6 @@ let
   # Import color scheme directly
   colorsDef = import ./theme/colors.nix;
   isLaptop = hostname == "laptop";
-  laptopModule = if isLaptop then ../../modules/home/laptop else null;
 in
 {
   imports = [
@@ -28,12 +27,11 @@ in
     ../../modules/home/browser/firefox.nix
     ../../modules/home/3d-printing/prusa-slicer-fixed.nix
 
-    # Conditionally import laptop-specific modules
-
     # Import Doom Emacs module
     ../../modules/home/editors/doom-emacs.nix
 
-  ] ++ lib.optional isLaptop laptopModule;
+  ] ++ (if isLaptop then [ ../../modules/home/laptop ] else [ ]);
+  # ↑ Fixed: Use proper conditional list instead of lib.optional with null
 
   # Home Manager basics
   home.username = "stamno";
@@ -49,6 +47,4 @@ in
     # The repoUrl is deprecated but kept for compatibility
     repoUrl = "https://github.com/stamnostomp/doom-d";
   };
-
-  # Rest of configuration remains the same...
 }

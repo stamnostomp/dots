@@ -29,8 +29,8 @@ in
     settings = {
       # Monitor configuration with the fixed positioning
       monitor = [
-        "DP-1,3440x1440@144,0x1080,1"
-        "HDMI-A-1,1920x1080@75,760x0,1"
+        "DP-1,3440x1440@144,1080x0,1"
+        "HDMI-A-1,1920x1080@75, 0x0 ,1,transform,3"
       ];
 
       # Environment variables - cursor settings
