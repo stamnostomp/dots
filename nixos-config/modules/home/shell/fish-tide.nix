@@ -1,4 +1,4 @@
-# modules/home/shell/fish-prompt.nix
+# modules/home/shell/fish-tide.nix
 {
   config,
   lib,
@@ -55,14 +55,27 @@ in
       set -g tide_status_color_success "${colors.brightGreen}"
       set -g tide_time_color "${colors.brightWhite}"
       set -g tide_nix_shell_color "${colors.brightBlue}"
-      set -g tide_nix_shell_icon "️❄"
+      set -g tide_nix_shell_icon "❄️"
       set -g tide_nix_shell_enabled true
 
-      # Custom prompt function
+      # Helper function to detect nix-shell status
+      function __nix_shell_indicator
+        if set -q IN_NIX_SHELL
+          set_color "${colors.brightBlue}"
+          if test "$IN_NIX_SHELL" = "pure"
+            echo -n " (❄️ pure)"
+          else
+            echo -n " (❄️ nix-shell)"
+          end
+          set_color normal
+        end
+      end
+
+      # Custom prompt function with better nix-shell support
       function fish_prompt
         set -l last_status $status
 
-        # Left side
+        # User and hostname
         set_color "${colors.brightCyan}"
         echo -n (prompt_pwd)
         set_color normal
@@ -74,10 +87,13 @@ in
           set_color normal
         end
 
-        # Nix shell indicator
-        if set -q IN_NIX_SHELL
-          set_color "${colors.brightBlue}"
-          echo -n " (nix-shell)"
+        # Nix shell indicator - improved detection
+        __nix_shell_indicator
+
+        # Emacs indicator if inside Emacs
+        if set -q INSIDE_EMACS
+          set_color "${colors.brightGreen}"
+          echo -n " (emacs)"
           set_color normal
         end
 
@@ -93,11 +109,27 @@ in
         set_color normal
       end
 
-      # Right-side prompt with time
+      # Right-side prompt with time and additional info
       function fish_right_prompt
+        # Show nix-shell name if available
+        if set -q IN_NIX_SHELL
+          if set -q NIX_SHELL_NAME
+            set_color "${colors.brightBlue}"
+            echo -n "[$NIX_SHELL_NAME] "
+            set_color normal
+          end
+        end
+
+        # Time
         set_color "${colors.brightWhite}"
         echo -n (date "+%H:%M:%S")
         set_color normal
+      end
+
+      # Function to refresh prompt when entering/exiting nix-shell
+      function __refresh_prompt_on_nix_shell --on-variable IN_NIX_SHELL
+        # Force prompt refresh
+        commandline -f repaint
       end
     '';
   };

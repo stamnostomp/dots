@@ -30,26 +30,34 @@ in
       package = pkgs.emacsNativeComp;
     };
 
-    # Set up environment variables
+    # Set up environment variables - improved for nix-shell support
     home.sessionVariables = {
       EDITOR = "emacsclient -c";
       VISUAL = "emacsclient -c";
       ALTERNATE_EDITOR = "emacs";
       DOOMDIR = "${config.home.homeDirectory}/.doom.d";
       DOOMLOCALDIR = "${config.home.homeDirectory}/.doom-local";
+      # Ensure nix commands work in Emacs shells
+      NIX_PATH = "nixpkgs=${pkgs.path}";
     };
 
     # Doom-specific environment
     home.sessionPath = [
       "${config.home.homeDirectory}/.emacs.d/bin"
+      "${pkgs.nix}/bin" # Ensure nix is in PATH
     ];
 
-    # Essential packages (kept the same)
+    # Essential packages (kept the same but added debugging tools)
     home.packages = with pkgs; [
       # Core dependencies
       git
       ripgrep
       fd
+
+      # Nix development tools
+      nix
+      nixfmt-rfc-style
+      nil
 
       #vterm comp
       libtool
@@ -65,8 +73,6 @@ in
       dina-font
 
       # Language support
-      nil
-      nixfmt-rfc-style
       shellcheck
       shfmt
 
@@ -124,7 +130,7 @@ in
     # Setup activation script to clone Doom Emacs and symlink the packaged config
     home.activation = {
       doomEmacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        PATH=${pkgs.git}/bin:${pkgs.emacs-pgtk}/bin:$PATH
+        PATH=${pkgs.git}/bin:${pkgs.emacs-pgtk}/bin:${pkgs.nix}/bin:$PATH
 
         # Clone or update Doom Emacs if needed
         if [ ! -d "${config.home.homeDirectory}/.emacs.d" ]; then
@@ -146,13 +152,14 @@ in
           $DRY_RUN_CMD chmod +x ${config.home.homeDirectory}/.emacs.d/bin/doom
         fi
 
-        # Run doom sync if not in dry run mode - REMOVED the -y flag
+        # Run doom sync if not in dry run mode
         if [ -z "$DRY_RUN_CMD" ]; then
           # Make sure the directory exists first
           mkdir -p ${config.home.homeDirectory}/.doom-local
           # Run doom sync with important environment variables
           DOOMDIR="${config.home.homeDirectory}/.doom.d" \
           DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local" \
+          NIX_PATH="nixpkgs=${pkgs.path}" \
           ${config.home.homeDirectory}/.emacs.d/bin/doom sync
         fi
       '';
@@ -188,34 +195,102 @@ in
       ];
     };
 
-    # Create Emacs wrapper script with improved sync handling
+    # Create Emacs wrapper script with improved nix-shell support
     home.file.".local/bin/emacs-wrapper" = {
       executable = true;
       text = ''
         #!/usr/bin/env bash
-        # Emacs wrapper to ensure proper environment
+        # Emacs wrapper to ensure proper environment and nix-shell support
 
         # Set necessary environment variables
-        export PATH="${config.home.homeDirectory}/.emacs.d/bin:${pkgs.emacs-pgtk}/bin:$PATH"
+        export PATH="${config.home.homeDirectory}/.emacs.d/bin:${pkgs.emacs-pgtk}/bin:${pkgs.nix}/bin:$PATH"
         export DOOMDIR="${config.home.homeDirectory}/.doom.d"
         export DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local"
         export EMACS="${pkgs.emacs-pgtk}/bin/emacs"
+        export NIX_PATH="nixpkgs=${pkgs.path}"
+
+        # Ensure nix profile is sourced for proper nix command availability
+        if [ -e "${config.home.homeDirectory}/.nix-profile/etc/profile.d/nix.sh" ]; then
+          source "${config.home.homeDirectory}/.nix-profile/etc/profile.d/nix.sh"
+        fi
 
         # Check if Doom is properly installed/synced
         if [ ! -d "${config.home.homeDirectory}/.doom-local" ] || [ ! -f "${config.home.homeDirectory}/.doom-local/init.el" ]; then
           echo "Doom appears to be not properly installed. Running doom sync..."
+          DOOMDIR="${config.home.homeDirectory}/.doom.d" \
+          DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local" \
+          NIX_PATH="nixpkgs=${pkgs.path}" \
           ${config.home.homeDirectory}/.emacs.d/bin/doom sync
         fi
 
-        # Launch Emacs
+        # Launch Emacs with proper environment
         exec ${pkgs.emacs-pgtk}/bin/emacs "$@"
       '';
     };
 
-    # Create Emacs service
+    # Create debug script for nix-shell issues
+    home.file.".local/bin/debug-emacs-nix.sh" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        # Debug script for Emacs nix-shell issues
+
+        echo "=== Emacs Nix-Shell Debug Information ==="
+        echo
+
+        echo "Current Environment Variables:"
+        echo "INSIDE_EMACS: ''${INSIDE_EMACS:-"not set"}"
+        echo "IN_NIX_SHELL: ''${IN_NIX_SHELL:-"not set"}"
+        echo "NIX_SHELL_NAME: ''${NIX_SHELL_NAME:-"not set"}"
+        echo "SHELL: ''${SHELL:-"not set"}"
+        echo "TERM: ''${TERM:-"not set"}"
+        echo "PWD: $(pwd)"
+        echo
+
+        echo "Available Commands:"
+        echo "nix command: $(which nix || echo "not found")"
+        echo "fish command: $(which fish || echo "not found")"
+        echo "bash command: $(which bash || echo "not found")"
+        echo
+
+        echo "Testing nix develop:"
+        echo "Attempting basic nix develop test..."
+        if nix develop --command echo "nix develop works" 2>/dev/null; then
+          echo "✅ nix develop basic test passed"
+        else
+          echo "❌ nix develop basic test failed"
+        fi
+
+        echo
+        echo "Testing fish in nix develop:"
+        if nix develop --command fish -c 'echo "fish works in nix-shell"' 2>/dev/null; then
+          echo "✅ fish in nix develop test passed"
+        else
+          echo "❌ fish in nix develop test failed"
+        fi
+
+        echo
+        echo "Fish configuration check:"
+        if [ -f "$HOME/.config/fish/config.fish" ]; then
+          echo "✅ Fish config exists"
+        else
+          echo "❌ Fish config not found"
+        fi
+
+        echo
+        echo "=== End Debug Information ==="
+      '';
+    };
+
+    # Create Emacs service with improved environment
     services.emacs = {
       enable = true;
       client.enable = true;
+      # Set environment variables for the daemon
+      extraOptions = [
+        "--with-profile"
+        "doom"
+      ];
     };
 
     # Configure fontconfig

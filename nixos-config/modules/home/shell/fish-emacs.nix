@@ -1,14 +1,20 @@
 # modules/home/shell/fish-emacs.nix
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Configure Fish shell to work with Emacs
   programs.fish.interactiveShellInit = lib.mkAfter ''
     # Ensure Emacs can work with Fish shell
     if set -q INSIDE_EMACS
-        set -gx SHELL ${pkgs.bash}/bin/bash
+        # Don't change the shell when inside Emacs - let it handle nix-shell properly
+        set -gx SHELL ${pkgs.fish}/bin/fish
     end
-    
+
     # Add support for Emacs vterm
     function vterm_printf
       if begin; [ -n "$TMUX" ] && string match -q -r "screen|tmux" "$TERM"; end
@@ -45,15 +51,20 @@
         vterm_prompt_end
       end
     end
+
+    # Better nix-shell integration for Emacs
+    function __handle_nix_shell_enter --on-variable IN_NIX_SHELL
+      if set -q IN_NIX_SHELL
+        # We've entered a nix shell
+        if set -q INSIDE_EMACS
+          echo "Entered Nix development environment (Emacs)"
+        else
+          echo "Entered Nix development environment"
+        end
+      end
+    end
   '';
 
-  # Add special support for Emacs shell mode in Bash as well
-  programs.bash.initExtra = lib.mkAfter ''
-    # Set up proper shell inside Emacs
-    if [ -n "$INSIDE_EMACS" ]; then
-      export SHELL=${pkgs.bash}/bin/bash
-      unset INSIDE_EMACS
-      exec fish
-    fi
-  '';
+  # Remove the problematic bash integration that was causing issues
+  # Let Fish handle everything directly
 }
