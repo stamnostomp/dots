@@ -40,24 +40,13 @@
     };
   };
 
-  services.deluge = {
-    enable = true;
-    web = {
-      enable = true;
-      port = 8112;
-    };
-    declarative = true;
-    config = {
-      # Download directory
-      download_location = "/home/stamno/Downloads/torrents";
-      # Allow remote connections (for deluge.el)
-      allow_remote = true;
-      # Daemon port (default is 58846)
-      daemon_port = 58846;
-    };
-    # User to run deluge as
-    user = "stamno";
-    group = "users";
+  # Open firewall ports for deluge (optional, for remote access)
+  networking.firewall = {
+    allowedTCPPorts = [
+      8112
+      58846
+    ]; # Web UI and daemon ports
+    allowedUDPPorts = [ 58846 ];
   };
   # Enable Bluetooth
   hardware.bluetooth.enable = true;

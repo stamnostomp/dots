@@ -6,5 +6,6 @@
     ./base.nix
     ./desktop.nix
     ./networking.nix
+    ./torrenting.nix
   ];
 }

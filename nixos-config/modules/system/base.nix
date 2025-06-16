@@ -61,6 +61,11 @@
     usbutils
   ];
 
+  programs.localsend = {
+    enable = true;
+    openFirewall = true; # This automatically opens port 53317 TCP/UDP
+  };
+
   # System configuration
   time.timeZone = "America/Denver"; # Adjust to your timezone
   i18n.defaultLocale = "en_US.UTF-8";

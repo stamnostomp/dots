@@ -12,7 +12,7 @@
 
   # Firewall configuration
   networking.firewall = {
-    enable = false;
+    enable = true;
     allowedTCPPorts = [ 22 ];
   };
 

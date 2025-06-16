@@ -25,6 +25,7 @@
     enable = true;
     nix-direnv.enable = true;
   };
+  # Enable LocalSend with automatic firewall configuration
 
   # Application packages
   home.packages = with pkgs; [
@@ -40,6 +41,7 @@
     ripgrep
     htop
     btop
+    localsend
 
     # File managers
     pcmanfm # Lightweight GTK+ file manager
