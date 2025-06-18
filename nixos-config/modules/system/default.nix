@@ -7,5 +7,7 @@
     ./desktop.nix
     ./networking.nix
     ./torrenting.nix
+    ./flatpack.nix
+    ./trezor.nix
   ];
 }
