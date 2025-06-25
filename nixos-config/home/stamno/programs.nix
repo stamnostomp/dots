@@ -71,6 +71,7 @@
     steam
     protonup-ng
     lutris
+    godot
 
     #CAd
     freecad
