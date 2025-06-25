@@ -9,8 +9,8 @@
 {
   # Transmission BitTorrent client setup
   environment.systemPackages = with pkgs; [
-    transmission-gtk # Full Transmission client with GUI
-    transmission # Command line tools and daemon
+    transmission_4-gtk # Full Transmission client with GUI
+    transmission_4 # Command line tools and daemon
   ];
 
   # Enable Transmission daemon service

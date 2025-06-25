@@ -4,7 +4,8 @@
   inputs = {
     # Core dependencies
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    zen-browser.url = "github:MarceColl/zen-browser-flake";
+    zen-browser.url = "github:youwen5/zen-browser-flake";
+    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
 
     # Home manager
     home-manager = {

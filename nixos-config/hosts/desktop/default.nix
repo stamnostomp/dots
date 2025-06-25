@@ -32,12 +32,10 @@
   };
 
   # Enable X11 and display manager
-  services.xserver = {
+  services.displayManager = {
     enable = true;
-    displayManager = {
-      gdm.enable = true;
-      gdm.wayland = true;
-    };
+    gdm.enable = true;
+    gdm.wayland = true;
   };
 
   # Open firewall ports for deluge (optional, for remote access)

@@ -8,17 +8,15 @@
 
 {
   # Enable X11 and display manager
-  services.xserver = {
-    enable = true;
-    displayManager.gdm = {
+  services.displayManager = {
+    gdm = {
       enable = true;
       wayland = true;
       autoSuspend = false;
     };
-    # Enable GNOME desktop environment
-    desktopManager.gnome.enable = true;
   };
-
+  # Enable GNOME desktop environment
+  services.desktopManager.gnome.enable = true;
   # Enable sound with Pipewire
   security.rtkit.enable = true;
   services.pipewire = {
@@ -87,7 +85,7 @@
   # GNOME services
   services.gnome = {
     gnome-keyring.enable = true;
-    tracker-miners.enable = true;
-    tracker.enable = true;
+    localsearch.enable = true;
+    tinysparql.enable = true;
   };
 }

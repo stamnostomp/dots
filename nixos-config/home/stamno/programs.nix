@@ -84,7 +84,7 @@
     bottles
 
     #office
-    libreoffice
+    #libreoffice
 
   ];
 
