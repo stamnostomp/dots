@@ -80,7 +80,7 @@ in
       dockfmt
 
       # LSP and npm
-      nodejs
+      #nodejs
       nodePackages.npm
 
       # C# development

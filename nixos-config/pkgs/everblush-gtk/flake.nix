@@ -32,7 +32,6 @@
 
             nativeBuildInputs = with pkgs; [
               gnumake
-              nodePackages.sass
             ];
 
             propagatedUserEnvPkgs = with pkgs; [
