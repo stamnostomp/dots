@@ -70,6 +70,9 @@
           })
         ];
         config.allowUnfree = true;
+        config.permittedInsecurePackages = [
+          "libsoup-2.74.3"
+        ];
       };
 
       # Function to make system configuration with given hostname
