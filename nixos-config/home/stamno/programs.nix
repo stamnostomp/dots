@@ -76,6 +76,9 @@
     #CAd
     freecad
 
+    #art
+    krita
+
     #3d
     orca-slicer
     prusa-slicer
