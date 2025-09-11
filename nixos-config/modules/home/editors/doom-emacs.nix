@@ -62,6 +62,7 @@ in
       #vterm comp
       libtool
       claude-code
+      cmake
 
       #spell checking
       ispell

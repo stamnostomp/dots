@@ -4,8 +4,8 @@
   inputs = {
     # Core dependencies
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    zen-browser.url = "github:youwen5/zen-browser-flake";
-    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
+    # zen-browser.url = "github:youwen5/zen-browser-flake";
+    # zen-browser.inputs.nixpkgs.follows = "nixpkgs";
 
     # Home manager
     home-manager = {
@@ -48,7 +48,7 @@
       everblush-gtk,
       firefox-everblush-theme,
       doom-config,
-      zen-browser,
+      # zen-browser,
       ...
     }@inputs:
     let
@@ -66,7 +66,7 @@
             everblush-gtk = everblush-gtk.packages.${system}.default;
             firefox-everblush-theme = firefox-everblush-theme.packages.${system}.default;
             doom-config = doom-config.packages.${system}.default;
-            zen-browser = zen-browser.packages.${system}.default;
+            #zen-browser = zen-browser.packages.${system}.default;
           })
         ];
         config.allowUnfree = true;
@@ -174,7 +174,7 @@
         everblush-gtk = everblush-gtk.packages.${system}.default;
         firefox-theme = firefox-everblush-theme.packages.${system}.default;
         doom = doom-config.packages.${system}.default;
-        zen-browser = zen-browser.packages.${system}.default;
+        #zen-browser = zen-browser.packages.${system}.default;
       };
 
       # Add specific shells for each target

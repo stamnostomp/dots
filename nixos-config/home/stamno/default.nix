@@ -25,12 +25,13 @@ in
     ../../modules/home/terminal/alacritty.nix
     ../../modules/home/terminal/kitty.nix
     ../../modules/home/browser/firefox.nix
-    ../../modules/home/3d-printing/prusa-slicer-fixed.nix
+    #    ../../modules/home/3d-printing/prusa-slicer-fixed.nix
 
     # Import Doom Emacs module
     ../../modules/home/editors/doom-emacs.nix
 
-  ] ++ (if isLaptop then [ ../../modules/home/laptop ] else [ ]);
+  ]
+  ++ (if isLaptop then [ ../../modules/home/laptop ] else [ ]);
   # ↑ Fixed: Use proper conditional list instead of lib.optional with null
 
   # Home Manager basics

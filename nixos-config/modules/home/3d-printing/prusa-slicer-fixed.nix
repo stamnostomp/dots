@@ -12,7 +12,7 @@ let
     name = "prusa-slicer-fhs";
     targetPkgs =
       pkgs: with pkgs; [
-        prusa-slicer
+        #        prusa-slicer
         # Basic GTK dependencies
         gtk3
         glib
