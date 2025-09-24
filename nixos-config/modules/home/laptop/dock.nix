@@ -4,7 +4,7 @@
 {
   # Create a dock detection and handling script
   home.file.".local/bin/dock-handler.sh" = {
-    executable = true,
+    executable = true;
     text = ''
       #!/usr/bin/env bash
 

@@ -27,7 +27,7 @@
 
   # Add scripts for power management
   home.file.".local/bin/battery-check.sh" = {
-    executable = true,
+    executable = true;
     text = ''
       #!/usr/bin/env bash
 
@@ -53,7 +53,7 @@
 
   # Create a battery status script
   home.file.".local/bin/battery-status.sh" = {
-    executable = true,
+    executable = true;
     text = ''
       #!/usr/bin/env bash
 

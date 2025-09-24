@@ -64,7 +64,7 @@ in
 
   # Create a battery status indicator in the system tray
   home.file.".config/hypr/scripts/battery-status.sh" = {
-    executable = true,
+    executable = true;
     text = ''
       #!/usr/bin/env bash
 

@@ -20,7 +20,7 @@
 
   # Add microphone mute notification
   home.file.".local/bin/mic-notify.sh" = {
-    executable = true,
+    executable = true;
     text = ''
       #!/usr/bin/env bash
 
@@ -37,7 +37,7 @@
 
   # Create a quick access for video settings
   home.file.".local/bin/webcam-settings.sh" = {
-    executable = true,
+    executable = true;
     text = ''
       #!/usr/bin/env bash
       ${pkgs.v4l-utils}/bin/v4l2-ctl --list-devices

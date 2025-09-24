@@ -11,7 +11,7 @@
 
   # Add a script to toggle airplane mode
   home.file.".local/bin/toggle-wireless.sh" = {
-    executable = true,
+    executable = true;
     text = ''
       #!/usr/bin/env bash
 

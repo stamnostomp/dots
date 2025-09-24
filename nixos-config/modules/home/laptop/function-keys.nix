@@ -22,7 +22,7 @@
 
   # Add notification for volume changes
   home.file.".local/bin/volume-notify.sh" = {
-    executable = true,
+    executable = true;
     text = ''
       #!/usr/bin/env bash
 
