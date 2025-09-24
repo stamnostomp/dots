@@ -5,7 +5,7 @@
   # Wi-Fi management GUI
   home.packages = with pkgs; [
     networkmanagerapplet  # Network system tray
-    nm-tray              # Lightweight network tray
+#    nm-tray              # Lightweight network tray
     wpa_supplicant_gui   # WPA configuration tool
   ];
 

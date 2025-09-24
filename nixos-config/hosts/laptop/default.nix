@@ -16,7 +16,7 @@
 
   boot.extraModulePackages = with config.boot.kernelPackages; [
     acpi_call # Required for TLP battery threshold setting
-    thinkpad_acpi
+#    thinkpad_acpi
   ];
 
   boot.extraModprobeConfig = ''
