@@ -33,19 +33,29 @@
 
   # Enable X11 and display manager
   services.displayManager = {
-    enable = true;
-    gdm.enable = true;
-    gdm.wayland = true;
+    gdm = {
+      enable = true;
+      wayland = true;
+      autoSuspend = false;
+    };
   };
+
+  # Enable GNOME desktop environment
+  services.desktopManager.gnome.enable = true;
+
+  # IMPORTANT: Disable power-profiles-daemon if it conflicts with other power management
+  # Desktops usually don't need aggressive power management like TLP
+  services.power-profiles-daemon.enable = true; # This is fine for desktop, but disable if using TLP
 
   # Open firewall ports for deluge (optional, for remote access)
   networking.firewall = {
     allowedTCPPorts = [
-      8112
-      58846
-    ]; # Web UI and daemon ports
+      8112  # Deluge web UI
+      58846 # Deluge daemon
+    ];
     allowedUDPPorts = [ 58846 ];
   };
+
   # Enable Bluetooth
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
@@ -82,6 +92,7 @@
     xdg-desktop-portal
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
+    xdg-desktop-portal-gnome
 
     # Hardware tools
     pciutils
@@ -98,7 +109,6 @@
 
   # Enable nix flakes
   nix = {
-
     extraOptions = ''
       experimental-features = nix-command flakes
     '';

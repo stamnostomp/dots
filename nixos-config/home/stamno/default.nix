@@ -19,20 +19,32 @@ in
     ./programs.nix
     ./theme.nix
 
-    # Import reusable home-manager modules
-    ../../modules/home/desktop
+    # Import shell modules (common to both)
     ../../modules/home/shell
+    
+    # Import terminal modules (common to both)
     ../../modules/home/terminal/alacritty.nix
     ../../modules/home/terminal/kitty.nix
+    
+    # Import browser modules (common to both)
     ../../modules/home/browser/firefox.nix
-    #    ../../modules/home/3d-printing/prusa-slicer-fixed.nix
 
-    # Import Doom Emacs module
+    # Import Doom Emacs module (common to both)
     ../../modules/home/editors/doom-emacs.nix
 
-  ]
-  ++ (if isLaptop then [ ../../modules/home/laptop ] else [ ]);
-  # ↑ Fixed: Use proper conditional list instead of lib.optional with null
+    # Conditional imports based on hostname
+  ] ++ (if isLaptop then [
+    # Laptop-specific modules
+    ../../modules/home/laptop
+    # Import only the desktop modules that don't conflict
+    ../../modules/home/desktop/dunst.nix
+    ../../modules/home/desktop/audio.nix
+    # Note: NOT importing ../../modules/home/desktop/hyprland.nix to avoid conflicts
+    # The laptop modules will handle Hyprland configuration
+  ] else [
+    # Desktop-specific modules
+    ../../modules/home/desktop
+  ]);
 
   # Home Manager basics
   home.username = "stamno";

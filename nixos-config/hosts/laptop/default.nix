@@ -24,8 +24,9 @@
   '';
 
   services.fwupd.enable = true;
-
+  services.power-profiles-daemon.enable = false; # This is fine for desktop, but disable if using TLP
   # Basic system settings
+
   networking.hostName = hostname;
   networking.networkmanager.enable = true;
   hardware.firmware = [ pkgs.linux-firmware ];
