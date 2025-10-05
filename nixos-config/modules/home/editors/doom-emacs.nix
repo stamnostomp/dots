@@ -63,6 +63,8 @@ in
       libtool
       claude-code
       cmake
+      gnumake
+      gcc
 
       #spell checking
       ispell

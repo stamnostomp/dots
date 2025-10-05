@@ -63,6 +63,9 @@
     pulsemixer
     easyeffects
 
+    # Bluetooth utilities
+    bluetui
+
     # Other utilities
     xdg-utils
     libnotify

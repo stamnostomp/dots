@@ -58,7 +58,7 @@ in
       # Input configuration (laptop-specific)
       input = {
         kb_layout = "us";
-        kb_variant = "";
+        kb_variant = "dvorak";
         kb_model = "";
         kb_options = "";
         kb_rules = "";
@@ -73,19 +73,21 @@ in
         };
       };
 
-      # TrackPoint settings (ThinkPad specific)
-      "device:tpps/2-ibm-trackpoint" = {
-        sensitivity = 0.5;
-        accel_profile = "flat";
-      };
-
-      # Touchpad settings (device-specific)
-      "device:synaptics-tm2964-001" = {
-        natural_scroll = true;
-        tap-to-click = true;
-        middle_button_emulation = true;
-        scroll_factor = 0.8;
-      };
+      # Device-specific settings
+      device = [
+        {
+          name = "tpps/2-ibm-trackpoint";
+          sensitivity = 0.5;
+          accel_profile = "flat";
+        }
+        {
+          name = "synaptics-tm2964-001";
+          natural_scroll = true;
+          tap-to-click = true;
+          middle_button_emulation = true;
+          scroll_factor = 0.8;
+        }
+      ];
 
       # Battery-optimized appearance settings
       general = {
@@ -108,45 +110,36 @@ in
           enabled = false;   # Disable blur to save battery
         };
         
-        drop_shadow = false; # Disable shadows to save battery
+        ###drop_shadow = false; # Disable shadows to save battery
       };
 
       # Battery-optimized animation settings
       animations = {
         enabled = true;
-        bezier = "laptopBezier, 0.05, 0.9, 0.1, 1.00";  # Different name to avoid conflicts
-        animation = [
-          "windows, 1, 5, laptopBezier"
-          "windowsOut, 1, 5, default, popin 80%"
-          "border, 1, 8, default"
-          "fade, 1, 5, default"
-          "workspaces, 1, 5, default"
-        ];
-      };
+           };
 
       # Layout settings optimized for laptop screens
       dwindle = {
         pseudotile = true;
         preserve_split = true;
-        no_gaps_when_only = true;  # Remove gaps when only one window
         smart_split = true;
         smart_resizing = true;
       };
 
       # Gestures for touchpad
       gestures = {
-        workspace_swipe = true;
-        workspace_swipe_fingers = 3;
+       # workspace_swipe = true;
+        #workspace_swipe_fingers = 3;
         workspace_swipe_distance = 300;
         workspace_swipe_create_new = true;
       };
 
       # Laptop-specific window rules
-      windowrule = [
-        "float,^(pavucontrol)$"
-        "float,^(nm-connection-editor)$"
-        "float,^(blueman-manager)$"
-        "size 800 600,^(pavucontrol)$"
+      windowrulev2 = [
+        "float,class:^(pavucontrol)$"
+        "float,class:^(nm-connection-editor)$"
+        "float,class:^(blueman-manager)$"
+        "size 800 600,class:^(pavucontrol)$"
       ];
 
       # Better battery life settings
@@ -185,7 +178,10 @@ in
         "$mod, p, exec, alacritty -e pulsemixer"
 
         # Battery status
-        "$mod, b, exec, ~/.local/bin/battery-status.sh"
+        "$mod SHIFT, b, exec, ~/.local/bin/battery-status.sh"
+
+        # Bluetooth manager
+        "$mod, b, exec, alacritty -e bluetui"
 
         # Dock detection
         "$mod, d, exec, ~/.local/bin/dock-handler.sh"
@@ -225,12 +221,17 @@ in
         "$mod SHIFT, k, movewindow, u"
         "$mod SHIFT, l, movewindow, r"
 
-        # Switch workspaces (laptop typically uses fewer workspaces)
+        # Switch workspaces
         "$mod, 1, workspace, 1"
         "$mod, 2, workspace, 2"
         "$mod, 3, workspace, 3"
         "$mod, 4, workspace, 4"
         "$mod, 5, workspace, 5"
+        "$mod, 6, workspace, 6"
+        "$mod, 7, workspace, 7"
+        "$mod, 8, workspace, 8"
+        "$mod, 9, workspace, 9"
+        "$mod, 0, workspace, 10"
 
         # Move active window to workspace
         "$mod SHIFT, 1, movetoworkspace, 1"
@@ -238,6 +239,11 @@ in
         "$mod SHIFT, 3, movetoworkspace, 3"
         "$mod SHIFT, 4, movetoworkspace, 4"
         "$mod SHIFT, 5, movetoworkspace, 5"
+        "$mod SHIFT, 6, movetoworkspace, 6"
+        "$mod SHIFT, 7, movetoworkspace, 7"
+        "$mod SHIFT, 8, movetoworkspace, 8"
+        "$mod SHIFT, 9, movetoworkspace, 9"
+        "$mod SHIFT, 0, movetoworkspace, 10"
 
         # Scroll through workspaces
         "$mod, bracketleft, workspace, e-1"

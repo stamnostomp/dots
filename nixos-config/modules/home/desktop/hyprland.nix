@@ -146,6 +146,9 @@ in
         # Audio mixer
         "$mod, p, exec, alacritty -e pulsemixer"
 
+        # Bluetooth manager
+        "$mod, b, exec, alacritty -e bluetui"
+
         # Waybar reload
         "$mod SHIFT, w, exec, killall waybar && waybar &"
 

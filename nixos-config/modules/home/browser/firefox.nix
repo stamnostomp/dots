@@ -15,7 +15,7 @@ in
 {
   # Firefox configuration
   programs.firefox = {
-    enable = false;
+    enable = true;
     package = pkgs.firefox-bin;
 
     # Firefox profiles

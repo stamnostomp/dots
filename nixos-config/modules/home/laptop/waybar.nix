@@ -37,7 +37,7 @@ in
               "custom/left", "memory", "custom/right", "custom/space",
               "custom/left", "disk", "custom/right", "custom/space",
               "custom/left", "pulseaudio", "custom/right", "custom/space",
-              "custom/left", "battery", "custom/right", "custom/space",
+              "custom/left", "custom/battery", "custom/right", "custom/space",
               "custom/left", "network", "custom/right", "custom/space",
               "custom/left", "clock", "custom/right", "custom/space",
               "tray"
@@ -104,20 +104,11 @@ in
               "on-click": "alacritty -e pulsemixer"
           },
 
-          "battery": {
-              "bat": "BAT0",
-              "adapter": "AC",
+          "custom/battery": {
+              "exec": "~/.local/bin/dual-battery-status.sh status",
+              "return-type": "json",
               "interval": 10,
-              "states": {
-                  "warning": 30,
-                  "critical": 15
-              },
-              "format": "{icon} {capacity}%",
-              "format-charging": "󰂄 {capacity}%",
-              "format-plugged": "󰚥 {capacity}%",
-              "format-alt": "{icon} {time}",
-              "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
-              "on-click": "~/.local/bin/battery-status.sh"
+              "on-click": "~/.local/bin/dual-battery-status.sh click"
           },
 
           "network": {
@@ -220,19 +211,23 @@ in
           color: ${colors.yellow};
       }
 
-      #battery {
+      #custom-battery {
           color: ${colors.green};
       }
 
-      #battery.charging, #battery.plugged {
+      #custom-battery.Charging {
           color: ${colors.brightGreen};
       }
 
-      #battery.warning {
+      #custom-battery.Full {
+          color: ${colors.brightGreen};
+      }
+
+      #custom-battery.warning {
           color: ${colors.yellow};
       }
 
-      #battery.critical {
+      #custom-battery.critical {
           color: ${colors.red};
           animation-name: blink;
           animation-duration: 0.5s;
@@ -280,7 +275,7 @@ in
           padding: 0;
       }
 
-      #cpu, #memory, #disk, #pulseaudio, #battery, #network, #clock {
+      #cpu, #memory, #disk, #pulseaudio, #custom-battery, #network, #clock {
           padding: 0 10px;
           background-color: ${colors.waybarbg};
       }
@@ -317,4 +312,144 @@ in
     libnotify
     networkmanagerapplet
   ];
+
+  # Install dual battery status script
+  home.file.".local/bin/dual-battery-status.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+
+      # Custom battery script for dual battery ThinkPad T470
+      # Shows average charge and handles detailed status
+
+      get_battery_info() {
+          local bat=$1
+          local bat_path="/sys/class/power_supply/$bat"
+
+          if [[ ! -d "$bat_path" ]]; then
+              echo "0 Unknown Unknown"
+              return
+          fi
+
+          local capacity=$(cat "$bat_path/capacity" 2>/dev/null || echo "0")
+          local status=$(cat "$bat_path/status" 2>/dev/null || echo "Unknown")
+          local condition=$(cat "$bat_path/cycle_count" 2>/dev/null || echo "Unknown")
+
+          echo "$capacity $status $condition"
+      }
+
+      get_combined_status() {
+          # Get info for both batteries
+          local bat0_info=($(get_battery_info "BAT0"))
+          local bat1_info=($(get_battery_info "BAT1"))
+
+          local bat0_capacity=''${bat0_info[0]}
+          local bat0_status=''${bat0_info[1]}
+
+          local bat1_capacity=''${bat1_info[0]}
+          local bat1_status=''${bat1_info[1]}
+
+          # Calculate average capacity
+          local avg_capacity=$(( (bat0_capacity + bat1_capacity) / 2 ))
+
+          # Determine overall status
+          local overall_status="Discharging"
+          if [[ "$bat0_status" == "Charging" || "$bat1_status" == "Charging" ]]; then
+              overall_status="Charging"
+          elif [[ "$bat0_status" == "Full" && "$bat1_status" == "Full" ]]; then
+              overall_status="Full"
+          elif [[ "$bat0_status" == "Not charging" || "$bat1_status" == "Not charging" ]]; then
+              overall_status="Not charging"
+          fi
+
+          # Determine icon based on average capacity and status
+          local icon=""
+          if [[ "$overall_status" == "Charging" ]]; then
+              icon="󰂄"
+          elif [[ "$overall_status" == "Full" ]]; then
+              icon="󰁹"
+          elif [[ $avg_capacity -ge 90 ]]; then
+              icon="󰂂"
+          elif [[ $avg_capacity -ge 80 ]]; then
+              icon="󰂁"
+          elif [[ $avg_capacity -ge 70 ]]; then
+              icon="󰂀"
+          elif [[ $avg_capacity -ge 60 ]]; then
+              icon="󰁿"
+          elif [[ $avg_capacity -ge 50 ]]; then
+              icon="󰁾"
+          elif [[ $avg_capacity -ge 40 ]]; then
+              icon="󰁽"
+          elif [[ $avg_capacity -ge 30 ]]; then
+              icon="󰁼"
+          elif [[ $avg_capacity -ge 20 ]]; then
+              icon="󰁻"
+          elif [[ $avg_capacity -ge 10 ]]; then
+              icon="󰁺"
+          else
+              icon="󰂎"
+          fi
+
+          echo "{\"text\":\"$icon $avg_capacity%\",\"tooltip\":\"BAT0: $bat0_capacity% ($bat0_status)\\nBAT1: $bat1_capacity% ($bat1_status)\\nAverage: $avg_capacity%\",\"class\":\"$overall_status\",\"percentage\":$avg_capacity}"
+      }
+
+      show_detailed_status() {
+          # Get detailed info for both batteries
+          local bat0_info=($(get_battery_info "BAT0"))
+          local bat1_info=($(get_battery_info "BAT1"))
+
+          local bat0_capacity=''${bat0_info[0]}
+          local bat0_status=''${bat0_info[1]}
+          local bat0_cycles=''${bat0_info[2]}
+
+          local bat1_capacity=''${bat1_info[0]}
+          local bat1_status=''${bat1_info[1]}
+          local bat1_cycles=''${bat1_info[2]}
+
+          # Get additional info
+          local bat0_voltage=$(cat "/sys/class/power_supply/BAT0/voltage_now" 2>/dev/null | awk '{print $1/1000000 "V"}' || echo "Unknown")
+          local bat1_voltage=$(cat "/sys/class/power_supply/BAT1/voltage_now" 2>/dev/null | awk '{print $1/1000000 "V"}' || echo "Unknown")
+
+          local bat0_energy=$(cat "/sys/class/power_supply/BAT0/energy_now" 2>/dev/null | awk '{print $1/1000000 "Wh"}' || echo "Unknown")
+          local bat1_energy=$(cat "/sys/class/power_supply/BAT1/energy_now" 2>/dev/null | awk '{print $1/1000000 "Wh"}' || echo "Unknown")
+
+          local avg_capacity=$(( (bat0_capacity + bat1_capacity) / 2 ))
+
+          # Create notification
+          local message="🔋 Battery Status Report
+
+      📊 Overall Average: ''${avg_capacity}%
+
+      🔋 BAT0 (Internal):
+         • Charge: ''${bat0_capacity}%
+         • Status: ''${bat0_status}
+         • Voltage: ''${bat0_voltage}
+         • Energy: ''${bat0_energy}
+         • Cycles: ''${bat0_cycles}
+
+      🔋 BAT1 (External):
+         • Charge: ''${bat1_capacity}%
+         • Status: ''${bat1_status}
+         • Voltage: ''${bat1_voltage}
+         • Energy: ''${bat1_energy}
+         • Cycles: ''${bat1_cycles}"
+
+          # Send notification
+          ${pkgs.libnotify}/bin/notify-send "Battery Status" "$message" -t 8000 -i battery
+      }
+
+      # Main logic
+      case "''${1:-status}" in
+          "status")
+              get_combined_status
+              ;;
+          "detailed"|"click")
+              show_detailed_status
+              ;;
+          *)
+              get_combined_status
+              ;;
+      esac
+    '';
+  };
 }

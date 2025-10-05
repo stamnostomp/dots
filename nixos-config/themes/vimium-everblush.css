@@ -1,0 +1,231 @@
+/* Everblush theme for Vimium */
+/* Based on the Everblush color scheme */
+
+/* Link Hints */
+div > .vimiumHintMarker {
+  background: #6cbfbf !important;
+  border: 1px solid #67cbe7 !important;
+  color: #141b1e !important;
+  font-family: "Consolas", "Monaco", "Inconsolata", monospace !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  line-height: 1 !important;
+  padding: 2px 3px !important;
+  border-radius: 3px !important;
+  box-shadow: 0 2px 4px rgba(20, 27, 30, 0.3) !important;
+}
+
+div > .vimiumHintMarker span {
+  color: #141b1e !important;
+  font-weight: bold !important;
+}
+
+div > .vimiumHintMarker > .matchingCharacter {
+  color: #e57474 !important;
+}
+
+/* Search Box */
+#vimiumSearchBox {
+  background: #232a2d !important;
+  border: 2px solid #6cbfbf !important;
+  border-radius: 4px !important;
+  box-shadow: 0 4px 8px rgba(20, 27, 30, 0.4) !important;
+  padding: 8px !important;
+  color: #dadada !important;
+  font-family: "Consolas", "Monaco", "Inconsolata", monospace !important;
+}
+
+#vimiumSearchBox input {
+  background: #141b1e !important;
+  color: #dadada !important;
+  border: 1px solid #2d3437 !important;
+  border-radius: 2px !important;
+  padding: 4px 8px !important;
+  font-family: "Consolas", "Monaco", "Inconsolata", monospace !important;
+  font-size: 12px !important;
+}
+
+#vimiumSearchBox input:focus {
+  border-color: #6cbfbf !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(108, 191, 191, 0.3) !important;
+}
+
+/* Completion List */
+#vimiumSearchBox .vimiumSearchResults {
+  background: #232a2d !important;
+  border: 1px solid #2d3437 !important;
+  border-radius: 0 0 4px 4px !important;
+}
+
+#vimiumSearchBox .vimiumSearchResults .vimiumSearchResult {
+  background: #232a2d !important;
+  color: #dadada !important;
+  padding: 4px 8px !important;
+  border-bottom: 1px solid #2d3437 !important;
+}
+
+#vimiumSearchBox .vimiumSearchResults .vimiumSearchResult:last-child {
+  border-bottom: none !important;
+}
+
+#vimiumSearchBox .vimiumSearchResults .vimiumSearchResult.vimiumSelected {
+  background: #6cbfbf !important;
+  color: #141b1e !important;
+}
+
+#vimiumSearchBox .vimiumSearchResults .vimiumSearchResult .vimiumTitle {
+  color: #67b0e8 !important;
+  font-weight: bold !important;
+}
+
+#vimiumSearchBox .vimiumSearchResults .vimiumSearchResult.vimiumSelected .vimiumTitle {
+  color: #141b1e !important;
+}
+
+#vimiumSearchBox .vimiumSearchResults .vimiumSearchResult .vimiumUrl {
+  color: #8ccf7e !important;
+  font-size: 11px !important;
+}
+
+#vimiumSearchBox .vimiumSearchResults .vimiumSearchResult.vimiumSelected .vimiumUrl {
+  color: #232a2d !important;
+}
+
+/* Help Dialog */
+.vimiumUIComponentVisible {
+  background: rgba(20, 27, 30, 0.8) !important;
+}
+
+.vimiumUIComponentHidden {
+  display: none !important;
+}
+
+div.vimiumHelp {
+  background: #232a2d !important;
+  border: 2px solid #6cbfbf !important;
+  border-radius: 6px !important;
+  color: #dadada !important;
+  font-family: "Consolas", "Monaco", "Inconsolata", monospace !important;
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  padding: 15px !important;
+  box-shadow: 0 4px 12px rgba(20, 27, 30, 0.5) !important;
+}
+
+div.vimiumHelp .vimiumTitle {
+  color: #6cbfbf !important;
+  font-size: 16px !important;
+  font-weight: bold !important;
+  margin-bottom: 10px !important;
+  text-align: center !important;
+}
+
+div.vimiumHelp .vimiumCommand {
+  color: #e5c76b !important;
+  font-weight: bold !important;
+}
+
+div.vimiumHelp .vimiumKey {
+  background: #141b1e !important;
+  border: 1px solid #2d3437 !important;
+  border-radius: 2px !important;
+  color: #67b0e8 !important;
+  font-weight: bold !important;
+  padding: 1px 4px !important;
+  margin: 0 2px !important;
+}
+
+div.vimiumHelp td {
+  padding: 2px 8px !important;
+}
+
+div.vimiumHelp table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+}
+
+div.vimiumHelp tr:nth-child(even) {
+  background: rgba(45, 52, 55, 0.3) !important;
+}
+
+/* Status Messages */
+#vimiumFlash {
+  background: #232a2d !important;
+  border: 1px solid #6cbfbf !important;
+  border-radius: 3px !important;
+  color: #dadada !important;
+  font-family: "Consolas", "Monaco", "Inconsolata", monospace !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  padding: 4px 8px !important;
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  box-shadow: 0 2px 6px rgba(20, 27, 30, 0.3) !important;
+}
+
+/* Scrollbar (if visible) */
+::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: #141b1e !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6cbfbf !important;
+  border-radius: 4px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #67cbe7 !important;
+}
+
+/* Find Mode */
+#vimiumFindMode {
+  background: #232a2d !important;
+  border: 1px solid #6cbfbf !important;
+  border-radius: 3px !important;
+  color: #dadada !important;
+  font-family: "Consolas", "Monaco", "Inconsolata", monospace !important;
+  font-size: 12px !important;
+  padding: 4px 8px !important;
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  box-shadow: 0 2px 6px rgba(20, 27, 30, 0.3) !important;
+}
+
+#vimiumFindMode input {
+  background: #141b1e !important;
+  border: 1px solid #2d3437 !important;
+  border-radius: 2px !important;
+  color: #dadada !important;
+  font-family: "Consolas", "Monaco", "Inconsolata", monospace !important;
+  font-size: 12px !important;
+  margin-left: 4px !important;
+  padding: 2px 4px !important;
+}
+
+#vimiumFindMode input:focus {
+  border-color: #6cbfbf !important;
+  outline: none !important;
+}
+
+/* Visual Mode */
+.vimiumVisualMode {
+  background: rgba(108, 191, 191, 0.3) !important;
+  border: 1px solid #6cbfbf !important;
+}
+
+/* Caret Mode */
+.vimiumCaret {
+  background: #e57474 !important;
+  width: 2px !important;
+  animation: vimiumCaretBlink 1s infinite !important;
+}
+
+@keyframes vimiumCaretBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
