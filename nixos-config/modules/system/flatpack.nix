@@ -15,7 +15,7 @@
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-gtk
-      xdg-desktop-portal-gnome
+      xdg-desktop-portal-xapp
       xdg-desktop-portal-hyprland
     ];
     config.common.default = "*";
@@ -54,8 +54,9 @@
   # Flatpak management tools
   environment.systemPackages = with pkgs; [
     flatpak
-    gnome-software # GUI for managing Flatpaks
-    # warehouse      # Alternative Flatpak manager (uncomment if preferred)
+    # Flatpak GUI managers for XFCE (uncomment if you want a GUI)
+    # warehouse      # Modern Flatpak manager
+    # gnome-software # Works without full GNOME (if you want it)
   ];
 
   # Allow Flatpaks to access fonts and themes

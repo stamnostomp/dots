@@ -27,7 +27,7 @@ in
     # Install Emacs with native compilation and wayland support
     programs.emacs = {
       enable = true;
-      package = pkgs.emacsNativeComp;
+      package = pkgs.emacs;
     };
 
     # Set up environment variables - improved for nix-shell support

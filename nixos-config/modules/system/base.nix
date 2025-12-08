@@ -13,6 +13,7 @@
 
   nixpkgs.config.permittedInsecurePackages = [
     "libsoup-2.74.3"
+    "python3.13-ecdsa-0.19.1"
   ];
   # Nix configuration
   nix = {
@@ -72,6 +73,13 @@
   # System configuration
   time.timeZone = "America/Denver"; # Adjust to your timezone
   i18n.defaultLocale = "en_US.UTF-8";
+
+  # Override noto-fonts-color-emoji with empty package to avoid build failure
+  nixpkgs.overlays = [
+    (final: prev: {
+      noto-fonts-color-emoji = prev.runCommand "noto-fonts-color-emoji-dummy" {} "mkdir -p $out";
+    })
+  ];
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;

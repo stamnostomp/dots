@@ -8,15 +8,18 @@
 
 {
   # Enable X11 and display manager
+  # GDM supports both Wayland (for Hyprland) and X11 (for XFCE)
+  services.xserver.enable = true;
   services.displayManager = {
     gdm = {
       enable = true;
-      wayland = true;
+      wayland = true; # Keep Wayland support for Hyprland
       autoSuspend = false;
     };
   };
-  # Enable GNOME desktop environment
-  services.desktopManager.gnome.enable = true;
+
+  # Enable XFCE desktop environment (X11 backup)
+  services.xserver.desktopManager.xfce.enable = true;
   # Enable sound with Pipewire
   security.rtkit.enable = true;
   services.pipewire = {
@@ -43,34 +46,17 @@
     xdg-desktop-portal
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
-    xdg-desktop-portal-gnome
+    xdg-desktop-portal-xapp
 
-    # GNOME-specific packages (optional but recommended)
-    gnome-tweaks
-    gnome-extension-manager
+    # XFCE additional utilities
+    xfce.xfce4-settings
+    xfce.xfce4-screenshooter
+    xfce.xfce4-power-manager
+    xfce.xfce4-taskmanager
 
     # Additional utilities that work well with both DEs
     dconf-editor
   ];
-
-  # Exclude some GNOME applications you might not want
-  environment.gnome.excludePackages = (
-    with pkgs;
-    [
-      gnome-photos
-      gnome-tour
-      gedit # Use your preferred editor instead
-      cheese # webcam tool
-      gnome-music
-      epiphany # gnome web browser
-      geary # email reader
-      gnome-characters
-      tali # poker game
-      iagno # go game
-      hitori # sudoku game
-      atomix # puzzle game
-    ]
-  );
 
   # Fish shell
   programs.fish.enable = true;
@@ -82,10 +68,10 @@
     dedicatedServer.openFirewall = true;
   };
 
-  # GNOME services
-  services.gnome = {
-    gnome-keyring.enable = true;
-    localsearch.enable = true;
-    tinysparql.enable = true;
-  };
+  # Enable GNOME Keyring (works with XFCE too)
+  services.gnome.gnome-keyring.enable = true;
+
+  # Enable PAM integration for GNOME Keyring
+  # This allows apps to access the keyring properly
+  security.pam.services.gdm-password.enableGnomeKeyring = true;
 }

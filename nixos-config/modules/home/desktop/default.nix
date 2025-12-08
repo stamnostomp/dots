@@ -54,9 +54,9 @@
       executable = true;
       text = ''
         #!/usr/bin/env bash
-        if [[ "$XDG_CURRENT_DESKTOP" == *"GNOME"* ]]; then
-          echo "gnome"
-        elif [[ "$XDG_CURRENT_DESKTOP" == *"Hyprland"* ]] || [[ "$WAYLAND_DISPLAY" && "$XDG_SESSION_TYPE" == "wayland" && -z "$GNOME_DESKTOP_SESSION_ID" ]]; then
+        if [[ "$XDG_CURRENT_DESKTOP" == *"XFCE"* ]]; then
+          echo "xfce"
+        elif [[ "$XDG_CURRENT_DESKTOP" == *"Hyprland"* ]] || [[ "$WAYLAND_DISPLAY" && "$XDG_SESSION_TYPE" == "wayland" ]]; then
           echo "hyprland"
         else
           echo "unknown"
@@ -71,13 +71,14 @@
         #!/usr/bin/env bash
         DESKTOP=$($HOME/.local/bin/detect-desktop)
         case $DESKTOP in
-          "gnome")
-            # Use GNOME's overview (Super key) or rofi as fallback
-            if command -v rofi &> /dev/null; then
+          "xfce")
+            # Use XFCE's application finder or rofi as fallback
+            if command -v xfce4-appfinder &> /dev/null; then
+              xfce4-appfinder
+            elif command -v rofi &> /dev/null; then
               rofi -show drun
             else
-              # Trigger GNOME overview
-              gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/Shell --method org.gnome.Shell.Eval "Main.overview.toggle();"
+              echo "No application launcher found"
             fi
             ;;
           "hyprland")

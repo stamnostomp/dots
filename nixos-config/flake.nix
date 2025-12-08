@@ -36,6 +36,12 @@
       url = "path:./pkgs/doom-config";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Orca Slicer with NVIDIA + Wayland fixes
+    orca-slicer-fixed = {
+      url = "path:./pkgs/orca-slicer-fixed";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -48,6 +54,7 @@
       everblush-gtk,
       firefox-everblush-theme,
       doom-config,
+      orca-slicer-fixed,
       # zen-browser,
       ...
     }@inputs:
@@ -66,6 +73,7 @@
             everblush-gtk = everblush-gtk.packages.${system}.default;
             firefox-everblush-theme = firefox-everblush-theme.packages.${system}.default;
             doom-config = doom-config.packages.${system}.default;
+            orca-slicer-fixed = orca-slicer-fixed.packages.${system}.default;
             #zen-browser = zen-browser.packages.${system}.default;
           })
         ];
@@ -174,6 +182,7 @@
         everblush-gtk = everblush-gtk.packages.${system}.default;
         firefox-theme = firefox-everblush-theme.packages.${system}.default;
         doom = doom-config.packages.${system}.default;
+        orca-slicer-fixed = orca-slicer-fixed.packages.${system}.default;
         #zen-browser = zen-browser.packages.${system}.default;
       };
 

@@ -47,7 +47,7 @@
   # System packages
   environment.systemPackages = with pkgs; [
     trezor-suite
-    trezorctl
+    # trezorctl # Temporarily disabled due to dependency conflict with click
     usbutils
     libusb1
   ];

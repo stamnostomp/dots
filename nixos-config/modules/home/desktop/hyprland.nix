@@ -109,9 +109,7 @@ in
       };
 
       # Gestures
-      gestures = {
-        workspace_swipe = true;
-      };
+      
 
       # Window rules
       windowrule = [

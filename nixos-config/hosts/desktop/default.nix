@@ -31,17 +31,6 @@
     pulse.enable = true;
   };
 
-  # Enable X11 and display manager
-  services.displayManager = {
-    gdm = {
-      enable = true;
-      wayland = true;
-      autoSuspend = false;
-    };
-  };
-
-  # Enable GNOME desktop environment
-  services.desktopManager.gnome.enable = true;
 
   # IMPORTANT: Disable power-profiles-daemon if it conflicts with other power management
   # Desktops usually don't need aggressive power management like TLP
@@ -92,7 +81,7 @@
     xdg-desktop-portal
     xdg-desktop-portal-gtk
     xdg-desktop-portal-hyprland
-    xdg-desktop-portal-gnome
+    xdg-desktop-portal-xapp
 
     # Hardware tools
     pciutils

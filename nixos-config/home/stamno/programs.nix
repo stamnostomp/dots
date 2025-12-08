@@ -29,6 +29,8 @@
 
   # Application packages
   home.packages = with pkgs; [
+    # Custom orca-slicer with NVIDIA + Wayland fixes
+    (pkgs.callPackage ../../pkgs/orca-slicer-fixed/default.nix { })
     # Browsers
     firefox-bin
     #    inputs.zen-browser.packages.${system}.default # Use the Zen Browser input
@@ -84,7 +86,7 @@
     #krita
 
     #3d
-    orca-slicer
+    # orca-slicer-fixed added at top of packages list
     #   prusa-slicer
 
     #wine

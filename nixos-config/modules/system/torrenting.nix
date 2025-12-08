@@ -16,6 +16,7 @@
   # Enable Transmission daemon service
   services.transmission = {
     enable = true;
+    package = pkgs.transmission_4;
     settings = {
       # Download directory
       download-dir = "/home/stamno/Downloads/torrents";

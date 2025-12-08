@@ -490,12 +490,24 @@ in
   # IMPORTANT: This now runs AFTER Home Manager has set up the cursor theme files
   home.activation = {
     setupTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      # Ensure GTK theme is properly set
+      # Set GTK theme using gsettings (works for both GNOME and XFCE)
+      # Only run if gsettings is available (dconf/gsettings work in XFCE too)
       if command -v gsettings >/dev/null 2>&1; then
-        $DRY_RUN_CMD gsettings set org.gnome.desktop.interface gtk-theme "${theme.name}"
-        $DRY_RUN_CMD gsettings set org.gnome.desktop.interface icon-theme "${theme.icons.name}"
-        $DRY_RUN_CMD gsettings set org.gnome.desktop.interface cursor-theme "${theme.cursor.name}"
-        $DRY_RUN_CMD gsettings set org.gnome.desktop.interface cursor-size ${toString theme.cursor.size}
+        # Try to set GNOME settings (won't error if schema doesn't exist)
+        if gsettings list-schemas | grep -q "org.gnome.desktop.interface"; then
+          $DRY_RUN_CMD gsettings set org.gnome.desktop.interface gtk-theme "${theme.name}" 2>/dev/null || true
+          $DRY_RUN_CMD gsettings set org.gnome.desktop.interface icon-theme "${theme.icons.name}" 2>/dev/null || true
+          $DRY_RUN_CMD gsettings set org.gnome.desktop.interface cursor-theme "${theme.cursor.name}" 2>/dev/null || true
+          $DRY_RUN_CMD gsettings set org.gnome.desktop.interface cursor-size ${toString theme.cursor.size} 2>/dev/null || true
+        fi
+
+        # XFCE-specific settings
+        if command -v xfconf-query >/dev/null 2>&1; then
+          $DRY_RUN_CMD xfconf-query -c xsettings -p /Net/ThemeName -s "${theme.name}" 2>/dev/null || true
+          $DRY_RUN_CMD xfconf-query -c xsettings -p /Net/IconThemeName -s "${theme.icons.name}" 2>/dev/null || true
+          $DRY_RUN_CMD xfconf-query -c xsettings -p /Gtk/CursorThemeName -s "${theme.cursor.name}" 2>/dev/null || true
+          $DRY_RUN_CMD xfconf-query -c xsettings -p /Gtk/CursorThemeSize -s ${toString theme.cursor.size} 2>/dev/null || true
+        fi
       fi
 
       # Run cursor fix script - but this no longer creates symlinks that conflict
