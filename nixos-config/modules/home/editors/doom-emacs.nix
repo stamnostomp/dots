@@ -111,8 +111,8 @@ in
 
       # PureScript
       purescript
-      nodePackages.purescript-language-server
-      nodePackages.purs-tidy
+      #nodePackages.purescript-language-server
+      #nodePackages.purs-tidy
 
       # Rust development
       rust-analyzer
