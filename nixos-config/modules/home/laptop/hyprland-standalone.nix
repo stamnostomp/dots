@@ -24,12 +24,12 @@ in
     enable = true;
     systemd.enable = true;
     xwayland.enable = true;
-    
+
     settings = {
       # Laptop monitor configuration
       monitor = [
-        "eDP-1,1920x1080@60,0x0,1"  # Internal laptop display
-        ",preferred,auto,1"          # External displays (auto-detect)
+        "eDP-1,1920x1080@60,0x0,1" # Internal laptop display
+        ",preferred,auto,1" # External displays (auto-detect)
       ];
 
       # Environment variables - cursor settings
@@ -53,7 +53,7 @@ in
         "hyprpaper"
         "nm-applet --indicator"
         "blueman-applet"
-        "hypridle"  # Power management
+        "hypridle" # Power management
       ];
 
       # Input configuration (laptop-specific)
@@ -65,7 +65,7 @@ in
         kb_rules = "";
         follow_mouse = 1;
         sensitivity = 0.0;
-        
+
         touchpad = {
           natural_scroll = true;
           tap-to-click = true;
@@ -92,9 +92,9 @@ in
 
       # Battery-optimized appearance settings
       general = {
-        gaps_in = 3;         # Smaller gaps to save screen space
+        gaps_in = 3; # Smaller gaps to save screen space
         gaps_out = 5;
-        border_size = 2;     # Thinner borders
+        border_size = 2; # Thinner borders
         "col.active_border" = "rgba(6cbfbfee)";
         "col.inactive_border" = "rgba(b3b9b8aa)";
         layout = "dwindle";
@@ -103,21 +103,21 @@ in
 
       # Battery-optimized decoration settings
       decoration = {
-        rounding = 0;        # No rounding to save GPU cycles
+        rounding = 0; # No rounding to save GPU cycles
         active_opacity = 1.0;
         inactive_opacity = 1.0;
-        
+
         blur = {
-          enabled = false;   # Disable blur to save battery
+          enabled = false; # Disable blur to save battery
         };
-        
+
         ###drop_shadow = false; # Disable shadows to save battery
       };
 
       # Battery-optimized animation settings
       animations = {
         enabled = true;
-           };
+      };
 
       # Layout settings optimized for laptop screens
       dwindle = {
@@ -128,13 +128,6 @@ in
       };
 
       # Gestures for touchpad
-      gestures = {
-        workspace_swipe = true;
-        workspace_swipe_fingers = 3;
-        workspace_swipe_distance = 300;
-        workspace_swipe_create_new = true;
-      };
-
       # Laptop-specific window rules
       windowrulev2 = [
         "float,class:^(pavucontrol)$"
@@ -145,13 +138,13 @@ in
 
       # Better battery life settings
       misc = {
-        vfr = true;          # Variable refresh rate
+        vfr = true; # Variable refresh rate
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         force_default_wallpaper = 0;
-        disable_autoreload = true;  # Disable config auto-reload to save resources
-        mouse_move_enables_dpms = true;  # Wake screens on mouse movement
-        key_press_enables_dpms = true;   # Wake screens on key press
+        disable_autoreload = true; # Disable config auto-reload to save resources
+        mouse_move_enables_dpms = true; # Wake screens on mouse movement
+        key_press_enables_dpms = true; # Wake screens on key press
       };
 
       # Keybindings
@@ -358,7 +351,7 @@ in
 
     # XDG portal
     xdg-desktop-portal-hyprland
-    
+
     # Display management
     wdisplays
 
