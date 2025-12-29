@@ -45,6 +45,7 @@ in
 
       # Startup applications
       exec-once = [
+        "gnome-keyring-daemon --start --components=secrets"
         "hyprcursor"
         "hyprctl setcursor ${cursorTheme.name} ${toString cursorTheme.size}"
         "waybar"
@@ -351,6 +352,9 @@ in
     # System tray applications
     networkmanagerapplet
     blueman
+
+    # Keyring for secrets management
+    gnome-keyring
 
     # XDG portal
     xdg-desktop-portal-hyprland

@@ -13,8 +13,8 @@
     enable = true;
     settings = {
       user = {
-        userName = "stamnostomp"; # Replace with your actual name
-        userEmail = "stamno@pm.me"; # Replace with your email
+        user = "stamnostomp"; # Replace with your actual name
+        email = "stamno@pm.me"; # Replace with your email
       };
     };
     extraConfig = {
