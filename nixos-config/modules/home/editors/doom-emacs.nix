@@ -92,6 +92,7 @@ in
       # Haskell development
       haskell-language-server
       haskellPackages.hoogle
+      haskellPackages.stylish-haskell
       cabal-install
       ghc
 
