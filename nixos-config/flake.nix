@@ -4,8 +4,6 @@
   inputs = {
     # Core dependencies
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
-    # zen-browser.url = "github:youwen5/zen-browser-flake";
-    # zen-browser.inputs.nixpkgs.follows = "nixpkgs";
 
     # Home manager
     home-manager = {
@@ -16,7 +14,7 @@
     # Hardware support
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
-    # Add NUR (Nix User Repository) - FIXED
+    # Add NUR (Nix User Repository)
     nur.url = "github:nix-community/NUR";
 
     # Package overrides and custom packages
@@ -36,12 +34,6 @@
       url = "path:./pkgs/doom-config";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # Orca Slicer with NVIDIA + Wayland fixes
-    orca-slicer-fixed = {
-      url = "path:./pkgs/orca-slicer-fixed";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -54,15 +46,12 @@
       everblush-gtk,
       firefox-everblush-theme,
       doom-config,
-      orca-slicer-fixed,
-      # zen-browser,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
       pkgs = import nixpkgs {
         inherit system;
-        # FIXED: Updated NUR overlay and improved structure
         overlays = [
           # Use the new NUR overlay syntax
           nur.overlays.default
@@ -73,8 +62,6 @@
             everblush-gtk = everblush-gtk.packages.${system}.default;
             firefox-everblush-theme = firefox-everblush-theme.packages.${system}.default;
             doom-config = doom-config.packages.${system}.default;
-            orca-slicer-fixed = orca-slicer-fixed.packages.${system}.default;
-            #zen-browser = zen-browser.packages.${system}.default;
           })
         ];
         config.allowUnfree = true;
@@ -182,8 +169,6 @@
         everblush-gtk = everblush-gtk.packages.${system}.default;
         firefox-theme = firefox-everblush-theme.packages.${system}.default;
         doom = doom-config.packages.${system}.default;
-        orca-slicer-fixed = orca-slicer-fixed.packages.${system}.default;
-        #zen-browser = zen-browser.packages.${system}.default;
       };
 
       # Add specific shells for each target

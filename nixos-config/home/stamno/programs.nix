@@ -29,15 +29,11 @@
     enable = true;
     nix-direnv.enable = true;
   };
-  # Enable LocalSend with automatic firewall configuration
 
   # Application packages
   home.packages = with pkgs; [
-    # Custom orca-slicer with NVIDIA + Wayland fixes
-    (pkgs.callPackage ../../pkgs/orca-slicer-fixed/default.nix { })
     # Browsers
     firefox-bin
-    #    inputs.zen-browser.packages.${system}.default # Use the Zen Browser input
 
     # The Everblush Firefox theme - use the input directly
     inputs.firefox-everblush-theme.packages.${system}.default
@@ -82,23 +78,15 @@
     lutris
     godot
 
-    #CAd
+    # CAD
     freecad-wayland
     openscad
 
-    #art
-    #krita
+    # 3D printing - using standard orca-slicer from nixpkgs
+    orca-slicer
 
-    #3d
-    # orca-slicer-fixed added at top of packages list
-    #   prusa-slicer
-
-    #wine
+    # Wine
     bottles
-
-    #office
-    #libreoffice
-
   ];
 
   # Auto-install the Firefox theme on activation
@@ -184,20 +172,4 @@
     EOF
         chmod +x $HOME/.local/bin/install-firefox-everblush-theme
   '';
-
-  # Create a script to launch Zen Browser
-  #  home.activation.createZenBrowserScript = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-  #       # Create a script to launch Zen Browser with the Everblush theme
-  #      mkdir -p $HOME/.local/bin
-  #     cat > $HOME/.local/bin/zen-browser << EOF
-  #!/usr/bin/env bash
-
-  # Set GTK theme
-  #export GTK_THEME=Everblush
-
-  # Launch Zen Browser
-  #exec ${inputs.zen-browser.packages.${pkgs.system}.default}/bin/zen-browser "\$@"
-  #EOF
-  #   chmod +x $HOME/.local/bin/zen-browser
-  #'';
 }
