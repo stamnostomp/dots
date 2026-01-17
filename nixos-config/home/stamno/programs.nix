@@ -79,7 +79,7 @@
     godot
 
     # CAD
-    freecad-wayland
+    # freecad-wayland  # Temporarily disabled - build broken upstream
     openscad
 
     # 3D printing - using standard orca-slicer from nixpkgs

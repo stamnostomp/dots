@@ -38,6 +38,9 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
+  # Enable ratbagd for gaming mouse configuration
+  services.ratbagd.enable = true;
+
   # Desktop packages
   environment.systemPackages = with pkgs; [
     # Desktop utilities
@@ -56,6 +59,9 @@
 
     # Additional utilities that work well with both DEs
     dconf-editor
+
+    # Gaming mouse configuration
+    piper
   ];
 
   # Fish shell
