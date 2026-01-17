@@ -126,10 +126,9 @@ in
       nodePackages.stylelint
       nodePackages.js-beautify
 
-      # Clipboard and window management (for everywhere)
-      xclip
-      xorg.xwininfo
-      xdotool
+      # Clipboard and input simulation for Wayland (for emacs-everywhere)
+      wl-clipboard
+      wtype
     ];
 
     # Setup activation script to clone Doom Emacs and symlink the packaged config
