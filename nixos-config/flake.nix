@@ -59,9 +59,9 @@
           # Add our custom packages overlay
           (final: prev: {
             # Custom packages from our flake inputs
-            everblush-gtk = everblush-gtk.packages.${system}.default;
-            firefox-everblush-theme = firefox-everblush-theme.packages.${system}.default;
-            doom-config = doom-config.packages.${system}.default;
+            everblush-gtk = everblush-gtk.packages.${prev.stdenv.hostPlatform.system}.default;
+            firefox-everblush-theme = firefox-everblush-theme.packages.${prev.stdenv.hostPlatform.system}.default;
+            doom-config = doom-config.packages.${prev.stdenv.hostPlatform.system}.default;
           })
         ];
         config.allowUnfree = true;
@@ -176,7 +176,7 @@
         default = pkgs.mkShell {
           buildInputs = with pkgs; [
             git
-            nixfmt-rfc-style
+            nixfmt
             ripgrep
             fd
             jq
@@ -209,7 +209,7 @@
         desktop = pkgs.mkShell {
           buildInputs = with pkgs; [
             git
-            nixfmt-rfc-style
+            nixfmt
             ripgrep
             fd
             jq
@@ -231,7 +231,7 @@
         laptop = pkgs.mkShell {
           buildInputs = with pkgs; [
             git
-            nixfmt-rfc-style
+            nixfmt
             ripgrep
             fd
             jq

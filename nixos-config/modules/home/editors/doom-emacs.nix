@@ -56,7 +56,7 @@ in
 
       # Nix development tools
       nix
-      nixfmt-rfc-style
+      nixfmt
       nil
 
       #vterm comp

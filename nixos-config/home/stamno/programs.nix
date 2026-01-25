@@ -13,11 +13,9 @@
     enable = true;
     settings = {
       user = {
-        user = "stamnostomp"; # Replace with your actual name
-        email = "stamno@pm.me"; # Replace with your email
+        name = "stamnostomp";
+        email = "stamno@pm.me";
       };
-    };
-    extraConfig = {
       init.defaultBranch = "main";
       pull.rebase = false;
       core.editor = "vim";
@@ -36,7 +34,7 @@
     firefox-bin
 
     # The Everblush Firefox theme - use the input directly
-    inputs.firefox-everblush-theme.packages.${system}.default
+    inputs.firefox-everblush-theme.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     # Development tools
     git
@@ -47,7 +45,7 @@
 
     # File managers
     pcmanfm # Lightweight GTK+ file manager
-    xfce.thunar
+    thunar
     kdePackages.dolphin
 
     # Messaging and communication
@@ -79,7 +77,7 @@
     godot
 
     # CAD
-    # freecad-wayland  # Temporarily disabled - build broken upstream
+    freecad-wayland
     openscad
 
     # 3D printing - using standard orca-slicer from nixpkgs

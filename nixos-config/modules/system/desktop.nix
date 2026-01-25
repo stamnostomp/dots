@@ -7,19 +7,16 @@
 }:
 
 {
-  # Enable X11 and display manager
-  # GDM supports both Wayland (for Hyprland) and X11 (for XFCE)
+  # Enable display manager
   services.xserver.enable = true;
   services.displayManager = {
     gdm = {
       enable = true;
-      wayland = true; # Keep Wayland support for Hyprland
+      wayland = true;
       autoSuspend = false;
     };
   };
 
-  # Enable XFCE desktop environment (X11 backup)
-  services.xserver.desktopManager.xfce.enable = true;
   # Enable sound with Pipewire
   security.rtkit.enable = true;
   services.pipewire = {
@@ -51,13 +48,7 @@
     xdg-desktop-portal-hyprland
     xdg-desktop-portal-xapp
 
-    # XFCE additional utilities
-    xfce.xfce4-settings
-    xfce.xfce4-screenshooter
-    xfce.xfce4-power-manager
-    xfce.xfce4-taskmanager
-
-    # Additional utilities that work well with both DEs
+    # Additional utilities
     dconf-editor
 
     # Gaming mouse configuration
@@ -74,7 +65,7 @@
     dedicatedServer.openFirewall = true;
   };
 
-  # Enable GNOME Keyring (works with XFCE too)
+  # Enable GNOME Keyring
   services.gnome.gnome-keyring.enable = true;
 
   # Enable PAM integration for GNOME Keyring
