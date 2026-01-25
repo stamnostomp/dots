@@ -133,7 +133,7 @@ in
         "$mod SHIFT, p, exec, wlogout"
 
         # Emacs
-        "$mod, e, exec --no-startup-id, emacs
+        "$mod, e, exec, emacs
 
         # ${config.home.homeDirectory}/.local/bin/emacs-wrapper"
 
