@@ -151,7 +151,7 @@ in
         "$mod SHIFT, w, exec, killall waybar && waybar &"
 
         # emacse
-        "$mod SHIFT, semicolon, exec, emacsclient -c -e '(emacs-everywhere)'"
+        "$mod SHIFT, semicolon, exec, emacsclient -e '(emacs-everywhere)'"
 
         # Close window
         "$mod, q, killactive"
@@ -161,7 +161,7 @@ in
         "$mod ALT, r, exec, hyprctl reload"
 
         # Screenshots
-        "$mod ALT, s, exec, grimblast copy area"
+        "$mod SHIFT, s, exec, grimblast copy area"
         "SHIFT, Print, exec, grimblast save area"
         ", Print, exec, grimblast copy area"
 
