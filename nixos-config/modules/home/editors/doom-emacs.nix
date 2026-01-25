@@ -163,15 +163,15 @@ in
         # Create symlink to the packaged Doom config
         echo "Creating symlink to packaged Doom config..."
         $DRY_RUN_CMD ln -s ${
-          inputs.doom-config.packages.${pkgs.system}.default
+          inputs.doom-config.packages.${pkgs.stdenv.hostPlatform.system}.default
         } ${config.home.homeDirectory}/.doom.d || {
           echo "Failed to create symlink to Doom config"
           echo "Debug info:"
-          echo "Source: ${inputs.doom-config.packages.${pkgs.system}.default}"
+          echo "Source: ${inputs.doom-config.packages.${pkgs.stdenv.hostPlatform.system}.default}"
           echo "Target: ${config.home.homeDirectory}/.doom.d"
           echo "Target parent directory exists: $(test -d "${config.home.homeDirectory}" && echo "yes" || echo "no")"
           echo "Source exists: $(test -e "${
-            inputs.doom-config.packages.${pkgs.system}.default
+            inputs.doom-config.packages.${pkgs.stdenv.hostPlatform.system}.default
           }" && echo "yes" || echo "no")"
           exit 1
         }
@@ -263,33 +263,14 @@ in
       executable = true;
       text = ''
         #!/usr/bin/env bash
-        # Emacs wrapper to ensure proper environment and nix-shell support
+        # Emacs wrapper - uses emacsclient for instant startup
 
-        # Set necessary environment variables
-        export PATH="${config.home.homeDirectory}/.emacs.d/bin:${pkgs.emacs-pgtk}/bin:${pkgs.nix}/bin:$PATH"
         export DOOMDIR="${config.home.homeDirectory}/.doom.d"
         export DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local"
-        export EMACS="${pkgs.emacs-pgtk}/bin/emacs"
-        export NIX_PATH="nixpkgs=${pkgs.path}"
 
-        # Ensure nix profile is sourced for proper nix command availability
-        if [ -e "${config.home.homeDirectory}/.nix-profile/etc/profile.d/nix.sh" ]; then
-          source "${config.home.homeDirectory}/.nix-profile/etc/profile.d/nix.sh"
-        fi
-
-        # Check if Doom is properly installed/synced
-        if [ ! -d "${config.home.homeDirectory}/.doom-local" ] || [ ! -f "${config.home.homeDirectory}/.doom-local/init.el" ]; then
-          echo "Warning: Doom appears to be not properly installed. Running doom sync..."
-          DOOMDIR="${config.home.homeDirectory}/.doom.d" \
-          DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local" \
-          NIX_PATH="nixpkgs=${pkgs.path}" \
-          ${config.home.homeDirectory}/.emacs.d/bin/doom sync || {
-            echo "Failed to sync Doom. Continuing anyway..."
-          }
-        fi
-
-        # Launch Emacs with proper environment
-        exec ${pkgs.emacs-pgtk}/bin/emacs "$@"
+        # Try emacsclient first (connects to daemon for instant startup)
+        # Falls back to starting emacs if daemon isn't running
+        exec ${pkgs.emacs-pgtk}/bin/emacsclient -c -a "" "$@"
       '';
     };
 
@@ -351,11 +332,6 @@ in
     services.emacs = {
       enable = true;
       client.enable = true;
-      # Set environment variables for the daemon
-      extraOptions = [
-        "--with-profile"
-        "doom"
-      ];
     };
 
     # Configure fontconfig

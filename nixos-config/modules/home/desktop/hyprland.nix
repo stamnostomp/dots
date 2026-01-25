@@ -133,9 +133,7 @@ in
         "$mod SHIFT, p, exec, wlogout"
 
         # Emacs
-        "$mod, e, exec, emacs
-
-        # ${config.home.homeDirectory}/.local/bin/emacs-wrapper"
+        "$mod, e, exec, ${config.home.homeDirectory}/.local/bin/emacs-wrapper"
 
         # Web browser
         "$mod, w, exec, firefox"
