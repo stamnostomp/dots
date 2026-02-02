@@ -69,6 +69,7 @@
     # Other utilities
     xdg-utils
     libnotify
+    mpv
 
     # Games
     steam
