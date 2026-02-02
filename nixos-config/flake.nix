@@ -28,12 +28,6 @@
       url = "path:./pkgs/firefox-everblush-theme";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    #Doom Emacs configuration
-    doom-config = {
-      url = "path:./pkgs/doom-config";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -45,7 +39,6 @@
       nur,
       everblush-gtk,
       firefox-everblush-theme,
-      doom-config,
       ...
     }@inputs:
     let
@@ -62,7 +55,6 @@
             everblush-gtk = everblush-gtk.packages.${prev.stdenv.hostPlatform.system}.default;
             firefox-everblush-theme =
               firefox-everblush-theme.packages.${prev.stdenv.hostPlatform.system}.default;
-            doom-config = doom-config.packages.${prev.stdenv.hostPlatform.system}.default;
           })
         ];
         config.allowUnfree = true;
@@ -169,7 +161,6 @@
       packages.${system} = {
         everblush-gtk = everblush-gtk.packages.${system}.default;
         firefox-theme = firefox-everblush-theme.packages.${system}.default;
-        doom = doom-config.packages.${system}.default;
       };
 
       # Add specific shells for each target

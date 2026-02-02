@@ -3,7 +3,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 
@@ -15,11 +14,10 @@ in
   options.modules.doom-emacs = {
     enable = mkEnableOption "Doom Emacs configuration";
 
-    # The repoUrl option is no longer used but kept for backward compatibility
-    repoUrl = mkOption {
+    configPath = mkOption {
       type = types.str;
-      default = "https://github.com/stamnostomp/doom-d";
-      description = "URL of your Doom config repository (deprecated, now using packaged config)";
+      default = "${config.home.homeDirectory}/Gits/doom-d";
+      description = "Path to your local Doom config directory (symlinked to ~/.doom.d)";
     };
   };
 
@@ -131,8 +129,8 @@ in
       wtype
     ];
 
-    # Setup activation script to clone Doom Emacs and symlink the packaged config
-    # FIXED: Added proper error handling and logging
+    # Setup activation script to clone Doom Emacs and symlink local doom config
+    # This allows updating doom config without rebuilding the system
     home.activation = {
       doomEmacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         echo "Starting Doom Emacs setup..."
@@ -143,7 +141,7 @@ in
         export DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local"
         export NIX_PATH="nixpkgs=${pkgs.path}"
 
-        # Clone or update Doom Emacs if needed
+        # Clone Doom Emacs if needed
         if [ ! -d "${config.home.homeDirectory}/.emacs.d" ]; then
           echo "Cloning Doom Emacs..."
           $DRY_RUN_CMD git clone --depth 1 https://github.com/doomemacs/doomemacs ${config.home.homeDirectory}/.emacs.d || {
@@ -154,27 +152,23 @@ in
           echo "Doom Emacs already cloned"
         fi
 
-        # Remove existing .doom.d if it exists (whether it's a directory or symlink)
-        if [ -e "${config.home.homeDirectory}/.doom.d" ]; then
-          echo "Removing existing .doom.d..."
-          $DRY_RUN_CMD rm -rf ${config.home.homeDirectory}/.doom.d
+        # Create symlink to local doom config if needed
+        if [ -L "${config.home.homeDirectory}/.doom.d" ]; then
+          CURRENT_TARGET=$(readlink "${config.home.homeDirectory}/.doom.d")
+          if [ "$CURRENT_TARGET" != "${cfg.configPath}" ]; then
+            echo "Updating symlink to point to ${cfg.configPath}..."
+            $DRY_RUN_CMD rm ${config.home.homeDirectory}/.doom.d
+            $DRY_RUN_CMD ln -s ${cfg.configPath} ${config.home.homeDirectory}/.doom.d
+          else
+            echo "Symlink already points to ${cfg.configPath}"
+          fi
+        elif [ -d "${config.home.homeDirectory}/.doom.d" ]; then
+          echo "Warning: ~/.doom.d is a directory, not a symlink"
+          echo "Remove it manually and rebuild if you want to use the symlink approach"
+        else
+          echo "Creating symlink to ${cfg.configPath}..."
+          $DRY_RUN_CMD ln -s ${cfg.configPath} ${config.home.homeDirectory}/.doom.d
         fi
-
-        # Create symlink to the packaged Doom config
-        echo "Creating symlink to packaged Doom config..."
-        $DRY_RUN_CMD ln -s ${
-          inputs.doom-config.packages.${pkgs.stdenv.hostPlatform.system}.default
-        } ${config.home.homeDirectory}/.doom.d || {
-          echo "Failed to create symlink to Doom config"
-          echo "Debug info:"
-          echo "Source: ${inputs.doom-config.packages.${pkgs.stdenv.hostPlatform.system}.default}"
-          echo "Target: ${config.home.homeDirectory}/.doom.d"
-          echo "Target parent directory exists: $(test -d "${config.home.homeDirectory}" && echo "yes" || echo "no")"
-          echo "Source exists: $(test -e "${
-            inputs.doom-config.packages.${pkgs.stdenv.hostPlatform.system}.default
-          }" && echo "yes" || echo "no")"
-          exit 1
-        }
 
         # Ensure Doom binary is executable
         if [ -f "${config.home.homeDirectory}/.emacs.d/bin/doom" ]; then
@@ -184,41 +178,37 @@ in
           echo "Warning: Doom binary not found at expected location"
         fi
 
-        # Run doom sync if not in dry run mode
+        # Run doom sync only on initial setup (when .doom-local doesn't have init.el)
         if [ -z "$DRY_RUN_CMD" ]; then
-          echo "Creating Doom local directory..."
           mkdir -p ${config.home.homeDirectory}/.doom-local
 
-          echo "Running doom sync..."
+          if [ ! -f "${config.home.homeDirectory}/.doom-local/init.el" ]; then
+            echo "Running initial doom sync..."
 
-          # Run doom sync with proper error handling
-          if DOOMDIR="${config.home.homeDirectory}/.doom.d" \
-             DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local" \
-             NIX_PATH="nixpkgs=${pkgs.path}" \
-             ${config.home.homeDirectory}/.emacs.d/bin/doom sync 2>&1; then
-            echo "Doom sync completed successfully"
-          else
-            # Get the exit code
-            DOOM_EXIT_CODE=$?
-            echo "Warning: Doom sync returned exit code $DOOM_EXIT_CODE"
-
-            # Check if sync actually worked despite the exit code
-            if [ -f "${config.home.homeDirectory}/.doom-local/init.el" ]; then
-              echo "Doom appears to be properly configured despite exit code"
+            if DOOMDIR="${config.home.homeDirectory}/.doom.d" \
+               DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local" \
+               NIX_PATH="nixpkgs=${pkgs.path}" \
+               ${config.home.homeDirectory}/.emacs.d/bin/doom sync 2>&1; then
+              echo "Doom sync completed successfully"
             else
-              echo "Error: Doom sync failed - init.el not found"
-              echo "Checking doom sync output..."
+              DOOM_EXIT_CODE=$?
+              echo "Warning: Doom sync returned exit code $DOOM_EXIT_CODE"
 
-              # Try to run doom doctor for diagnostics
-              echo "Running doom doctor for diagnostics..."
-              DOOMDIR="${config.home.homeDirectory}/.doom.d" \
-              DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local" \
-              NIX_PATH="nixpkgs=${pkgs.path}" \
-              ${config.home.homeDirectory}/.emacs.d/bin/doom doctor || true
-
-              # Don't fail the activation - let it continue
-              echo "Continuing despite doom sync issues..."
+              if [ -f "${config.home.homeDirectory}/.doom-local/init.el" ]; then
+                echo "Doom appears to be properly configured despite exit code"
+              else
+                echo "Error: Doom sync failed - init.el not found"
+                echo "Running doom doctor for diagnostics..."
+                DOOMDIR="${config.home.homeDirectory}/.doom.d" \
+                DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local" \
+                NIX_PATH="nixpkgs=${pkgs.path}" \
+                ${config.home.homeDirectory}/.emacs.d/bin/doom doctor || true
+                echo "Continuing despite doom sync issues..."
+              fi
             fi
+          else
+            echo "Doom already initialized, skipping doom sync"
+            echo "Run 'doom sync' manually after updating your config"
           fi
         else
           echo "Dry run mode - skipping doom sync"
@@ -232,7 +222,7 @@ in
     xdg.desktopEntries.emacs = {
       name = "Emacs";
       genericName = "Text Editor";
-      exec = "${config.home.homeDirectory}/.local/bin/emacs-wrapper %F";
+      exec = "emacsclient -c %F";
       terminal = false;
       categories = [
         "Development"
@@ -256,22 +246,6 @@ in
         "text/x-c"
         "text/x-c++"
       ];
-    };
-
-    # Create Emacs wrapper script with improved nix-shell support
-    home.file.".local/bin/emacs-wrapper" = {
-      executable = true;
-      text = ''
-        #!/usr/bin/env bash
-        # Emacs wrapper - uses emacsclient for instant startup
-
-        export DOOMDIR="${config.home.homeDirectory}/.doom.d"
-        export DOOMLOCALDIR="${config.home.homeDirectory}/.doom-local"
-
-        # Try emacsclient first (connects to daemon for instant startup)
-        # Falls back to starting emacs if daemon isn't running
-        exec ${pkgs.emacs-pgtk}/bin/emacsclient -c -a "" "$@"
-      '';
     };
 
     # Create debug script for nix-shell issues
@@ -333,6 +307,12 @@ in
       enable = true;
       client.enable = true;
     };
+
+    # Add Doom environment variables to the emacs systemd service
+    systemd.user.services.emacs.Service.Environment = [
+      "DOOMDIR=${config.home.homeDirectory}/.doom.d"
+      "DOOMLOCALDIR=${config.home.homeDirectory}/.doom-local"
+    ];
 
     # Configure fontconfig
     fonts.fontconfig.enable = true;
