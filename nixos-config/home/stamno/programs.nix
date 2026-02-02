@@ -90,7 +90,9 @@
   # Auto-install the Firefox theme on activation
   home.activation.installFirefoxTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         # Use the flake input directly
-        THEME_PACKAGE="${inputs.firefox-everblush-theme.packages.${pkgs.stdenv.hostPlatform.system}.default}"
+        THEME_PACKAGE="${
+          inputs.firefox-everblush-theme.packages.${pkgs.stdenv.hostPlatform.system}.default
+        }"
 
         # Create the script in the user's bin directory
         mkdir -p $HOME/.local/bin

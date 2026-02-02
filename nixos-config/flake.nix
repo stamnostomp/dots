@@ -29,7 +29,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Doom Emacs configuration
+    #Doom Emacs configuration
     doom-config = {
       url = "path:./pkgs/doom-config";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -60,7 +60,8 @@
           (final: prev: {
             # Custom packages from our flake inputs
             everblush-gtk = everblush-gtk.packages.${prev.stdenv.hostPlatform.system}.default;
-            firefox-everblush-theme = firefox-everblush-theme.packages.${prev.stdenv.hostPlatform.system}.default;
+            firefox-everblush-theme =
+              firefox-everblush-theme.packages.${prev.stdenv.hostPlatform.system}.default;
             doom-config = doom-config.packages.${prev.stdenv.hostPlatform.system}.default;
           })
         ];
