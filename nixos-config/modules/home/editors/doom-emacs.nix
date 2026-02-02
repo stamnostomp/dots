@@ -127,6 +127,14 @@ in
       # Clipboard and input simulation for Wayland (for emacs-everywhere)
       wl-clipboard
       wtype
+
+      # Dirvish preview dependencies
+      vips # vipsthumbnail for image previews
+      ffmpegthumbnailer # video thumbnails
+      poppler-utils # pdftoppm for PDF previews
+      p7zip # 7z for archive previews
+      mediainfo # audio file metadata
+      imagemagick # magick for font previews
     ];
 
     # Setup activation script to clone Doom Emacs and symlink local doom config
