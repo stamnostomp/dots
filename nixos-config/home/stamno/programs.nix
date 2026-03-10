@@ -78,7 +78,8 @@
     godot
 
     # CAD
-    freecad-wayland
+    #freecad-wayland
+    #
     openscad
 
     # 3D printing - using standard orca-slicer from nixpkgs

@@ -29,7 +29,7 @@
 
     # System tools
     tree # Directory listing as tree
-    neofetch # System info
+    #    neofetch # System info
     lsof # List open files
     pv # Pipe viewer
 
