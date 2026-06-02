@@ -23,14 +23,15 @@ in
   # Enable Hyprland
   wayland.windowManager.hyprland = {
     enable = true;
+    configType = "hyprlang";
     systemd.enable = true;
     xwayland.enable = true;
     # Use settings directly rather than extraConfig
     settings = {
       # Monitor configuration with the fixed positioning
       monitor = [
-        "DP-1,3440x1440@144,1080x0,1"
-        "HDMI-A-1,1920x1080@75, 0x0 ,1,transform,3"
+        #"DP-1,3440x1440@144,1080x0,1"
+        "HDMI-A-1,1920x1080@75, 0x0 ,1"
       ];
 
       # Environment variables - cursor settings
@@ -105,7 +106,6 @@ in
 
       # Layout settings
       dwindle = {
-        pseudotile = true;
         preserve_split = true;
       };
 
@@ -170,7 +170,7 @@ in
 
         # Window states
         "$mod, t, pseudo"
-        "$mod SHIFT, t, togglesplit"
+        "$mod SHIFT, t, layoutmsg, togglesplit"
         "$mod, s, togglefloating"
 
         # Focus windows

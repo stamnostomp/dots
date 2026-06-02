@@ -82,7 +82,7 @@ in
       dockfmt
 
       # LSP and npm
-      nodePackages.npm
+      nodejs
 
       # C# development
       csharpier
@@ -121,8 +121,6 @@ in
 
       # Web development
       html-tidy
-      nodePackages.stylelint
-      nodePackages.js-beautify
 
       # Clipboard and input simulation for Wayland (for emacs-everywhere)
       wl-clipboard

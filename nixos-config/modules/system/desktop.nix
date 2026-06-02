@@ -7,13 +7,14 @@
 }:
 
 {
-  # Enable display manager
-  services.xserver.enable = true;
-  services.displayManager = {
-    gdm = {
-      enable = true;
-      wayland = true;
-      autoSuspend = false;
+  # Enable display manager (greetd + tuigreet works with Hyprland; GDM 50 requires GNOME Shell)
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd Hyprland";
+        user = "greeter";
+      };
     };
   };
 
@@ -69,6 +70,5 @@
   services.gnome.gnome-keyring.enable = true;
 
   # Enable PAM integration for GNOME Keyring
-  # This allows apps to access the keyring properly
-  security.pam.services.gdm-password.enableGnomeKeyring = true;
+  security.pam.services.greetd.enableGnomeKeyring = true;
 }

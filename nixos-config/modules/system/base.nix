@@ -77,15 +77,25 @@
   # Override noto-fonts-color-emoji with empty package to avoid build failure
   nixpkgs.overlays = [
     (final: prev: {
-      noto-fonts-color-emoji = prev.runCommand "noto-fonts-color-emoji-dummy" {} "mkdir -p $out";
+      noto-fonts-color-emoji = prev.runCommand "noto-fonts-color-emoji-dummy" { } "mkdir -p $out";
     })
   ];
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Pin dbus implementation to avoid boot issues when switching to broker
+  services.dbus.implementation = "dbus";
+
   # System services
   services.openssh.enable = true;
+
+  services.udev.extraRules = ''
+    # ESP32-S3 normal mode
+    ATTRS{idVendor}=="303a", ATTRS{idProduct}=="81b4", MODE="0666", GROUP="users"
+    # ESP32-S3 bootloader/flash mode (Espressif generic)
+    ATTRS{idVendor}=="303a", ATTRS{idProduct}=="0002", MODE="0666", GROUP="users"
+  '';
 
   # This value determines the NixOS release
   system.stateVersion = "25.05"; # Don't change unless you know what you're doing!
