@@ -25,6 +25,7 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    jack.enable = true;
   };
 
   # Enable OpenGL
@@ -41,6 +42,7 @@
 
   # Desktop packages
   environment.systemPackages = with pkgs; [
+    pipewire.jack
     # Desktop utilities
     firefox-bin
     xdg-utils

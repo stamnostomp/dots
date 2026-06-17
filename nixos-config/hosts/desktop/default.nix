@@ -22,6 +22,13 @@
   time.timeZone = "America/Denver"; # Adjust to your timezone
   i18n.defaultLocale = "en_US.UTF-8";
 
+  # Real-time scheduling permissions for audio group (SuperCollider, JACK, etc.)
+  security.pam.loginLimits = [
+    { domain = "@audio"; item = "rtprio";  type = "-"; value = "99"; }
+    { domain = "@audio"; item = "memlock"; type = "-"; value = "unlimited"; }
+    { domain = "@audio"; item = "nice";    type = "-"; value = "-20"; }
+  ];
+
   # Enable sound with Pipewire
   security.rtkit.enable = true;
   services.pipewire = {
@@ -29,8 +36,8 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    jack.enable = true;
   };
-
 
   # IMPORTANT: Disable power-profiles-daemon if it conflicts with other power management
   # Desktops usually don't need aggressive power management like TLP
@@ -39,7 +46,7 @@
   # Open firewall ports for deluge (optional, for remote access)
   networking.firewall = {
     allowedTCPPorts = [
-      8112  # Deluge web UI
+      8112 # Deluge web UI
       58846 # Deluge daemon
     ];
     allowedUDPPorts = [ 58846 ];

@@ -95,6 +95,22 @@ in
       cabal-install
       ghc
 
+      # TidalCycles live coding
+      (symlinkJoin {
+        name = "supercollider-pipewire";
+        paths = [ supercollider-with-sc3-plugins ];
+        nativeBuildInputs = [ makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/sclang \
+            --prefix LD_LIBRARY_PATH : "${pipewire.jack}/lib"
+          wrapProgram $out/bin/scsynth \
+            --prefix LD_LIBRARY_PATH : "${pipewire.jack}/lib"
+        '';
+      })
+      (writeShellScriptBin "tidal-ghci" ''
+        exec ${(haskellPackages.ghcWithPackages (hpkgs: [hpkgs.tidal]))}/bin/ghci "$@"
+      '')
+
       elmPackages.elm-format
       elmPackages.elm-language-server
 

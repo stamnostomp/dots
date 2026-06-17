@@ -82,7 +82,7 @@
     freecad
     kicad
     #
-    openscad
+    #    openscad
 
     # 3D printing - using standard orca-slicer from nixpkgs
     orca-slicer
