@@ -89,7 +89,8 @@
     prusa-slicer
 
     # VPN
-    protonvpn-gui
+    proton-vpn
+    prismlauncher
 
     # Wine
     bottles
