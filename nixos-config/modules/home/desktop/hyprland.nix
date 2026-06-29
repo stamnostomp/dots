@@ -23,14 +23,18 @@ in
   # Enable Hyprland
   wayland.windowManager.hyprland = {
     enable = true;
-    systemd.enable = true;
+    configType = "hyprlang";
+    # UWSM (programs.hyprland.withUWSM) owns the systemd graphical session and
+    # environment import, so disable HM's own systemd integration to avoid
+    # double-starting graphical-session.target.
+    systemd.enable = false;
     xwayland.enable = true;
     # Use settings directly rather than extraConfig
     settings = {
       # Monitor configuration with the fixed positioning
       monitor = [
-        "DP-1,3440x1440@144,1080x0,1"
-        "HDMI-A-1,1920x1080@75, 0x0 ,1,transform,3"
+        #"DP-1,3440x1440@144,1080x0,1"
+        "HDMI-A-1,1920x1080@75, 0x0 ,1"
       ];
 
       # Environment variables - cursor settings
@@ -47,6 +51,7 @@ in
 
       # Startup applications
       exec-once = [
+        "gnome-keyring-daemon --start --components=secrets"
         "hyprcursor"
         "hyprctl setcursor ${cursorTheme.name} ${toString cursorTheme.size}"
         "waybar"
@@ -104,12 +109,10 @@ in
 
       # Layout settings
       dwindle = {
-        pseudotile = true;
         preserve_split = true;
       };
 
       # Gestures
-      
 
       # Window rules
       windowrule = [
@@ -133,7 +136,7 @@ in
         "$mod SHIFT, p, exec, wlogout"
 
         # Emacs
-        "$mod, e, exec, ${config.home.homeDirectory}/.local/bin/emacs-wrapper"
+        "$mod, e, exec, emacsclient -c"
 
         # Web browser
         "$mod, w, exec, firefox"
@@ -151,7 +154,7 @@ in
         "$mod SHIFT, w, exec, killall waybar && waybar &"
 
         # emacse
-        "$mod SHIFT, semicolon, exec, emacsclient -c -e '(emacs-everywhere)'"
+        "$mod SHIFT, semicolon, exec, emacsclient -e '(emacs-everywhere)'"
 
         # Close window
         "$mod, q, killactive"
@@ -161,7 +164,7 @@ in
         "$mod ALT, r, exec, hyprctl reload"
 
         # Screenshots
-        "$mod ALT, s, exec, grimblast copy area"
+        "$mod SHIFT, s, exec, grimblast copy area"
         "SHIFT, Print, exec, grimblast save area"
         ", Print, exec, grimblast copy area"
 
@@ -170,7 +173,7 @@ in
 
         # Window states
         "$mod, t, pseudo"
-        "$mod SHIFT, t, togglesplit"
+        "$mod SHIFT, t, layoutmsg, togglesplit"
         "$mod, s, togglefloating"
 
         # Focus windows
@@ -343,6 +346,9 @@ in
     # System tray applications
     networkmanagerapplet
     blueman
+
+    # Keyring for secrets management
+    gnome-keyring
 
     # XDG portal
     xdg-desktop-portal-hyprland

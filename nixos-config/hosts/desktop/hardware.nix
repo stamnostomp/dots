@@ -14,7 +14,7 @@
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
-  services.xserver.videoDrivers = [ "nvidia" ];
+  services.xserver.videoDrivers = [ "amdgpu" ];
   boot.initrd.availableKernelModules = [
     "nvme"
     "xhci_pci"
@@ -49,15 +49,16 @@
   # Additional hardware settings for your Hyprland setup
   hardware.steam-hardware.enable = true;
 
-  hardware.nvidia = {
-    modesetting.enable = true;
-    open = false;
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-    powerManagement.enable = true;
-    forceFullCompositionPipeline = true;
-  };
-
+  /*
+    hardware.nvidia = {
+      modesetting.enable = true;
+      open = false;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.stable;
+      powerManagement.enable = true;
+      forceFullCompositionPipeline = true;
+    };
+  */
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [

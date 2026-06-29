@@ -45,6 +45,7 @@ in
 
       # Startup applications
       exec-once = [
+        "gnome-keyring-daemon --start --components=secrets"
         "hyprcursor"
         "hyprctl setcursor ${cursorTheme.name} ${toString cursorTheme.size}"
         "waybar"
@@ -180,7 +181,7 @@ in
         "$mod, d, exec, ~/.local/bin/dock-handler.sh"
 
         # Emacs everywhere
-        "$mod SHIFT, semicolon, exec, emacsclient -c -e '(emacs-everywhere)'"
+        "$mod SHIFT, semicolon, exec, emacsclient -e '(emacs-everywhere)'"
 
         # Close window
         "$mod, q, killactive"
@@ -190,7 +191,7 @@ in
         "$mod ALT, r, exec, hyprctl reload"
 
         # Screenshots
-        "$mod ALT, s, exec, grimblast copy area"
+        "$mod SHIFT, s, exec, grimblast copy area"
         "SHIFT, Print, exec, grimblast save area"
         ", Print, exec, grimblast copy area"
 
@@ -344,6 +345,9 @@ in
     # System tray applications
     networkmanagerapplet
     blueman
+
+    # Keyring for secrets management
+    gnome-keyring
 
     # XDG portal
     xdg-desktop-portal-hyprland

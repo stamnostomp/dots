@@ -7,18 +7,20 @@
 }:
 
 {
-  # Enable X11 and display manager
-  # GDM supports both Wayland (for Hyprland) and X11 (for XFCE)
-  services.xserver.enable = true;
-  services.displayManager = {
-    gdm = {
-      enable = true;
-      autoSuspend = false;
+  # Enable display manager (greetd + tuigreet works with Hyprland; GDM 50 requires GNOME Shell)
+  # Launch via UWSM (programs.hyprland.withUWSM) instead of bare Hyprland so the
+  # session gets XDG/Wayland env, the D-Bus activation environment, and
+  # graphical-session.target (xdg-desktop-portal) set up correctly.
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd 'uwsm start hyprland-uwsm.desktop'";
+        user = "greeter";
+      };
     };
   };
 
-  # Enable XFCE desktop environment (X11 backup)
-  services.xserver.desktopManager.xfce.enable = true;
   # Enable sound with Pipewire
   security.rtkit.enable = true;
   services.pipewire = {
@@ -26,6 +28,7 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    jack.enable = true;
   };
 
   # Enable OpenGL
@@ -37,8 +40,12 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
+  # Enable ratbagd for gaming mouse configuration
+  services.ratbagd.enable = true;
+
   # Desktop packages
   environment.systemPackages = with pkgs; [
+    pipewire.jack
     # Desktop utilities
     firefox-bin
     xdg-utils
@@ -47,14 +54,11 @@
     xdg-desktop-portal-hyprland
     xdg-desktop-portal-xapp
 
-    # XFCE additional utilities
-    xfce4-settings
-    xfce4-screenshooter
-    xfce4-power-manager
-    xfce4-taskmanager
-
-    # Additional utilities that work well with both DEs
+    # Additional utilities
     dconf-editor
+
+    # Gaming mouse configuration
+    piper
   ];
 
   # Fish shell
@@ -67,10 +71,9 @@
     dedicatedServer.openFirewall = true;
   };
 
-  # Enable GNOME Keyring (works with XFCE too)
+  # Enable GNOME Keyring
   services.gnome.gnome-keyring.enable = true;
 
   # Enable PAM integration for GNOME Keyring
-  # This allows apps to access the keyring properly
-  security.pam.services.gdm-password.enableGnomeKeyring = true;
+  security.pam.services.greetd.enableGnomeKeyring = true;
 }

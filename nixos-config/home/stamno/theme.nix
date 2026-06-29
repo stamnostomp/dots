@@ -211,20 +211,24 @@ in
       gtk-application-prefer-dark-theme=1
     '';
     gtk3.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-        gtk-cursor-theme-name=${theme.cursor.name}
-        gtk-cursor-theme-size=${toString theme.cursor.size}
-        gtk-primary-button-warps-slider=false
-      '';
+      gtk-application-prefer-dark-theme = 1;
+      gtk-primary-button-warps-slider = false;
     };
+    gtk4.theme = config.gtk.theme;
     gtk4.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-        gtk-cursor-theme-name=${theme.cursor.name}
-        gtk-cursor-theme-size=${toString theme.cursor.size}
-        gtk-primary-button-warps-slider=false
-      '';
+      gtk-application-prefer-dark-theme = 1;
+      gtk-primary-button-warps-slider = false;
+    };
+  };
+
+  # GTK4 apps on Wayland use the portal/dconf for color-scheme, not settings.ini
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      gtk-theme = theme.name;
+      icon-theme = theme.icons.name;
+      cursor-theme = theme.cursor.name;
+      cursor-size = theme.cursor.size;
     };
   };
 
@@ -299,38 +303,6 @@ in
     "hypr/cursor.conf".text = ''
       env = XCURSOR_SIZE,${toString theme.cursor.size}
       env = XCURSOR_THEME,${theme.cursor.name}
-    '';
-
-    # Updated GTK settings with theme variables
-    "gtk-3.0/settings.ini".text = ''
-      [Settings]
-      gtk-application-prefer-dark-theme=1
-      gtk-cursor-theme-name=${theme.cursor.name}
-      gtk-cursor-theme-size=${toString theme.cursor.size}
-      gtk-theme-name=${theme.name}
-      gtk-icon-theme-name=${theme.icons.name}
-      gtk-font-name=Sans 10
-      gtk-xft-antialias=1
-      gtk-xft-hinting=1
-      gtk-xft-hintstyle=hintslight
-      gtk-xft-rgba=rgb
-      gtk-primary-button-warps-slider=false
-    '';
-
-    # Same for GTK4
-    "gtk-4.0/settings.ini".text = ''
-      [Settings]
-      gtk-application-prefer-dark-theme=1
-      gtk-cursor-theme-name=${theme.cursor.name}
-      gtk-cursor-theme-size=${toString theme.cursor.size}
-      gtk-theme-name=${theme.name}
-      gtk-icon-theme-name=${theme.icons.name}
-      gtk-font-name=Sans 10
-      gtk-xft-antialias=1
-      gtk-xft-hinting=1
-      gtk-xft-hintstyle=hintslight
-      gtk-xft-rgba=rgb
-      gtk-primary-button-warps-slider=false
     '';
 
     # Everblush for Alacritty

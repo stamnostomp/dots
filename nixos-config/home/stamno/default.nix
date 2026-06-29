@@ -57,7 +57,7 @@ in
   # Enable Doom Emacs module
   modules.doom-emacs = {
     enable = true;
-    # The repoUrl is deprecated but kept for compatibility
-    repoUrl = "https://github.com/stamnostomp/doom-d";
+    # Path to local doom config (symlinked to ~/.doom.d)
+    configPath = "${config.home.homeDirectory}/Gits/doom-d";
   };
 }

@@ -13,11 +13,9 @@
     enable = true;
     settings = {
       user = {
-        userName = "stamnostomp"; # Replace with your actual name
-        userEmail = "stamno@pm.me"; # Replace with your email
+        name = "stamnostomp";
+        email = "stamno@pm.me";
       };
-    };
-    settings = {
       init.defaultBranch = "main";
       pull.rebase = false;
       core.editor = "vim";
@@ -29,18 +27,14 @@
     enable = true;
     nix-direnv.enable = true;
   };
-  # Enable LocalSend with automatic firewall configuration
 
   # Application packages
   home.packages = with pkgs; [
-    # Custom orca-slicer with NVIDIA + Wayland fixes
-    (pkgs.callPackage ../../pkgs/orca-slicer-fixed/default.nix { })
     # Browsers
     firefox-bin
-    #    inputs.zen-browser.packages.${system}.default # Use the Zen Browser input
 
     # The Everblush Firefox theme - use the input directly
-    inputs.firefox-everblush-theme.packages.${system}.default
+    inputs.firefox-everblush-theme.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     # Development tools
     git
@@ -75,6 +69,7 @@
     # Other utilities
     xdg-utils
     libnotify
+    mpv
 
     # Games
     steam
@@ -82,29 +77,31 @@
     lutris
     godot
 
-    #CAd
-    freecad-wayland
-    openscad
+    # CAD
+    #freecad-wayland
+    freecad
+    kicad
+    #
+    #    openscad
+    opencode
+    # 3D printing - using standard orca-slicer from nixpkgs
+    orca-slicer
+    prusa-slicer
 
-    #art
-    #krita
+    # VPN
+    proton-vpn
+    prismlauncher
 
-    #3d
-    # orca-slicer-fixed added at top of packages list
-    #   prusa-slicer
-
-    #wine
+    # Wine
     bottles
-
-    #office
-    #libreoffice
-
   ];
 
   # Auto-install the Firefox theme on activation
   home.activation.installFirefoxTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         # Use the flake input directly
-        THEME_PACKAGE="${inputs.firefox-everblush-theme.packages.${pkgs.system}.default}"
+        THEME_PACKAGE="${
+          inputs.firefox-everblush-theme.packages.${pkgs.stdenv.hostPlatform.system}.default
+        }"
 
         # Create the script in the user's bin directory
         mkdir -p $HOME/.local/bin
@@ -184,20 +181,4 @@
     EOF
         chmod +x $HOME/.local/bin/install-firefox-everblush-theme
   '';
-
-  # Create a script to launch Zen Browser
-  #  home.activation.createZenBrowserScript = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-  #       # Create a script to launch Zen Browser with the Everblush theme
-  #      mkdir -p $HOME/.local/bin
-  #     cat > $HOME/.local/bin/zen-browser << EOF
-  #!/usr/bin/env bash
-
-  # Set GTK theme
-  #export GTK_THEME=Everblush
-
-  # Launch Zen Browser
-  #exec ${inputs.zen-browser.packages.${pkgs.system}.default}/bin/zen-browser "\$@"
-  #EOF
-  #   chmod +x $HOME/.local/bin/zen-browser
-  #'';
 }
