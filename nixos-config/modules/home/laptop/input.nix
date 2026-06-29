@@ -42,7 +42,7 @@
   # Add tools for input device management
   home.packages = with pkgs; [
     libinput
-    xorg.xev # For debugging key inputs
+    xev # For debugging key inputs
     wev # Wayland event viewer
   ];
 }

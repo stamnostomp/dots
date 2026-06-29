@@ -56,7 +56,7 @@ in
 
       # Nix development tools
       nix
-      nixfmt-rfc-style
+      nixfmt
       nil
 
       #vterm comp
@@ -84,7 +84,7 @@ in
       dockfmt
 
       # LSP and npm
-      nodePackages.npm
+      nodejs
 
       # C# development
       csharpier
@@ -121,12 +121,12 @@ in
 
       # Web development
       html-tidy
-      nodePackages.stylelint
-      nodePackages.js-beautify
+      stylelint
+      js-beautify
 
       # Clipboard and window management (for everywhere)
       xclip
-      xorg.xwininfo
+      xwininfo
       xdotool
     ];
 

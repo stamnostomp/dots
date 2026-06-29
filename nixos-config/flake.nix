@@ -102,7 +102,6 @@
               ];
         in
         nixpkgs.lib.nixosSystem {
-          inherit system;
           specialArgs = {
             inherit inputs hostname;
           };
@@ -112,6 +111,7 @@
 
             # Override hostname here to be explicit
             {
+              nixpkgs.hostPlatform = system;
               networking.hostName = hostname;
             }
 
@@ -191,7 +191,7 @@
         default = pkgs.mkShell {
           buildInputs = with pkgs; [
             git
-            nixfmt-rfc-style
+            nixfmt
             ripgrep
             fd
             jq
@@ -224,7 +224,7 @@
         desktop = pkgs.mkShell {
           buildInputs = with pkgs; [
             git
-            nixfmt-rfc-style
+            nixfmt
             ripgrep
             fd
             jq
@@ -246,7 +246,7 @@
         laptop = pkgs.mkShell {
           buildInputs = with pkgs; [
             git
-            nixfmt-rfc-style
+            nixfmt
             ripgrep
             fd
             jq

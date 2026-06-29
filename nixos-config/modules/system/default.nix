@@ -9,5 +9,6 @@
     ./torrenting.nix
     ./flatpack.nix
     ./trezor.nix
+    ./printing.nix
   ];
 }

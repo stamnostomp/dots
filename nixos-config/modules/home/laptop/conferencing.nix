@@ -6,7 +6,7 @@
   home.packages = with pkgs; [
     pavucontrol        # Audio controls
     pamixer            # CLI audio mixer
-    helvum             # Pipewire patchbay
+    crosspipe          # Pipewire patchbay
     easyeffects        # Audio processing
     v4l-utils          # Webcam utilities
   ];

@@ -482,8 +482,8 @@ in
     gnome-themes-extra
 
     # Add xorg utils for cursor settings
-    xorg.xcursorgen
-    xorg.xrdb
+    xcursorgen
+    xrdb
   ];
 
   # Activation hooks to ensure themes are applied

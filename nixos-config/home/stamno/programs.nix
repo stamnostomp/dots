@@ -17,7 +17,7 @@
         userEmail = "stamno@pm.me"; # Replace with your email
       };
     };
-    extraConfig = {
+    settings = {
       init.defaultBranch = "main";
       pull.rebase = false;
       core.editor = "vim";
@@ -51,7 +51,7 @@
 
     # File managers
     pcmanfm # Lightweight GTK+ file manager
-    xfce.thunar
+    thunar
     kdePackages.dolphin
 
     # Messaging and communication

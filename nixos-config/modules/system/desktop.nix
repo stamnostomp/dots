@@ -13,7 +13,6 @@
   services.displayManager = {
     gdm = {
       enable = true;
-      wayland = true; # Keep Wayland support for Hyprland
       autoSuspend = false;
     };
   };
@@ -49,10 +48,10 @@
     xdg-desktop-portal-xapp
 
     # XFCE additional utilities
-    xfce.xfce4-settings
-    xfce.xfce4-screenshooter
-    xfce.xfce4-power-manager
-    xfce.xfce4-taskmanager
+    xfce4-settings
+    xfce4-screenshooter
+    xfce4-power-manager
+    xfce4-taskmanager
 
     # Additional utilities that work well with both DEs
     dconf-editor

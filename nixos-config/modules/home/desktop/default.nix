@@ -34,7 +34,7 @@
       libnotify
       # File managers (useful as alternatives to GNOME Files)
       pcmanfm
-      xfce.thunar
+      thunar
       # Screenshot tools (work in both Wayland and X11)
       grim
       slurp

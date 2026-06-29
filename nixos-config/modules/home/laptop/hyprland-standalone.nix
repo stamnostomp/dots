@@ -128,11 +128,11 @@ in
 
       # Gestures for touchpad
       # Laptop-specific window rules
-      windowrulev2 = [
-        "float,class:^(pavucontrol)$"
-        "float,class:^(nm-connection-editor)$"
-        "float,class:^(blueman-manager)$"
-        "size 800 600,class:^(pavucontrol)$"
+      windowrule = [
+        "match:class ^(pavucontrol)$, float on"
+        "match:class ^(nm-connection-editor)$, float on"
+        "match:class ^(blueman-manager)$, float on"
+        "match:class ^(pavucontrol)$, size 800 600"
       ];
 
       # Better battery life settings

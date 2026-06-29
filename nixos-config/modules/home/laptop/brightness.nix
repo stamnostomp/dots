@@ -40,6 +40,5 @@
   # Install brightness control utilities
   home.packages = with pkgs; [
     brightnessctl
-    light
   ];
 }
