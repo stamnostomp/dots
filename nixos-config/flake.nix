@@ -121,6 +121,11 @@
               programs.hyprland = {
                 enable = true;
                 xwayland.enable = true;
+                # UWSM wraps the session so it sets up XDG/Wayland env, the
+                # D-Bus activation environment, and graphical-session.target
+                # (xdg-desktop-portal). Launching bare `Hyprland` from greetd
+                # left these unset, breaking portal-dependent apps.
+                withUWSM = true;
               };
             }
           ];

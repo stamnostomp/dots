@@ -24,7 +24,10 @@ in
   wayland.windowManager.hyprland = {
     enable = true;
     configType = "hyprlang";
-    systemd.enable = true;
+    # UWSM (programs.hyprland.withUWSM) owns the systemd graphical session and
+    # environment import, so disable HM's own systemd integration to avoid
+    # double-starting graphical-session.target.
+    systemd.enable = false;
     xwayland.enable = true;
     # Use settings directly rather than extraConfig
     settings = {

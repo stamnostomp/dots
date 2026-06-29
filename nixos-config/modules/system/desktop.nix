@@ -8,11 +8,14 @@
 
 {
   # Enable display manager (greetd + tuigreet works with Hyprland; GDM 50 requires GNOME Shell)
+  # Launch via UWSM (programs.hyprland.withUWSM) instead of bare Hyprland so the
+  # session gets XDG/Wayland env, the D-Bus activation environment, and
+  # graphical-session.target (xdg-desktop-portal) set up correctly.
   services.greetd = {
     enable = true;
     settings = {
       default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd Hyprland";
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd 'uwsm start hyprland-uwsm.desktop'";
         user = "greeter";
       };
     };

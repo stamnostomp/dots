@@ -83,7 +83,7 @@
     kicad
     #
     #    openscad
-
+    opencode
     # 3D printing - using standard orca-slicer from nixpkgs
     orca-slicer
     prusa-slicer
