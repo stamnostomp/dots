@@ -8,45 +8,22 @@
 }:
 
 let
+  # Central theme definitions (colors, cursor name/size, font stack)
+  themeDef = import ../../modules/theme-colors.nix;
+
   # Theme configuration - Everblush GTK theme (built from pkgs/everblush-gtk via overlay)
   theme = {
     name = "Everblush";
     package = pkgs.everblush-gtk;
-    cursor = {
-      name = "Bibata-Modern-Classic";
-      package = pkgs.bibata-cursors;
-      size = 24;
+    # Classic black macOS arrow (apple-cursor ships "macOS" and "macOS-White")
+    cursor = themeDef.cursor // {
+      package = pkgs.apple-cursor;
     };
     icons = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
     };
-    # Everblush colors
-    colors = {
-      background = "#141b1e";
-      foreground = "#dadada";
-      cursor = "#dadada";
-      black = "#232a2d";
-      red = "#e57474";
-      green = "#8ccf7e";
-      yellow = "#e5c76b";
-      blue = "#67b0e8";
-      magenta = "#c47fd5";
-      cyan = "#6cbfbf";
-      white = "#b3b9b8";
-      brightBlack = "#2d3437";
-      brightRed = "#ef7e7e";
-      brightGreen = "#96d988";
-      brightYellow = "#f4d67a";
-      brightBlue = "#71baf2";
-      brightMagenta = "#ce89df";
-      brightCyan = "#67cbe7";
-      brightWhite = "#bdc3c2";
-      waybarbg = "#232a2d"; # Using the black color as a lighter background
-    };
-    # Waybar font that we'll reuse for Wofi
-    font = "Cozette, JetBrainsMono Nerd Font, Siji, FontAwesome";
-    fontSize = "13px";
+    inherit (themeDef) colors font fontSize;
   };
 
   # Helper function to convert hex to rgba
@@ -443,6 +420,18 @@ in
     cursorFix
     papirusFolderColor
     cleanupGtkFixes
+
+    # UI fonts referenced by the shared font stack (waybar/wofi)
+    # cherry ships X11 core-font index files (fonts.dir/fonts.scale) that
+    # collide with dina-font's (from doom-emacs.nix) in buildEnv; fontconfig
+    # doesn't need them, so strip them.
+    # (postFixup, not postInstall: cherry's custom installPhase skips hooks)
+    (cherry.overrideAttrs (old: {
+      postFixup = (old.postFixup or "") + ''
+        rm -f $out/share/fonts/misc/fonts.dir $out/share/fonts/misc/fonts.scale
+      '';
+    }))
+    cozette
 
     # Theme dependencies
     gtk-engine-murrine

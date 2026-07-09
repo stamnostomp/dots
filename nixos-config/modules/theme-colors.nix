@@ -1,6 +1,18 @@
 # modules/theme-colors.nix
-# This is a central module for color definitions to avoid import problems
+# This is a central module for theme definitions (colors, cursor, font) to
+# avoid import problems. Plain data only - packages are attached where a
+# `pkgs` argument is available (home/stamno/theme.nix).
 {
+  # Cursor theme: classic black macOS arrow from pkgs.apple-cursor
+  cursor = {
+    name = "macOS";
+    size = 24;
+  };
+
+  # UI font stack (waybar, wofi, ...). Cherry is the primary bitmap font.
+  font = "Cherry, Cozette, JetBrainsMono Nerd Font, Siji, FontAwesome";
+  fontSize = "13px";
+
   colors = {
     background = "#141b1e";
     foreground = "#dadada";

@@ -38,8 +38,8 @@
   '';
 
   # Install brightness control utilities
+  # (`light` was removed from nixpkgs; everything here uses brightnessctl)
   home.packages = with pkgs; [
     brightnessctl
-    light
   ];
 }

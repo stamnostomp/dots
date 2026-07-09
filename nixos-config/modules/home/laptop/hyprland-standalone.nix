@@ -12,11 +12,8 @@ let
   colorsDef = import ../../../modules/theme-colors.nix;
   colors = colorsDef.colors;
 
-  # Cursor theme
-  cursorTheme = {
-    name = "Bibata-Modern-Classic";
-    size = 20;
-  };
+  # Cursor theme from the central theme module
+  cursorTheme = colorsDef.cursor;
 in
 {
   # Enable Hyprland (laptop-optimized version)
