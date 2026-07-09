@@ -32,6 +32,9 @@ in
     # Import Doom Emacs module (common to both)
     ../../modules/home/editors/doom-emacs.nix
 
+    # CAD tooling (KiCad + declarative global library tables)
+    ../../modules/home/cad/kicad.nix
+
     # Conditional imports based on hostname
   ] ++ (if isLaptop then [
     # Laptop-specific modules

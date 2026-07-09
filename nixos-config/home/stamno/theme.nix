@@ -8,10 +8,10 @@
 }:
 
 let
-  # Theme configuration - using Adwaita-dark GTK theme with Everblush colors
+  # Theme configuration - Everblush GTK theme (built from pkgs/everblush-gtk via overlay)
   theme = {
-    name = "Adwaita-dark"; # Adwaita-dark is the stable GTK theme
-    package = pkgs.gnome-themes-extra; # Corrected package path
+    name = "Everblush";
+    package = pkgs.everblush-gtk;
     cursor = {
       name = "Bibata-Modern-Classic";
       package = pkgs.bibata-cursors;
@@ -172,6 +172,7 @@ in
   # Set consistent cursor configuration across the system for X11
   # THIS IS THE IMPORTANT PART - LET HOME MANAGER HANDLE THE CURSOR THEME
   home.pointerCursor = {
+    enable = true;
     name = theme.cursor.name;
     package = theme.cursor.package;
     size = theme.cursor.size;
@@ -219,6 +220,14 @@ in
       gtk-application-prefer-dark-theme = 1;
       gtk-primary-button-warps-slider = false;
     };
+  };
+
+  # Qt apps: use Qt's native GTK3 platform theme plugin so Qt follows the
+  # Everblush GTK theme (colors, fonts, dark preference, GTK file dialogs).
+  # This also exports QT_QPA_PLATFORMTHEME=gtk3 into the systemd user session.
+  qt = {
+    enable = true;
+    platformTheme.name = "gtk3";
   };
 
   # GTK4 apps on Wayland use the portal/dconf for color-scheme, not settings.ini

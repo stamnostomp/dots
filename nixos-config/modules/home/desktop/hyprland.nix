@@ -45,7 +45,7 @@ in
         "GTK_THEME,Everblush" # Set GTK theme
         "GTK2_RC_FILES,${config.xdg.configHome}/gtk-2.0/gtkrc:${config.home.homeDirectory}/.gtkrc-2.0"
         "XDG_DATA_DIRS,${config.home.profileDirectory}/share:$XDG_DATA_DIRS"
-        "QT_QPA_PLATFORMTHEME,gtk2"
+        "QT_QPA_PLATFORMTHEME,gtk3"
         "WLR_NO_HARDWARE_CURSORS,1"
       ];
 

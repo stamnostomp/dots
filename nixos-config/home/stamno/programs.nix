@@ -80,7 +80,7 @@
     # CAD
     #freecad-wayland
     freecad
-    kicad
+    # kicad is provided by modules/home/cad/kicad.nix (with declarative lib tables)
     #
     #    openscad
     opencode
