@@ -60,11 +60,12 @@ in
 
       # Input configuration
       input = {
-        kb_layout = "us";
-        kb_variant = "";
+        kb_layout = "us,us";
+        kb_variant = ",dvorak";
         kb_model = "";
         kb_options = "";
         kb_rules = "";
+        resolve_binds_by_sym = true;
         follow_mouse = 1;
         sensitivity = 0.0;
         touchpad = {
@@ -236,8 +237,7 @@ in
         ", XF86MonBrightnessDown, exec, brightnessctl set 10%-"
 
         # Keyboard layout switching
-        "ALT, d, exec, hyprctl keyword input:kb_layout dvorak"
-        "ALT, u, exec, hyprctl keyword input:kb_layout us"
+        "$mod ALT, space, exec, hyprctl switchxkblayout all next"
       ];
 
       # Mouse bindings

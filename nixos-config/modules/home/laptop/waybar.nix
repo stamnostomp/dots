@@ -39,6 +39,7 @@ in
               "custom/left", "pulseaudio", "custom/right", "custom/space",
               "custom/left", "custom/battery", "custom/right", "custom/space",
               "custom/left", "network", "custom/right", "custom/space",
+              "custom/left", "hyprland/language", "custom/right", "custom/space",
               "custom/left", "clock", "custom/right", "custom/space",
               "tray"
           ],
@@ -119,6 +120,14 @@ in
               "format-alt": "󱘖 {bandwidthUpBytes} 󱘎 {bandwidthDownBytes}",
               "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
               "on-click": "nm-connection-editor"
+          },
+
+          "hyprland/language": {
+              "format": "󰌌 {}",
+              "keyboard-name": "at-translated-set-2-keyboard",
+              "format-en": "QWERTY",
+              "format-us": "QWERTY",
+              "format-en-dvorak": "DVORAK"
           },
 
           "clock": {
@@ -259,6 +268,10 @@ in
           color: ${colors.brightCyan};
       }
 
+      #language {
+          color: ${colors.brightYellow};
+      }
+
       #custom-left {
           font-size: 20px;
           color: ${colors.waybarbg};
@@ -275,7 +288,7 @@ in
           padding: 0;
       }
 
-      #cpu, #memory, #disk, #pulseaudio, #custom-battery, #network, #clock {
+      #cpu, #memory, #disk, #pulseaudio, #custom-battery, #network, #language, #clock {
           padding: 0 10px;
           background-color: ${colors.waybarbg};
       }
