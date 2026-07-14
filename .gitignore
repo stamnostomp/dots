@@ -1,4 +1,6 @@
-/nixos-config/*.lock
+# NOTE: do NOT ignore flake.lock — it must be committed so `nix build` is
+# reproducible. Ignoring it makes Nix re-lock nixpkgs to the latest (possibly
+# broken) commit on every build.
 /nixos-config/log.txt
 *.sh
 /nixos-config/modules/home/editors/doom-emacs-fonts.nix

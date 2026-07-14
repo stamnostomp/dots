@@ -1,0 +1,77 @@
+// Everblush color palette (https://github.com/Everblush/everblush)
+// injected into Colloid's src/sass/_color-palette-default.scss.
+//
+// Grey ramp: Colloid's dark variant uses grey-800 for window backgrounds and
+// grey-700 for surfaces/headerbars, so the ramp is anchored on the Everblush
+// background (#141b1e) and black (#232a2d) and tinted to match in between.
+
+// Red
+$red-light: #ef7e7e;
+$red-dark: #e57474;
+
+// Pink
+$pink-light: #ce89df;
+$pink-dark: #c47fd5;
+
+// Purple
+$purple-light: #ce89df;
+$purple-dark: #c47fd5;
+
+// Blue
+$blue-light: #71baf2;
+$blue-dark: #67b0e8;
+
+// Teal
+$teal-light: #67cbe7;
+$teal-dark: #6cbfbf;
+
+// Green
+$green-light: #96d988;
+$green-dark: #8ccf7e;
+
+// Yellow
+$yellow-light: #f4d67a;
+$yellow-dark: #e5c76b;
+
+// Orange (Everblush has no orange; blended from its red/yellow)
+$orange-light: #f0a988;
+$orange-dark: #e5967e;
+
+// Grey
+$grey-050: #f1f5f5;
+$grey-100: #e7eded;
+$grey-150: #dde4e4;
+$grey-200: #ccd5d5;
+$grey-250: #bdc3c2; // Everblush bright white
+$grey-300: #b3b9b8; // Everblush white
+$grey-350: #97a09f;
+$grey-400: #828b8a;
+$grey-450: #6d7776;
+$grey-500: #596363;
+$grey-550: #3f4a4d;
+$grey-600: #333c3f;
+$grey-650: #2d3437; // Everblush bright black
+$grey-700: #232a2d; // Everblush black -> surfaces/headerbars
+$grey-750: #1b2225;
+$grey-800: #141b1e; // Everblush background -> window background
+$grey-850: #101619;
+$grey-900: #0c1114;
+$grey-950: #05080a;
+
+// White
+$white: #ffffff;
+
+// Black
+$black: #000000;
+
+// Button
+$button-close: #e57474;
+$button-max: #8ccf7e;
+$button-min: #e5c76b;
+
+// Link
+$links: #67b0e8;
+
+// Theme
+$default-light: $blue-light;
+$default-dark: $blue-dark;

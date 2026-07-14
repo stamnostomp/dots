@@ -78,7 +78,7 @@
   environment.systemPackages = with pkgs; [
     powertop
     acpi
-    brightnessctl # Backlight control
+    brightnessctl # Backlight control (`light` was removed from nixpkgs)
   ];
 
   # This value determines the NixOS release

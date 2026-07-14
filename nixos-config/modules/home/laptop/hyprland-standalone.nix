@@ -12,11 +12,8 @@ let
   colorsDef = import ../../../modules/theme-colors.nix;
   colors = colorsDef.colors;
 
-  # Cursor theme
-  cursorTheme = {
-    name = "Bibata-Modern-Classic";
-    size = 20;
-  };
+  # Cursor theme from the central theme module
+  cursorTheme = colorsDef.cursor;
 in
 {
   # Enable Hyprland (laptop-optimized version)
@@ -40,7 +37,7 @@ in
         "GTK_THEME,Everblush"
         "GTK2_RC_FILES,${config.xdg.configHome}/gtk-2.0/gtkrc:${config.home.homeDirectory}/.gtkrc-2.0"
         "XDG_DATA_DIRS,${config.home.profileDirectory}/share:$XDG_DATA_DIRS"
-        "QT_QPA_PLATFORMTHEME,gtk2"
+        "QT_QPA_PLATFORMTHEME,gtk3"
       ];
 
       # Startup applications

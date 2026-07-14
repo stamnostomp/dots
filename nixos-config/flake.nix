@@ -101,6 +101,18 @@
               _module.args.self = self;
             }
 
+            # Custom package overlays (also used by the standalone homeConfigurations pkgs above)
+            {
+              nixpkgs.overlays = [
+                nur.overlays.default
+                (final: prev: {
+                  everblush-gtk = everblush-gtk.packages.${prev.stdenv.hostPlatform.system}.default;
+                  firefox-everblush-theme =
+                    firefox-everblush-theme.packages.${prev.stdenv.hostPlatform.system}.default;
+                })
+              ];
+            }
+
             # Include home-manager as a module
             home-manager.nixosModules.home-manager
             {

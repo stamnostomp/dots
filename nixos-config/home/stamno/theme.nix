@@ -8,45 +8,22 @@
 }:
 
 let
-  # Theme configuration - using Adwaita-dark GTK theme with Everblush colors
+  # Central theme definitions (colors, cursor name/size, font stack)
+  themeDef = import ../../modules/theme-colors.nix;
+
+  # Theme configuration - Everblush GTK theme (built from pkgs/everblush-gtk via overlay)
   theme = {
-    name = "Adwaita-dark"; # Adwaita-dark is the stable GTK theme
-    package = pkgs.gnome-themes-extra; # Corrected package path
-    cursor = {
-      name = "Bibata-Modern-Classic";
-      package = pkgs.bibata-cursors;
-      size = 24;
+    name = "Everblush";
+    package = pkgs.everblush-gtk;
+    # Classic black macOS arrow (apple-cursor ships "macOS" and "macOS-White")
+    cursor = themeDef.cursor // {
+      package = pkgs.apple-cursor;
     };
     icons = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
     };
-    # Everblush colors
-    colors = {
-      background = "#141b1e";
-      foreground = "#dadada";
-      cursor = "#dadada";
-      black = "#232a2d";
-      red = "#e57474";
-      green = "#8ccf7e";
-      yellow = "#e5c76b";
-      blue = "#67b0e8";
-      magenta = "#c47fd5";
-      cyan = "#6cbfbf";
-      white = "#b3b9b8";
-      brightBlack = "#2d3437";
-      brightRed = "#ef7e7e";
-      brightGreen = "#96d988";
-      brightYellow = "#f4d67a";
-      brightBlue = "#71baf2";
-      brightMagenta = "#ce89df";
-      brightCyan = "#67cbe7";
-      brightWhite = "#bdc3c2";
-      waybarbg = "#232a2d"; # Using the black color as a lighter background
-    };
-    # Waybar font that we'll reuse for Wofi
-    font = "Cozette, JetBrainsMono Nerd Font, Siji, FontAwesome";
-    fontSize = "13px";
+    inherit (themeDef) colors font fontSize;
   };
 
   # Helper function to convert hex to rgba
@@ -172,6 +149,7 @@ in
   # Set consistent cursor configuration across the system for X11
   # THIS IS THE IMPORTANT PART - LET HOME MANAGER HANDLE THE CURSOR THEME
   home.pointerCursor = {
+    enable = true;
     name = theme.cursor.name;
     package = theme.cursor.package;
     size = theme.cursor.size;
@@ -219,6 +197,14 @@ in
       gtk-application-prefer-dark-theme = 1;
       gtk-primary-button-warps-slider = false;
     };
+  };
+
+  # Qt apps: use Qt's native GTK3 platform theme plugin so Qt follows the
+  # Everblush GTK theme (colors, fonts, dark preference, GTK file dialogs).
+  # This also exports QT_QPA_PLATFORMTHEME=gtk3 into the systemd user session.
+  qt = {
+    enable = true;
+    platformTheme.name = "gtk3";
   };
 
   # GTK4 apps on Wayland use the portal/dconf for color-scheme, not settings.ini
@@ -434,6 +420,18 @@ in
     cursorFix
     papirusFolderColor
     cleanupGtkFixes
+
+    # UI fonts referenced by the shared font stack (waybar/wofi)
+    # cherry ships X11 core-font index files (fonts.dir/fonts.scale) that
+    # collide with dina-font's (from doom-emacs.nix) in buildEnv; fontconfig
+    # doesn't need them, so strip them.
+    # (postFixup, not postInstall: cherry's custom installPhase skips hooks)
+    (cherry.overrideAttrs (old: {
+      postFixup = (old.postFixup or "") + ''
+        rm -f $out/share/fonts/misc/fonts.dir $out/share/fonts/misc/fonts.scale
+      '';
+    }))
+    cozette
 
     # Theme dependencies
     gtk-engine-murrine

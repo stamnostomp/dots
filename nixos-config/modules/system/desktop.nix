@@ -43,16 +43,19 @@
   # Enable ratbagd for gaming mouse configuration
   services.ratbagd.enable = true;
 
+  # Portals: programs.hyprland already registers xdg-desktop-portal-hyprland,
+  # but that backend doesn't implement org.freedesktop.impl.portal.Settings.
+  # The GTK portal provides it, so apps (libadwaita, GTK4, Electron, Firefox)
+  # can read color-scheme=prefer-dark from dconf and default to dark mode.
+  # (Portal packages in environment.systemPackages alone do NOT register them.)
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
   # Desktop packages
   environment.systemPackages = with pkgs; [
     pipewire.jack
     # Desktop utilities
     firefox-bin
     xdg-utils
-    xdg-desktop-portal
-    xdg-desktop-portal-gtk
-    xdg-desktop-portal-hyprland
-    xdg-desktop-portal-xapp
 
     # Additional utilities
     dconf-editor

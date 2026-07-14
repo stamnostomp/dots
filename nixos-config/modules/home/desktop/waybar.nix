@@ -134,7 +134,7 @@ in
     # Waybar CSS remains the same (truncated for brevity)
     "waybar/style.css".text = ''
       * {
-          font-family: "Cozette", "JetBrainsMono Nerd Font", "Siji", "FontAwesome";
+          font-family: ${colorsDef.font};
           font-size: 13px;
           border: none;
           border-radius: 0;
