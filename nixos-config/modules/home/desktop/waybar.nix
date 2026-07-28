@@ -37,6 +37,7 @@ in
               "custom/left", "memory", "custom/right", "custom/space",
               "custom/left", "disk", "custom/right", "custom/space",
               "custom/left", "pulseaudio", "custom/right", "custom/space",
+              "custom/left", "hyprland/language", "custom/right", "custom/space",
               "custom/left", "clock", "custom/right", "custom/space",
               "tray"
           ],
@@ -104,6 +105,13 @@ in
                   "headphone": "󰋋"
               },
               "on-click": "alacritty -e pulsemixer"
+          },
+
+          "hyprland/language": {
+              "format": "󰌌 {}",
+              "format-en": "QWERTY",
+              "format-us": "QWERTY",
+              "format-en-dvorak": "DVORAK"
           },
 
           "clock": {
@@ -185,6 +193,10 @@ in
           color: #b8bb26;
       }
 
+      #language {
+          color: #fe8019;
+      }
+
       #custom-left {
           font-size: 20px;
           color: ${colors.waybarbg};
@@ -202,7 +214,7 @@ in
       }
 
       /* Module styling */
-      #cpu, #memory, #disk, #pulseaudio, #clock {
+      #cpu, #memory, #disk, #pulseaudio, #language, #clock {
           padding: 0 10px;
           background-color: ${colors.waybarbg};
       }

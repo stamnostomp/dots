@@ -27,8 +27,9 @@
 
     # General input settings
     input = {
-      kb_layout = "us";
-      kb_variant = "dvorak";
+      kb_layout = "us,us";
+      kb_variant = ",dvorak";
+      resolve_binds_by_sym = true;
       follow_mouse = 1;
       touchpad = {
         natural_scroll = true;
@@ -42,7 +43,7 @@
   # Add tools for input device management
   home.packages = with pkgs; [
     libinput
-    xorg.xev # For debugging key inputs
+    xev # For debugging key inputs
     wev # Wayland event viewer
   ];
 }

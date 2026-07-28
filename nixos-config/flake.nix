@@ -82,7 +82,6 @@
               ];
         in
         nixpkgs.lib.nixosSystem {
-          inherit system;
           specialArgs = {
             inherit inputs hostname;
           };
@@ -92,6 +91,7 @@
 
             # Override hostname here to be explicit
             {
+              nixpkgs.hostPlatform = system;
               networking.hostName = hostname;
             }
 

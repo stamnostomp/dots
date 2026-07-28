@@ -55,8 +55,8 @@ in
 
       # Input configuration (laptop-specific)
       input = {
-        kb_layout = "us";
-        kb_variant = "dvorak";
+        kb_layout = "us,us";
+        kb_variant = ",dvorak";
         kb_model = "";
         kb_options = "";
         kb_rules = "";
@@ -118,7 +118,6 @@ in
 
       # Layout settings optimized for laptop screens
       dwindle = {
-        pseudotile = true;
         preserve_split = true;
         smart_split = true;
         smart_resizing = true;
@@ -126,16 +125,15 @@ in
 
       # Gestures for touchpad
       # Laptop-specific window rules
-      windowrulev2 = [
-        "float,class:^(pavucontrol)$"
-        "float,class:^(nm-connection-editor)$"
-        "float,class:^(blueman-manager)$"
-        "size 800 600,class:^(pavucontrol)$"
+      windowrule = [
+        "match:class ^(pavucontrol)$, float on"
+        "match:class ^(nm-connection-editor)$, float on"
+        "match:class ^(blueman-manager)$, float on"
+        "match:class ^(pavucontrol)$, size 800 600"
       ];
 
       # Better battery life settings
       misc = {
-        vfr = true; # Variable refresh rate
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
         force_default_wallpaper = 0;
@@ -197,7 +195,6 @@ in
 
         # Window states
         "$mod, t, pseudo"
-        "$mod SHIFT, t, togglesplit"
         "$mod, s, togglefloating"
 
         # Focus windows
@@ -261,6 +258,11 @@ in
         ", XF86WLAN, exec, ~/.local/bin/toggle-wireless.sh"
         ", XF86NotificationCenter, exec, dunstctl history-pop"
         ", XF86WebCam, exec, grim -g \"$(slurp)\" - | wl-copy"
+
+        # Keyboard layout switching (target the physical keyboard only;
+        # "all" also cycles virtual devices like power-button/video-bus/mouse,
+        # which don't always stay in sync and desync the waybar indicator)
+        "$mod ALT, space, exec, hyprctl switchxkblayout at-translated-set-2-keyboard next"
       ];
 
       # Mouse bindings

@@ -60,13 +60,17 @@ in
 
       # Input configuration
       input = {
+<<<<<<< HEAD
         # Two layouts: plain us (index 0) and us dvorak (index 1),
         # switched with ALT+u / ALT+d via hyprctl switchxkblayout
+=======
+>>>>>>> b091fbdb4411653ee3d5748477c91a17bd18168b
         kb_layout = "us,us";
         kb_variant = ",dvorak";
         kb_model = "";
         kb_options = "";
         kb_rules = "";
+        resolve_binds_by_sym = true;
         follow_mouse = 1;
         sensitivity = 0.0;
         touchpad = {
@@ -238,8 +242,12 @@ in
         ", XF86MonBrightnessDown, exec, brightnessctl set 10%-"
 
         # Keyboard layout switching
+<<<<<<< HEAD
         "ALT, d, exec, hyprctl switchxkblayout all 1" # us(dvorak)
         "ALT, u, exec, hyprctl switchxkblayout all 0" # plain us
+=======
+        "$mod ALT, space, exec, hyprctl switchxkblayout all next"
+>>>>>>> b091fbdb4411653ee3d5748477c91a17bd18168b
       ];
 
       # Mouse bindings
