@@ -60,8 +60,10 @@ in
 
       # Input configuration
       input = {
-        kb_layout = "us";
-        kb_variant = "";
+        # Two layouts: plain us (index 0) and us dvorak (index 1),
+        # switched with ALT+u / ALT+d via hyprctl switchxkblayout
+        kb_layout = "us,us";
+        kb_variant = ",dvorak";
         kb_model = "";
         kb_options = "";
         kb_rules = "";
@@ -236,8 +238,8 @@ in
         ", XF86MonBrightnessDown, exec, brightnessctl set 10%-"
 
         # Keyboard layout switching
-        "ALT, d, exec, hyprctl keyword input:kb_layout dvorak"
-        "ALT, u, exec, hyprctl keyword input:kb_layout us"
+        "ALT, d, exec, hyprctl switchxkblayout all 1" # us(dvorak)
+        "ALT, u, exec, hyprctl switchxkblayout all 0" # plain us
       ];
 
       # Mouse bindings

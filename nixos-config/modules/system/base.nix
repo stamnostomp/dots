@@ -16,6 +16,7 @@
     "python3.13-ecdsa-0.19.1"
     # vesktop builds with pnpm 10.29.2; pnpm runs only in the build sandbox.
     "pnpm-10.29.2"
+    "electron-40.10.5"
   ];
   # Nix configuration
   nix = {

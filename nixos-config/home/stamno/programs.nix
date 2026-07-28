@@ -49,6 +49,8 @@
     kdePackages.dolphin
 
     # Messaging and communication
+    element-desktop
+    iamb
     signal-desktop
     vesktop
 
@@ -62,6 +64,8 @@
     # Audio utilities
     pulsemixer
     easyeffects
+    spotify-qt
+    librespot
 
     # Bluetooth utilities
     bluetui
@@ -79,8 +83,8 @@
 
     # CAD
     #freecad-wayland
-    freecad
-    # kicad is provided by modules/home/cad/kicad.nix (with declarative lib tables)
+    freecad # temporarily disabled: pulls in pdal-2.9.3, which fails to build
+    #kicad is provided by modules/home/cad/kicad.nix (with declarative lib tables)
     #
     #    openscad
     opencode
@@ -93,7 +97,7 @@
     prismlauncher
 
     # Wine
-    bottles
+    # bottles # temporarily disabled: patool dependency fails tests on current nixpkgs
   ];
 
   # Auto-install the Firefox theme on activation
