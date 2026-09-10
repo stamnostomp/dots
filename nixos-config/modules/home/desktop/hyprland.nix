@@ -31,7 +31,8 @@ in
       # Monitor configuration with the fixed positioning
       monitor = [
         #"DP-1,3440x1440@144,1080x0,1"
-        "HDMI-A-1,1920x1080@75, 0x0 ,1"
+        # "HDMI-A-1,1920x1080@75, 0x0 ,1"
+        ",preferred,auto,1" # External displays (auto-detect)
       ];
 
       # Environment variables - cursor settings
@@ -60,11 +61,6 @@ in
 
       # Input configuration
       input = {
-<<<<<<< HEAD
-        # Two layouts: plain us (index 0) and us dvorak (index 1),
-        # switched with ALT+u / ALT+d via hyprctl switchxkblayout
-=======
->>>>>>> b091fbdb4411653ee3d5748477c91a17bd18168b
         kb_layout = "us,us";
         kb_variant = ",dvorak";
         kb_model = "";
@@ -242,12 +238,9 @@ in
         ", XF86MonBrightnessDown, exec, brightnessctl set 10%-"
 
         # Keyboard layout switching
-<<<<<<< HEAD
-        "ALT, d, exec, hyprctl switchxkblayout all 1" # us(dvorak)
-        "ALT, u, exec, hyprctl switchxkblayout all 0" # plain us
-=======
+        "ALT, d, exec, hyprctl switchxkblayout all 1"
+        "ALT, u, exec, hyprctl switchxkblayout all 0"
         "$mod ALT, space, exec, hyprctl switchxkblayout all next"
->>>>>>> b091fbdb4411653ee3d5748477c91a17bd18168b
       ];
 
       # Mouse bindings

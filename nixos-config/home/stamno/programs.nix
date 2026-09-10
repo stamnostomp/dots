@@ -92,8 +92,13 @@
     orca-slicer
     prusa-slicer
 
-    # VPN
+    # proton
     proton-vpn
+    proton-vpn-cli
+    proton-pass
+    protonmail-desktop
+
+    #minecraft
     prismlauncher
 
     # Wine

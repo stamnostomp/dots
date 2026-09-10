@@ -39,9 +39,7 @@ cat >nixos-config/pkgs/everblush-gtk-custom/flake.nix <<'EOF'
             ];
 
             propagatedUserEnvPkgs = with pkgs; [
-              gtk-engine-murrine
-              gtk_engines
-            ];
+                         ];
 
             # We'll create the files in the right place directly
             buildPhase = ''

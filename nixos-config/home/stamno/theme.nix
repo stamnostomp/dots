@@ -434,8 +434,6 @@ in
     cozette
 
     # Theme dependencies
-    gtk-engine-murrine
-    gtk_engines
 
     # GTK theme - corrected path
     gnome-themes-extra
