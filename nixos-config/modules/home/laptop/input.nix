@@ -19,24 +19,26 @@
       {
         name = "synaptics-tm2964-001";
         natural_scroll = true;
-        tap-to-click = true;
+        tap_to_click = true;
         middle_button_emulation = true;
         scroll_factor = 0.8; # Adjust as needed
       }
     ];
 
     # General input settings
-    input = {
-      kb_layout = "us,us";
-      kb_variant = ",dvorak";
-      resolve_binds_by_sym = true;
-      follow_mouse = 1;
-      touchpad = {
-        natural_scroll = true;
-        tap-to-click = true;
-        scroll_factor = 0.8;
+    config = {
+      input = {
+        kb_layout = "us,us";
+        kb_variant = ",dvorak";
+        resolve_binds_by_sym = true;
+        follow_mouse = 1;
+        touchpad = {
+          natural_scroll = true;
+          tap_to_click = true;
+          scroll_factor = 0.8;
+        };
+        sensitivity = 0.0;
       };
-      sensitivity = 0.0;
     };
   };
 

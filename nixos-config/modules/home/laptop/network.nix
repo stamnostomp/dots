@@ -33,15 +33,30 @@
     '';
   };
 
-  # Add network manager to autostart
+  # Add network manager to autostart (exec-once equivalent: runs once at
+  # startup, not on every `hyprctl reload`)
   wayland.windowManager.hyprland.settings = {
-    exec-once = [
-      "nm-applet --indicator"  # Network tray icon
-    ];
+    on = [
+      {
+        _args = [
+          "hyprland.start"
+          (lib.generators.mkLuaInline ''
+            function()
+              hl.exec_cmd("nm-applet --indicator")
+            end
+          '')
+        ];
+      }
+    ]; # Network tray icon
 
     # ThinkPad Fn+F8 (airplane mode) key binding
     bind = [
-      ", XF86WLAN, exec, ~/.local/bin/toggle-wireless.sh"
+      {
+        _args = [
+          "XF86WLAN"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("~/.local/bin/toggle-wireless.sh")'')
+        ];
+      }
     ];
   };
 }

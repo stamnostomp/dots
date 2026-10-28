@@ -47,15 +47,30 @@
     '';
   };
 
-  # Add detect-dock trigger to Hyprland startup
+  # Add detect-dock trigger to Hyprland startup (exec-once equivalent:
+  # runs once at startup, not on every `hyprctl reload`)
+  # and manual key binding to re-detect dock status
   wayland.windowManager.hyprland.settings = {
-    exec-once = [
-      "~/.local/bin/dock-handler.sh"  # Run at startup
+    on = [
+      {
+        _args = [
+          "hyprland.start"
+          (lib.generators.mkLuaInline ''
+            function()
+              hl.exec_cmd("~/.local/bin/dock-handler.sh")
+            end
+          '')
+        ];
+      }
     ];
 
-    # Add manual key binding to re-detect dock status
     bind = [
-      "$mod, p, exec, ~/.local/bin/dock-handler.sh"  # Super+P to configure displays
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + p"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("~/.local/bin/dock-handler.sh")'')
+        ];
+      } # Super+P to configure displays
     ];
   };
 

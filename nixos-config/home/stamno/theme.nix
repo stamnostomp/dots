@@ -390,21 +390,26 @@ in
     '';
   };
 
-  # Update Hyprland configuration with the theme colors (using fixed format)
+  # Update Hyprland configuration with the theme colors (Lua form, appended
+  # after settings like the previous hyprlang block was).
   wayland.windowManager.hyprland.extraConfig = ''
-    # Everblush Theme Colors
-    general {
-        col.active_border = rgba(6cbfbfee)
-        col.inactive_border = rgba(b3b9b8aa)
-    }
-
-    # Everblush group border colors
-    group {
-        col.border_active = rgba(6cbfbfee)
-        col.border_inactive = rgba(b3b9b8aa)
-        col.border_locked_active = rgba(c47fd5ee)
-        col.border_locked_inactive = rgba(2d3437aa)
-    }
+    -- Everblush Theme Colors
+    hl.config({
+      general = {
+        col = {
+          active_border = "rgba(6cbfbfee)",
+          inactive_border = "rgba(b3b9b8aa)",
+        },
+      },
+      group = {
+        col = {
+          border_active = "rgba(6cbfbfee)",
+          border_inactive = "rgba(b3b9b8aa)",
+          border_locked_active = "rgba(c47fd5ee)",
+          border_locked_inactive = "rgba(2d3437aa)",
+        },
+      },
+    })
   '';
 
   # Generate wallpaper with the Everblush colors - FIXED version without text annotation

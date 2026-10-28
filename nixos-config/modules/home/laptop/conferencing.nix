@@ -14,7 +14,12 @@
   # Add microphone key bindings
   wayland.windowManager.hyprland.settings = {
     bind = [
-      ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle && ~/.local/bin/mic-notify.sh"
+      {
+        _args = [
+          "XF86AudioMicMute"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle && ~/.local/bin/mic-notify.sh")'')
+        ];
+      }
     ];
   };
 

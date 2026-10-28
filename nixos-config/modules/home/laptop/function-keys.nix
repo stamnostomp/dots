@@ -7,16 +7,58 @@
     # ThinkPad function key bindings
     bind = [
       # F1 - Help (Open user manual in browser)
-      ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-      ", XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-      ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-      ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-      ", XF86Display, exec, wdisplays"                             # F7 - Display settings
-      ", XF86WLAN, exec, nmcli radio wifi toggle"                  # F8 - Wireless toggle
-      ", XF86NotificationCenter, exec, dunstctl history-pop"       # F9 - Notifications
-      ", XF86WebCam, exec, grim -g \"$(slurp)\" - | wl-copy"       # F10 - Screenshot (area)
-      ", Shift Print, exec, grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date +'%Y-%m-%d-%H%M%S').png" # F10 + Shift - Save screenshot
-      ", XF86Tools, exec, alacritty -e htop"                       # F12 - System monitor
+      {
+        _args = [
+          "XF86AudioMute"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")'')
+        ];
+      }
+      {
+        _args = [
+          "XF86AudioMicMute"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle")'')
+        ];
+      }
+      {
+        _args = [
+          "XF86AudioRaiseVolume"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+")'')
+        ];
+      }
+      {
+        _args = [
+          "XF86AudioLowerVolume"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-")'')
+        ];
+      }
+      { _args = [ "XF86Display" (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("wdisplays")'') ]; } # F7 - Display settings
+      { _args = [ "XF86WLAN" (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("nmcli radio wifi toggle")'') ]; } # F8 - Wireless toggle
+      { _args = [ "XF86NotificationCenter" (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("dunstctl history-pop")'') ]; } # F9 - Notifications
+      { _args = [ "XF86WebCam" (lib.generators.mkLuaInline ''hl.dsp.exec_cmd([[grim -g "$(slurp)" - | wl-copy]])'') ]; } # F10 - Screenshot (area)
+      # F10 + Shift - Save screenshot (was missing the comma between mods and key in hyprlang, fixed here)
+      { _args = [ "SHIFT + Print" (lib.generators.mkLuaInline ''hl.dsp.exec_cmd([[grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +'%Y-%m-%d-%H%M%S').png]])'') ]; }
+      { _args = [ "XF86Tools" (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("alacritty -e htop")'') ]; } # F12 - System monitor
+
+      # Improved volume controls with notification
+      # (previously a separate extraConfig block; merged here, same binds)
+      {
+        _args = [
+          "XF86AudioRaiseVolume"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ && ~/.local/bin/volume-notify.sh")'')
+        ];
+      }
+      {
+        _args = [
+          "XF86AudioLowerVolume"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && ~/.local/bin/volume-notify.sh")'')
+        ];
+      }
+      {
+        _args = [
+          "XF86AudioMute"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && ~/.local/bin/volume-notify.sh")'')
+        ];
+      }
     ];
   };
 
@@ -37,14 +79,6 @@
       fi
     '';
   };
-
-  # Enhanced volume controls with notification
-  wayland.windowManager.hyprland.extraConfig = ''
-    # Improved volume controls with notification
-    bind = , XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ && ~/.local/bin/volume-notify.sh
-    bind = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && ~/.local/bin/volume-notify.sh
-    bind = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && ~/.local/bin/volume-notify.sh
-  '';
 
   # Install utilities for function keys
   home.packages = with pkgs; [

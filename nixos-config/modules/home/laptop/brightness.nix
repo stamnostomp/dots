@@ -11,8 +11,32 @@
   wayland.windowManager.hyprland.settings = {
     # Brightness control bindings
     bind = [
-      ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
-      ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+      {
+        _args = [
+          "XF86MonBrightnessUp"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("brightnessctl set +5%")'')
+        ];
+      }
+      {
+        _args = [
+          "XF86MonBrightnessDown"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("brightnessctl set 5%-")'')
+        ];
+      }
+      # Improved brightness controls with notification
+      # (previously a separate extraConfig block; merged here, same binds)
+      {
+        _args = [
+          "XF86MonBrightnessUp"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("brightnessctl set +5% && ~/.local/bin/brightness-notify.sh")'')
+        ];
+      }
+      {
+        _args = [
+          "XF86MonBrightnessDown"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("brightnessctl set 5%- && ~/.local/bin/brightness-notify.sh")'')
+        ];
+      }
     ];
   };
 
@@ -30,14 +54,7 @@
     '';
   };
 
-  # Enhanced brightness control with notification
-  wayland.windowManager.hyprland.extraConfig = ''
-    # Improved brightness controls with notification
-    bind = , XF86MonBrightnessUp, exec, brightnessctl set +5% && ~/.local/bin/brightness-notify.sh
-    bind = , XF86MonBrightnessDown, exec, brightnessctl set 5%- && ~/.local/bin/brightness-notify.sh
-  '';
-
-  # Install brightness control utilities
+  # Install brightnessctl utilities
   # (`light` was removed from nixpkgs; everything here uses brightnessctl)
   home.packages = with pkgs; [
     brightnessctl

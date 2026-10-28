@@ -101,8 +101,14 @@
   };
 
   # Add hyprland binding to view battery status
-  wayland.windowManager.hyprland.extraConfig = ''
-    # Battery status key binding
-    bind = $mod, b, exec, ~/.local/bin/battery-status.sh
-  '';
+  wayland.windowManager.hyprland.settings = {
+    bind = [
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + b"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("~/.local/bin/battery-status.sh")'')
+        ];
+      }
+    ];
+  };
 }
