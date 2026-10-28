@@ -57,6 +57,7 @@ in
         "hyprpaper"
         "nm-applet --indicator"
         "blueman-applet"
+        "kdeconnect-app"
       ];
 
       # Input configuration

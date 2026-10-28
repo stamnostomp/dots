@@ -79,4 +79,7 @@
 
   # Enable PAM integration for GNOME Keyring
   security.pam.services.greetd.enableGnomeKeyring = true;
+
+  # KDE Connect (phone/device integration); opens ports 1714-1764 TCP/UDP automatically
+  programs.kdeconnect.enable = true;
 }

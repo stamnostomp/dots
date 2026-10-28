@@ -26,6 +26,11 @@
     '';
     settings = {
       auto-optimise-store = true;
+      # Must be true when using distributedBuilds, otherwise the remote
+      # builder (192.168.1.200) rebuilds everything from source instead of
+      # using cache.nixos.org substitutes. This was causing hours-long
+      # source builds (freecad/ifcopenshell) on every update.
+      builders-use-substitutes = true;
       trusted-users = [
         "root"
         "@wheel"

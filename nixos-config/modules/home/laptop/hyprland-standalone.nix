@@ -50,6 +50,7 @@ in
         "hyprpaper"
         "nm-applet --indicator"
         "blueman-applet"
+        "kdeconnect-app"
         "hypridle" # Power management
       ];
 

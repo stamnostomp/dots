@@ -51,8 +51,9 @@ in
       git
       ripgrep
       fd
+      gnuplot
+      texliveFull
 
-      # Nix development tools
       nix
       nixfmt
       nil
@@ -83,7 +84,8 @@ in
 
       # LSP and npm
       nodejs
-
+      c3-lsp
+      tree-sitter
       # C# development
       csharpier
 
@@ -108,7 +110,7 @@ in
         '';
       })
       (writeShellScriptBin "tidal-ghci" ''
-        exec ${(haskellPackages.ghcWithPackages (hpkgs: [hpkgs.tidal]))}/bin/ghci "$@"
+        exec ${(haskellPackages.ghcWithPackages (hpkgs: [ hpkgs.tidal ]))}/bin/ghci "$@"
       '')
 
       elmPackages.elm-format
@@ -126,14 +128,12 @@ in
       graphviz
 
       # PureScript
-      purescript
+      #purescript
       #nodePackages.purescript-language-server
       #nodePackages.purs-tidy
 
       # Rust development
-      rust-analyzer
       rustc
-      cargo
 
       # Web development
       html-tidy

@@ -1,70 +1,121 @@
-# home/stamno/programs.nix
 {
   config,
-  lib,
   pkgs,
-  inputs,
+  lib,
   ...
 }:
 
 {
-  # Git configuration
-  programs.git = {
-    enable = true;
-    settings = {
-      user = {
-        name = "stamnostomp";
-        email = "stamno@pm.me";
-      };
-      init.defaultBranch = "main";
-      pull.rebase = false;
-      core.editor = "vim";
-    };
-  };
-
-  # Direnv for per-directory environment variables
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-  };
-
-  # Application packages
+  # Package installation
   home.packages = with pkgs; [
-    # Browsers
-    firefox-bin
-
-    # The Everblush Firefox theme - use the input directly
-    inputs.firefox-everblush-theme.packages.${pkgs.stdenv.hostPlatform.system}.default
-
-    # Development tools
-    git
+    # Core utilities
+    eza
+    fd
     ripgrep
+    fzf
+    tree
+    git
+    curl
+    wget
     htop
     btop
-    localsend
+    killall
+    unzip
+    zip
+    p7zip
+    jq
+    yq-go
+    xclip
+    wl-clipboard
+    brightnessctl
+    playerctl
+    pamixer
+    networkmanagerapplet
+    blueman
+    gnome-keyring
+    seahorse
+    libsecret
 
     # File managers
-    pcmanfm # Lightweight GTK+ file manager
-    thunar
-    kdePackages.dolphin
+    nautilus
+    nemo
+    file-roller
 
-    # Messaging and communication
-    element-desktop
-    iamb
-    signal-desktop
-    vesktop
-
-    # System utilities
-    imagemagick
-    wl-clipboard
-    grim # Screenshot utility
-    slurp # Area selection for screenshots
-    grimblast # Wrapper for grim and slurp
-
-    # Audio utilities
+    # Media
+    mpv
+    imv
+    pavucontrol
     pulsemixer
-    easyeffects
-    spotify-qt
+
+    # Productivity
+    obsidian
+    onlyoffice-desktopeditors
+    libreoffice
+    zathura
+    evince
+
+    # Communication
+    vesktop
+    #discord (use vesktop instead)
+    element-desktop
+
+    # Development
+    neovide
+    rustup
+    nodejs
+    bun
+    python3
+    go
+    #zig
+    #godot
+    #docker
+    lazygit
+    gh
+    act
+    just
+    direnv
+    nix-direnv
+
+    # System monitoring/tools
+    mission-center
+    gparted
+    nvtopPackages.amd
+    lm_sensors
+    hwinfo
+
+    # Theming
+    nwg-look
+    #gtk-engine-murrine
+    #gtk_engines
+    gsettings-desktop-schemas
+
+    # Screenshot tools
+    grim
+    slurp
+    swappy
+
+    # Wayland utilities
+    wlogout
+    waybar
+    rofi
+    hyprpicker
+    hyprpaper
+    hyprlock
+    hypridle
+    hyprsunset
+    hyprpolkitagent
+
+    # Fonts
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-color-emoji
+    font-awesome
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+
+    # Audio
+    spotify
+    #spotifywm
     librespot
 
     # Bluetooth utilities
@@ -79,14 +130,18 @@
     steam
     protonup-ng
     lutris
-    godot
+    #godot
 
     # CAD
     #freecad-wayland
+    # freecad disabled: no binary substitute on nixos-unstable-small rev 7a1ebac
+    # (needs local build of ifcopenshell + freecad, hours + big-parallel).
+    # Re-enable once `nixos-rebuild dry-build` shows 0 freecad drvs, or use flatpak.
     freecad # temporarily disabled: pulls in pdal-2.9.3, which fails to build
     #kicad is provided by modules/home/cad/kicad.nix (with declarative lib tables)
     #
-    #    openscad
+    # openscad disabled for same reason: heavy CAD stack, re-enable after base system builds
+    openscad
     opencode
     # 3D printing - using standard orca-slicer from nixpkgs
     orca-slicer
@@ -101,93 +156,30 @@
     #minecraft
     prismlauncher
 
-    # Wine
-    # bottles # temporarily disabled: patool dependency fails tests on current nixpkgs
+    # Win
+    winetricks
   ];
 
-  # Auto-install the Firefox theme on activation
-  home.activation.installFirefoxTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        # Use the flake input directly
-        THEME_PACKAGE="${
-          inputs.firefox-everblush-theme.packages.${pkgs.stdenv.hostPlatform.system}.default
-        }"
-
-        # Create the script in the user's bin directory
-        mkdir -p $HOME/.local/bin
-        cat > $HOME/.local/bin/install-firefox-everblush-theme << EOF
-    #!/usr/bin/env bash
-
-    echo "Everblush Firefox Theme Installer"
-    echo "=================================="
-    echo ""
-
-    # Find Firefox profile directory
-    if [ -d "\$HOME/.mozilla/firefox" ]; then
-        FIREFOX_DIR="\$HOME/.mozilla/firefox"
-
-        # Find profiles
-        PROFILES=\$(grep -E "^Path=" "\$FIREFOX_DIR/profiles.ini" | cut -d'=' -f2)
-
-        if [ -z "\$PROFILES" ]; then
-            echo "Could not find any Firefox profiles."
-            exit 1
-        fi
-
-        # If more than one profile, let user choose
-        if [ \$(echo "\$PROFILES" | wc -l) -gt 1 ]; then
-            echo "Found multiple Firefox profiles:"
-            PS3="Select a profile to install the theme (number): "
-            select PROFILE in \$PROFILES; do
-                if [ -n "\$PROFILE" ]; then
-                    PROFILE_PATH="\$FIREFOX_DIR/\$PROFILE"
-                    break
-                fi
-            done
-        else
-            PROFILE="\$PROFILES"
-            PROFILE_PATH="\$FIREFOX_DIR/\$PROFILE"
-        fi
-
-        echo "Using profile: \$PROFILE_PATH"
-
-        # Create chrome directory if it doesn't exist
-        mkdir -p "\$PROFILE_PATH/chrome"
-
-        # Install theme files
-        echo "Installing theme files..."
-
-        # Install user.js preferences
-        if [ -f "\$PROFILE_PATH/user.js" ]; then
-            # Append our preferences without overwriting the existing ones
-            cat "$THEME_PACKAGE/share/firefox-everblush-theme/user.js" >> "\$PROFILE_PATH/user.js"
-            echo "Added theme preferences to existing user.js"
-        else
-            # Create new user.js
-            cp "$THEME_PACKAGE/share/firefox-everblush-theme/user.js" "\$PROFILE_PATH/user.js"
-            echo "Created new user.js with theme preferences"
-        fi
-
-        # Install CSS files
-        cp "$THEME_PACKAGE/share/firefox-everblush-theme/chrome/userChrome.css" "\$PROFILE_PATH/chrome/"
-        cp "$THEME_PACKAGE/share/firefox-everblush-theme/chrome/userContent.css" "\$PROFILE_PATH/chrome/"
-
-        # Set proper permissions
-        chmod 644 "\$PROFILE_PATH/chrome/userChrome.css"
-        chmod 644 "\$PROFILE_PATH/chrome/userContent.css"
-        chmod 644 "\$PROFILE_PATH/user.js"
-
-        echo "Theme installed successfully!"
-        echo ""
-        echo "Please start Firefox now to see the new theme."
-        echo "If the theme doesn't apply, check about:config and make sure"
-        echo "toolkit.legacyUserProfileCustomizations.stylesheets is set to true."
-
-    else
-        echo "Firefox profile directory not found."
-        echo "Please make sure Firefox is installed and has been run at least once."
-        exit 1
-    fi
-    EOF
-        chmod +x $HOME/.local/bin/install-firefox-everblush-theme
-  '';
+  # Force Zink for OrcaSlicer via desktop entry override
+  xdg.desktopEntries."OrcaSlicer" = {
+    name = "OrcaSlicer";
+    genericName = "3D Printing Software";
+    comment = "G-code generator for 3D printers";
+    exec = "env MESA_LOADER_DRIVER_OVERRIDE=zink ${pkgs.orca-slicer}/bin/orca-slicer %F";
+    icon = "OrcaSlicer";
+    terminal = false;
+    type = "Application";
+    categories = [
+      "Graphics"
+      "3DGraphics"
+      "Engineering"
+    ];
+    mimeType = [
+      "model/stl"
+      "model/3mf"
+      "application/vnd.ms-3mfdocument"
+      "application/prs.wavefront-obj"
+      "application/x-amf"
+    ];
+  };
 }

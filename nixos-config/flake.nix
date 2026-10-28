@@ -3,7 +3,10 @@
 
   inputs = {
     # Core dependencies
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    # NOTE: nixos-unstable-small has almost no binary cache lag coverage.
+    # Fresh revs (e.g. 7a1ebac from today) force multi-hour source builds of
+    # freecad/ifcopenshell. Use full nixos-unstable for cache hits.
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Home manager
     home-manager = {
@@ -28,6 +31,19 @@
       url = "path:./pkgs/firefox-everblush-theme";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Pulsar gaming mouse configuration tool (GUI + CLI)
+    pulsar-mouse-linux = {
+      url = "github:packerlschupfer/pulsar-mouse-linux";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Zen Browser (Firefox-based)
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs =
@@ -39,6 +55,8 @@
       nur,
       everblush-gtk,
       firefox-everblush-theme,
+      pulsar-mouse-linux,
+      zen-browser,
       ...
     }@inputs:
     let
@@ -48,6 +66,9 @@
         overlays = [
           # Use the new NUR overlay syntax
           nur.overlays.default
+
+          # Pulsar mouse tool (provides pkgs.pulsar-mouse-linux)
+          pulsar-mouse-linux.overlays.default
 
           # Add our custom packages overlay
           (final: prev: {
@@ -105,11 +126,19 @@
             {
               nixpkgs.overlays = [
                 nur.overlays.default
+                pulsar-mouse-linux.overlays.default
                 (final: prev: {
                   everblush-gtk = everblush-gtk.packages.${prev.stdenv.hostPlatform.system}.default;
                   firefox-everblush-theme =
                     firefox-everblush-theme.packages.${prev.stdenv.hostPlatform.system}.default;
                 })
+              ];
+            }
+
+            # Zen Browser (from wiki.nixos.org/wiki/Zen_Browser, System setup)
+            {
+              environment.systemPackages = [
+                inputs.zen-browser.packages."${system}".default
               ];
             }
 

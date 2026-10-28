@@ -10,5 +10,6 @@
     ./flatpack.nix
     ./trezor.nix
     ./printing.nix
+    ./pulsar-mouse.nix
   ];
 }

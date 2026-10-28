@@ -16,7 +16,6 @@
     fzf # Fuzzy finder
     ripgrep # Fast grep
     jq # JSON processor
-    yq # YAML processor
     ncdu # Disk usage analyzer
     htop # Process viewer
     btop # Resource monitor
