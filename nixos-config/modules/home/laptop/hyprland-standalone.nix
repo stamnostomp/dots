@@ -105,6 +105,9 @@ in
           kb_options = "";
           kb_rules = "";
           follow_mouse = 1;
+          # Raw input for gaming: no acceleration
+          accel_profile = "flat";
+          force_no_accel = true;
           sensitivity = 0.0;
 
           touchpad = {

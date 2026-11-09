@@ -6,20 +6,45 @@
   ...
 }:
 
+let
+  # Central Everblush palette (single source of truth for TTY/ly theming)
+  everblush = (import ../theme-colors.nix).colors;
+  noHash = lib.removePrefix "#";
+in
 {
-  # Enable display manager (greetd + tuigreet works with Hyprland; GDM 50 requires GNOME Shell)
-  # Launch via UWSM (programs.hyprland.withUWSM) instead of bare Hyprland so the
-  # session gets XDG/Wayland env, the D-Bus activation environment, and
-  # graphical-session.target (xdg-desktop-portal) set up correctly.
-  services.greetd = {
+  # Display manager: ly (TUI greeter) themed with the Everblush TTY palette
+  # (console.colors below). Truecolor 0xSSRRGGBB values.
+  services.displayManager.ly = {
     enable = true;
     settings = {
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd 'uwsm start hyprland-uwsm.desktop'";
-        user = "greeter";
-      };
+      bg = "0x00${noHash everblush.background}"; # Everblush background
+      fg = "0x00${noHash everblush.foreground}"; # Everblush foreground
+      border_fg = "0x00${noHash everblush.cyan}"; # Everblush cyan
+      error_fg = "0x01${noHash everblush.red}"; # Everblush red, bold
     };
   };
+
+  # Everblush Linux console (TTY) palette: black red green yellow blue
+  # magenta cyan white, then the bright variants. Applies to all VTs, so
+  # ly and every other TTY app render in Everblush.
+  console.colors = map noHash [
+    everblush.black
+    everblush.red
+    everblush.green
+    everblush.yellow
+    everblush.blue
+    everblush.magenta
+    everblush.cyan
+    everblush.white
+    everblush.brightBlack
+    everblush.brightRed
+    everblush.brightGreen
+    everblush.brightYellow
+    everblush.brightBlue
+    everblush.brightMagenta
+    everblush.brightCyan
+    everblush.brightWhite
+  ];
 
   # Enable sound with Pipewire
   security.rtkit.enable = true;
@@ -78,8 +103,8 @@
   services.gnome.gnome-keyring.enable = true;
 
   # Enable PAM integration for GNOME Keyring
-  security.pam.services.greetd.enableGnomeKeyring = true;
+  security.pam.services.ly.enableGnomeKeyring = true;
 
-  # KDE Connect (phone/device integration); opens ports 1714-1764 TCP/UDP automatically
-  programs.kdeconnect.enable = true;
+  # KDE Connect moved to modules/system/kdeconnect.nix (with hyprland-remote-portal
+  # for Wayland remote input). Don't re-enable here to keep a single source.
 }

@@ -32,6 +32,8 @@
         kb_variant = ",dvorak";
         resolve_binds_by_sym = true;
         follow_mouse = 1;
+        accel_profile = "flat";
+        force_no_accel = true;
         touchpad = {
           natural_scroll = true;
           tap_to_click = true;

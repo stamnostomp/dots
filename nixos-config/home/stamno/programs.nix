@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   ...
 }:
 
@@ -130,6 +131,7 @@
     steam
     protonup-ng
     lutris
+    inputs.deadlock-mod-manager.packages.${pkgs.stdenv.hostPlatform.system}.default
     #godot
 
     # CAD
@@ -159,6 +161,16 @@
     # Win
     winetricks
   ];
+
+  # KDE Connect "Run commands" for the paired phone (Pixel 9).
+  # Lets the phone open the Hyprland app launcher and close the active window.
+  # NOTE: keyed by the phone's device ID; a new phone = new directory.
+  # If you edit commands in the KDE Connect Settings UI, a rebuild will
+  # restore this file (home-manager backup extension is set).
+  xdg.configFile."kdeconnect/80ead5bcccef47fa893f0a3e14dd9acf/kdeconnect_runcommand/config".text = ''
+    [General]
+    commands="@ByteArray({\"d2e5de32_9ffc_4542_9a11_96354b9cf51e\":{\"command\":\"zen-beta\",\"name\":\"zen-browser\"},\"2ffac3fd_8420_4fef_ad8d_e87f1ed8c75e\":{\"command\":\"/home/stamno/.local/bin/app-launcher\",\"name\":\"Open App Menu\"},\"dd11a933_489a_4823_a273_37fdb12bab7d\":{\"command\":\"/run/current-system/sw/bin/hyprctl dispatch killactive\",\"name\":\"Close Window\"}})"
+  '';
 
   # Force Zink for OrcaSlicer via desktop entry override
   xdg.desktopEntries."OrcaSlicer" = {

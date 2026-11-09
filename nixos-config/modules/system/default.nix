@@ -8,6 +8,8 @@
     ./networking.nix
     ./torrenting.nix
     ./flatpack.nix
+    ./sunshine.nix
+    ./kdeconnect.nix
     ./trezor.nix
     ./printing.nix
     ./pulsar-mouse.nix

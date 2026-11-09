@@ -22,6 +22,10 @@ in
   # Enable Hyprland
   wayland.windowManager.hyprland = {
     enable = true;
+    # Use system portals (xdg-desktop-portal-hyprland + hyprland-remote-portal
+    # from NixOS) instead of HM's portal wrapper, which hides system portals
+    # and breaks KDE Connect remote input.
+    portalPackage = null;
     # Lua config (hyprlang is deprecated since Hyprland 0.55).
     # Generates $XDG_CONFIG_HOME/hypr/hyprland.lua.
     configType = "lua";
@@ -107,6 +111,9 @@ in
           kb_rules = "";
           resolve_binds_by_sym = true;
           follow_mouse = 1;
+          # Raw input for gaming: no acceleration
+          accel_profile = "flat";
+          force_no_accel = true;
           sensitivity = 0.0;
           touchpad = {
             natural_scroll = false;
